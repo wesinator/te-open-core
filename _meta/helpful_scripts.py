@@ -1,4 +1,4 @@
-from importer import models
+from db import models
 
 
 def find_headers_without_emails():

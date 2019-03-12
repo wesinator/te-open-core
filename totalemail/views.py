@@ -23,6 +23,7 @@ from .settings import (
 
 class IndexView(generic.TemplateView):
     """Display an import page on the landing page."""
+
     template_name = 'totalemail/index-import.html'
 
 
@@ -55,7 +56,7 @@ def save(request):
         full_email_texts.append(request.POST['full_text'])
     else:
         messages.error(request, 'Please upload an email or paste the text of an email to analyze it')
-        return HttpResponseRedirect(reverse('totalemail:base'))
+        return HttpResponseRedirect(reverse('totalemail:index'))
 
     for full_email_text in full_email_texts:
         if request.POST.get('redact_data') and request.POST.get('redaction_values'):

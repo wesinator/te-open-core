@@ -1,0 +1,18 @@
+<div class="card">
+    <div class="card-divider">
+        Email Structure
+    </div>
+    <div class="card-section">
+        <a href="#header">Header</a><br>
+        <a href="#bodies">Body</a>
+        {% autoescape off %}
+        {{ email.structure|linebreaksbr }}
+        {% endautoescape %}
+    </div>
+<!--     <div class="card-divider">
+        Analysis Summary
+    </div>
+    <div class="card-section">
+        Looks good :)
+    </div> -->
+</div>

@@ -1,0 +1,47 @@
+<div class="importBase">
+    <div>
+        <h3>Upload or paste an email to see if it is malicious</h3>
+    </div>
+    <br>
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                {% autoescape off %}
+                    <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                {% endautoescape %}
+            {% endfor %}
+        {% endif %}
+        <br><br>
+    </div>
+
+    <div class="row">
+        <form action="{% url 'totalemail:save' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="columns large-6">
+                <input type="file" id="email-file-import" name="email_file" placeholder="Upload an email..." multiple>
+            </div>
+
+            <div class="columns large-6" style="border-left: 2px solid #2c2c2c; padding-left: 1em;">
+                <textarea style="text-align: center" id="full-text" name="full_text" placeholder="Paste email content here..." rows="10"></textarea>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <br><br><br>
+
+            <!-- TODO: add a tooltip over this checkbox -->
+            <label><input type="checkbox" name="redact_data" checked>Redact recipient information</label>
+            <input type="text" name="redaction_values" placeholder="Enter values you would like to remove from the email (comma seperated)">
+            <br>
+            <input class="hollow large button success" id="submitButton" type="submit" value="Analyze email" onclick="disable()">
+        </form>
+    </div>
+
+    <script>
+      function disable() {
+        // TODO: this is a temporary hack (because the button can still be clicked)
+        $('#submitButton').addClass('disabled');
+      }
+    </script>
+</div>
+

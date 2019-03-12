@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Analyze an Email{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div>
+    <div class="float-center text-center" style="margin-left: 2em">
+        {% if user.is_authenticated %}
+            <h1>Welcome {{ user.username }}!</h1>
+        {% else %}
+            <h1>TotalEmail</h1>
+        {% endif %}
+    </div>
+</div>
+
+<div class="large-8 medium-8 small-8 text-center float-center">
+    {% include "import.html" %}
+</div>
+
+{% endblock %}

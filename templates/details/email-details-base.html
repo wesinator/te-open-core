@@ -1,0 +1,92 @@
+{% extends 'totalemail/base.html' %}
+
+{% block title %}{{ email.header.subject }}{% endblock %}
+
+{% block content %}
+  <style>
+    .emailDetailsList {
+      list-style-type: none;
+    }
+
+    .emailDetailsItem {
+      margin: 1.5em;
+    }
+
+    .topOfPageLink {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      height: 2em;
+      padding-top: 0.35em;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+    }
+  </style>
+
+  <br>
+  {% if email.pk %}
+    <div class="row">
+      <h2>{{ email.header.subject|truncatechars:42 }}</h2>
+
+      <br>
+
+      <div class="large-9 medium-9 float-left">
+        <ul class="emailDetailsList">
+          <li class="emailDetailsItem">
+            <h3 id="details">Email Details & Analysis</h3>
+            <div class="fast" id="emailDetails" data-animate="fade-in fade-out">
+              {% include "importer/details_view/email-details.html" %}
+              <br>
+              {% include "importer/details_view/analysis-details.html" %}
+            </div>
+          </li><hr>
+          <li class="emailDetailsItem">
+            <h3 id="header">Header</h3>
+            <div class="fast" id="emailHeader" data-animate="fade-in fade-out">
+              {% include "importer/details_view/email-header.html" %}
+            </div>
+          </li><hr>
+          <li class="emailDetailsItem">
+            <h3 id="bodies">Body</h3>
+            <div class="fast" id="emailBody" data-animate="fade-in fade-out">
+              {% include "importer/details_view/email-body.html" %}
+            </div>
+          </li><hr>
+          <li class="emailDetailsItem">
+            <h3 id="networkData">Network Data</h3>
+            <p><i>({{ network_data_overlaps }} overlap{{ network_data_overlaps|pluralize }} with other emails)</i></p>
+            <div class="fast" id="emailNetworkData" data-animate="fade-in fade-out">
+              {% include "importer/details_view/network-data-base.html" %}
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="columns large-3 medium-3">
+        <div>
+          {% include "importer/details_view/email-summary-card.html" %}
+        </div>
+      </div>
+    </div>
+
+    <a class="topOfPageLink" href="#top">Top ^</a>
+  {% else %}
+      <p>No email with this id</p>
+  {% endif %}
+
+    <!-- If the email is new, show a pop-up letting the user know to refresh the page to view the external analyses. -->
+    {% if new %}
+        <script>
+            window.setTimeout(function() {
+                $.jGrowl('This email has likely been analyzed by email analysis engines. Refresh the page to view the results.', {group: 'success-growl'});
+            }, 20000);
+        </script>
+    {% endif %}
+
+    <script>
+      // remove the background image
+      document.getElementsByTagName("body")[0].style = "background-image: none;"
+      window.setTimeout(function() {
+          $(document).foundation();
+      }, 50);
+    </script>
+{% endblock %}

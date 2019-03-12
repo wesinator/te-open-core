@@ -1,0 +1,63 @@
+{% if network_data.bodies.hosts %}
+    <b>Domain names:</b>
+    <ul>
+        {% for host, links in network_data.bodies.hosts.items %} 
+            <li>{{ host }}
+              <ul>
+                {% for link in links %}
+                  <li>This host was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}
+
+{% if network_data.bodies.ip_addresses %}
+    <b>IP addresses:</b>
+    <ul>
+        {% for address, links in network_data.bodies.ip_addresses.items %} 
+            <li>{{ address }}
+              <ul>
+                {% for link in links %}
+                  <li>This IP address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}
+
+{% if network_data.bodies.email_addresses %}
+    <b>Email addresses:</b>
+    <ul>
+        {% for address, links in network_data.bodies.email_addresses.items %} 
+            <li>{{ address }}
+              <ul>
+                {% for link in links %}
+                  <li>This email address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}
+
+{% if network_data.bodies.urls %}
+    <b>URLs:</b>
+    <ul>
+        {% for url, links in network_data.bodies.urls.items %} 
+            <li>{{ url }}
+              <ul>
+                {% for link in links %}
+                  <li>This URL was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}

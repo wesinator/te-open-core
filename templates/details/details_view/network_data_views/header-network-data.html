@@ -1,0 +1,47 @@
+{% if network_data.header.hosts %}
+    <b>Domain names:</b>
+    <ul>
+        {% for host, links in network_data.header.hosts.items %} 
+            <li>{{ host }}
+              <ul>
+                {% for link in links %}
+                  <li>This host was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}
+
+{% if network_data.header.ip_addresses %}
+    <b>IP addresses:</b>
+    <ul>
+        {% for address, links in network_data.header.ip_addresses.items %} 
+            <li>{{ address }}
+              <ul>
+                {% for link in links %}
+                  <li>This IP address was also the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}
+
+{% if network_data.header.email_addresses %}
+    <b>Email addresses:</b>
+    <ul>
+        {% for address, links in network_data.header.email_addresses.items %} 
+            <li>{{ address }}
+              <ul>
+                {% for link in links %}
+                  <li>This email address was also the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+{% endif %}

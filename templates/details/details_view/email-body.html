@@ -1,0 +1,10 @@
+<ul>
+    {% for body in email.bodies.all|dictsort:"first_seen" %}
+        <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>
+        {% if body.decoded_text != None %}
+            <br>
+            <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.decoded_text }}</pre>
+        {% endif %}
+        <br>
+    {% endfor %}
+</ul>

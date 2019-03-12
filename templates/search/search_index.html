@@ -1,0 +1,83 @@
+{% extends 'totalemail/base.html' %}
+
+{% block title %}TotalEmail Search: {{ q|truncatechars:42 }}{% endblock %}
+
+{% block content %}
+
+<!-- TODO: make the space from the top dynamic based on the size of the screen... also do this on the importer-index and other importer page. -->
+<br>
+
+<div class="text-center row">
+    <h1>Search the Emails</h1>
+    <br>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% autoescape off %}
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                <br>
+            {% endautoescape %}
+        {% endfor %}
+        <br>
+    {% endif %}
+
+    <form action="{% url 'search:index' %}" method="get">
+        <input id="searchBox" type="text" placeholder="Search for something here..." name="q" value="{{ q }}">
+        <input class="button" type="submit" value="Search">
+        {% if q != None %}
+            <a class="button secondary" href="{% url 'search:index' %}">Clear</a>
+        {% endif %}
+    </form>
+
+    <span><i>Searching {{ total_email_count }} email{{ total_email_count|pluralize }}</i></span>
+
+    <br><br>
+
+    <div class="large-7 medium-7 small-7 float-center">
+        {% if results %}
+            {% if total_result_count > max_results %}
+                <!-- TODO: Add a tooltip to this message explaining why we are limiting the results -->
+                Showing {{ results|length }} of {{ total_result_count }} emails matching "{{ q }}":
+            {% else %}
+                Found {{ results|length }} email{{ results|length|pluralize }} matching "{{ q }}":
+            {% endif %}
+            <br><br>
+            <ul>
+            {% for email in results %}
+                <li><a href="{% url 'details:details' email.id %}" target="_blank">{{ email.header.subject }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            {% if q != None %}
+                No results found for "{{ q }}"
+            {% endif %}
+            <script>
+                window.onload = function() {
+                    $('#searchBox').focus();
+                }
+            </script>
+            <br>
+        {% endif %}
+    </div>
+
+    <br><hr><br>
+
+    <div class="large-6 medium-7 float-center">
+        <h4>Search Prefixes</h4>
+        <p>Every search can be prefixed with one of the values below to specify where you would like to find a specific value:</p>
+
+        <ul>
+            <li><i>sub:{subject}</i> - Search for emails with the given subject</li>
+            <li><i>to:{recipient address}</i> - Search for emails with the given subject</li>
+            <li><i>from:{sending address}</i> - Search for emails with the given subject</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        $(document).foundation();
+    }
+</script>
+
+{% endblock %}

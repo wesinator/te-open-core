@@ -1,0 +1,14 @@
+<ul>
+    {% for analysis in email.analysis_set.all %}
+        <li>
+            <b>{{ analysis.source|title }}</b> - <i>{{ analysis.first_seen|date:"DATE_FORMAT" }}</i>
+            <ul>
+                {% for note in analysis.notes_strings %}
+                    {% autoescape off %}
+                        <li>{{ note }}</li>
+                    {% endautoescape %}
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" id="svg3239" viewBox="0 0 100 100" version="1.1">
+  <g id="layer1" transform="translate(-325 -482.36)">
+    <g id="g4016" transform="matrix(.5 0 0 .5 295.54 119.01)">
+      <path id="path4018" d="m371.43 553.79c0 70.219-56.924 127.14-127.14 127.14-70.219 0-127.14-56.924-127.14-127.14 0-70.219 56.924-127.14 127.14-127.14 70.219 0 127.14 56.924 127.14 127.14z" fill="#333" transform="matrix(.78652 0 0 .78652 -33.223 391.15)"/>
+      <path id="path4020" d="m565 503.36c0 33.137-26.863 60-60 60s-60-26.863-60-60 26.863-60 60-60 60 26.863 60 60z" transform="matrix(1.375 0 0 1.375 -535.46 134.59)" stroke="#fff" stroke-width="7.2727" fill="none"/>
+      <g id="g4022" stroke="#fff" transform="translate(74.997 97.491)" fill="#333">
+        <rect id="rect4024" height="70" width="100" y="694.22" x="33.915" stroke-width="7"/>
+        <path id="path4026" stroke-linejoin="bevel" d="m468.81 424.56h-130.53l65.267-113.05z" stroke-width="13.001" transform="matrix(.75052 0 0 .38626 -218.95 600.1)"/>
+        <path id="path4028" stroke-linejoin="bevel" stroke-width="12.87" transform="matrix(-.76586 0 0 -.38626 392.97 859.97)" d="m468.81 424.56h-130.53l65.267-113.05z"/>
+      </g>
+    </g>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>mail badge </dc:title>
+        <dc:date>2011-12-13T06:27:55</dc:date>
+        <dc:description>Mail badge</dc:description>
+        <dc:source>http://openclipart.org/detail/166281/mail-badge--by-</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>eternaltyro</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Mail</rdf:li>
+            <rdf:li>badge</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>envelope</rdf:li>
+            <rdf:li>loge</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

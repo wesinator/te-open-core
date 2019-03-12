@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" id="svg1468" viewBox="0 0 187.5 187.5" sodipodi:version="0.32" version="1.0" y="0" x="0" sodipodi:docname="mail1.svg" sodipodi:docbase="C:\Documents and Settings\Jarno\Omat tiedostot\vanhasta\opencliparts\omat\symbols">
+  <sodipodi:namedview id="base" bordercolor="#666666" borderopacity="1.0" pagecolor="#ffffff"/>
+  <g id="layer1">
+    <g id="g2423" stroke-linejoin="round" stroke="#000" stroke-width="3.75" transform="matrix(.81088 0 0 .81088 5.9097 -403.36)">
+      <rect id="rect2398" rx="3" ry="3" height="100" width="158" stroke-linecap="round" y="560.36" x="30" fill="#fff"/>
+      <path id="path2400" d="m32 658.36l76-56 80 58" fill="none"/>
+      <path id="path2402" d="m31.935 561.05l75.765 59.97 78.3-60.63-154.06 0.66z" fill="#fff" fill-rule="evenodd"/>
+    </g>
+  </g>
+  <metadata>
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>Mail 1 icon</dc:title>
+        <dc:date>2006-12-26T00:00:00</dc:date>
+        <dc:description>clip art, clipart, </dc:description>
+        <dc:source>http://openclipart.org/detail/24606/-by--24606</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Anonymous</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

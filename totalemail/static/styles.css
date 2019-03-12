@@ -1,0 +1,39 @@
+.error {
+    color: red;
+}
+
+body {
+  background-image: url(/static/mail_badge_low_op.svg);
+  background-repeat: no-repeat;
+  background-position: bottom -40% right -7%;
+  background-size: 40em;
+  background-attachment: fixed;
+}
+
+h1 {
+    color: #2c2c2c;
+    /*font-size: 4em;*/
+    letter-spacing: .15em;
+/*    text-shadow:
+      6px 6px 5px #d5d5d5;*/
+    font-family: "Courier New";
+ /*   color: #202020;
+    background-color: #2d2d2d;
+    letter-spacing: .1em;
+    text-shadow:
+      -1px -1px 1px #111,
+      2px 2px 1px #363636;*/
+}
+
+
+h3 {
+/*    color: #2c2c2c;
+    font-size: 1.5em;
+    font-family: "Courier New";*/
+ /*   color: #202020;
+    background-color: #2d2d2d;
+    letter-spacing: .1em;
+    text-shadow:
+      -1px -1px 1px #111,
+      2px 2px 1px #363636;*/
+}

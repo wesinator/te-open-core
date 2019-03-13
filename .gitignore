@@ -111,3 +111,4 @@ test_emails/
 .pytest_cache/
 totalemail/staticfiles/
 totalemail/settings.py
+totalemail/test_settings.py

@@ -9,9 +9,8 @@ from django.contrib import messages
 
 from db.models import Email
 from .search_mappings import get_search_to_db_mappings
-from totalemail.settings import _validate_search_query
+from totalemail.settings import _validate_search_query, MAX_RESULTS
 
-MAX_RESULTS = 25
 SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
 
 

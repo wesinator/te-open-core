@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import hashlib
 import json
 import os
 import requests
@@ -14,6 +15,14 @@ def is_running_locally():
         return True
     else:
         return False
+
+
+def sha256(text):
+    """Find the hash of the given text."""
+    if isinstance(text, bytes):
+        return hashlib.sha256(text).hexdigest()
+    else:
+        return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
 def create_alerta_alert(event, severity, text):

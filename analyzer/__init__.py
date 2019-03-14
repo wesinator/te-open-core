@@ -1,1 +1,1 @@
-# from .analyzer import start_analysis
+from .analyzer import start_analysis

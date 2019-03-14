@@ -185,7 +185,7 @@ header_function_mapping = {
 
 def parse_header(email_message, log_mising_properties=True):
     """Parser email headers."""
-    from importer.models import JOIN_STRING
+    from db.models import JOIN_STRING
 
     parsed_header_fields = dict()
 

@@ -209,21 +209,6 @@ class BodyTests(TestCase):
         assert new_bodies is not None
         assert len(new_bodies) == 2
 
-    def test_email_body_network_data_parsing(self):
-        """Make sure network data is parsed from the email's body as expected."""
-        new_bodies = TestData.create_email().bodies.all()
-        assert len(new_bodies) == 2
-        for body in new_bodies:
-            assert len(body.url_set.all()) > 0
-            assert len(body.host_set.all()) > 0
-
-            # make sure the network data is shown on the details page
-            response = self.client.get('/email/{}/'.format(TestData.email_id))
-            assert 'URLs:' in str(response.content)
-            assert 'Domain names:' in str(response.content)
-            assert 'IP addresses:' in str(response.content)
-            assert 'Email addresses:' in str(response.content)
-
 
 class AttachmentTests(TestCase):
     """Attachment related tests."""

@@ -166,3 +166,15 @@ Content-Type: text/html; charset=utf-8
         # ensure email created and system redirects to new email
         empty_redaction = """                    : """
         assert empty_redaction not in str(response.content)
+
+    def test_email_body_network_data_parsing(self):
+        """Make sure network data is parsed from the email's body as expected."""
+        new_bodies = TestData.create_email().bodies.all()
+        assert len(new_bodies) == 2
+
+        # make sure the network data is shown on the details page
+        response = self.client.get('/email/{}/'.format(TestData.email_id))
+        assert 'URLs:' in str(response.content)
+        assert 'Domain names:' in str(response.content)
+        assert 'IP addresses:' in str(response.content)
+        assert 'Email addresses:' in str(response.content)

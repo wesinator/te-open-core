@@ -177,8 +177,9 @@ class EmailTests(TestCase):
 
     def test_outlook_email_handling(self):
         """Make sure we can upload emails from outlook."""
+        # TODO: make sure the hash created by this function corresponds with the one created by the UI (this hash was previously `c44c6a5c6b536b987ae38d517170f07f5bac14dda7c387bc2cea2a985ed1c629`)
         new_email = TestData.create_email(TestData.outlook_email_text)
-        assert new_email.id == 'c44c6a5c6b536b987ae38d517170f07f5bac14dda7c387bc2cea2a985ed1c629'
+        assert new_email.id == 'e971f4c5ef63c73c615e0cf82ac7b9f0bb82a36f886cdeb92d21039e37a0ac7f'
         assert '[1.2.3.4]' in new_email.header.full_text
 
 

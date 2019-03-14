@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^about/', views.AboutView.as_view(), name='about'),
     url(r'^email/', include('details.urls')),
     url(r'^search', include('search.urls')),
-    url(r'^accounts/', include('accounts.urls')),
+    # url(r'^accounts/', include('accounts.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 urlpatterns += staticfiles_urlpatterns()

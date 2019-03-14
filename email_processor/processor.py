@@ -3,14 +3,13 @@
 
 import email
 
-from settings import _process_request_data
-
 from .cleaner import clean_email
 from .formatter import format_email_for_db
 from .parse_attachments import parse_attachment
 from .parse_headers import parse_header, get_header_string
 from db import db_creator
 from utility import utility
+from totalemail import settings
 
 
 def _get_email_structure(
@@ -83,7 +82,7 @@ def process_email(
 
     email_body_objects = list()
     email_attachment_objects = list()
-    processed_request_data = _process_request_data(request_details)
+    processed_request_data = settings._process_request_data(request_details)
 
     # format
     email_text = format_email_for_db(email_text)

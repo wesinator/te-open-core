@@ -3,23 +3,8 @@
 """Parse attachments and attachment metadata from email text."""
 
 import hashlib
-import base64
 
-
-def decode_base64(data):
-    """Decode base64, padding being optional.
-
-    :param data: Base64 data as an ASCII byte string
-    :returns: The decoded byte string.
-
-    """
-    missing_padding = len(data) % 4
-    if missing_padding != 0:
-        if missing_padding == 1:
-            data += b'A=='
-        else:
-            data += b'=' * (4 - missing_padding)
-    return base64.decodestring(data)
+from utility import utility
 
 
 def parse_attachment(attachment):
@@ -29,7 +14,7 @@ def parse_attachment(attachment):
     formatted_payload_content = str(attachment.get_payload()).replace('\n', '').encode('utf-8')
 
     try:
-        decoded_content = decode_base64(formatted_payload_content)
+        decoded_content = utility.decode_base64(formatted_payload_content)
     except Exception as e:
         if str(e) == "Incorrect padding":
             # TODO: Just a reminder for J: I choose not to keep track of whether or not an attachment's hashes came from the decoded attachment or the undecoded version because I plan on later capturing the hashes of both (the decoded and undedoced versions) and we can easily compare the two to determine if an email was correctly decoded or not (2)

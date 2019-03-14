@@ -4,7 +4,7 @@
 import email
 import re
 
-from parser import parse_header
+from .parse_headers import parse_header
 from utility import utility
 
 

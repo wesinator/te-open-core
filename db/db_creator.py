@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from .models import Email, Header, Body, Attachment, Analysis, JOIN_STRING
-from parser import parse_bodies
+from email_processor import parse_bodies
 from utility import utility
 import analyzer
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import base64
 import hashlib
 import json
 import os
@@ -63,3 +64,19 @@ def create_alerta_alert(event, severity, text):
         except requests.exceptions.MissingSchema as e:
             print('Alerta is failing. Check your environment variables? {}'.format(e))
             return
+
+
+def decode_base64(data):
+    """Decode base64, padding being optional.
+
+    :param data: Base64 data as an ASCII byte string
+    :returns: The decoded byte string.
+
+    """
+    missing_padding = len(data) % 4
+    if missing_padding != 0:
+        if missing_padding == 1:
+            data += b'A=='
+        else:
+            data += b'=' * (4 - missing_padding)
+    return base64.decodestring(data)

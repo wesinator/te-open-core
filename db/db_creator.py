@@ -148,6 +148,14 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
     return new_body
 
 
+def _filename_exists(existing_filenames, new_filename):
+    """Check to see if the new filename already exists."""
+    return (
+        '{}{}'.format(new_filename, JOIN_STRING) in existing_filenames
+        or '{}{}'.format(JOIN_STRING, new_filename) in existing_filenames
+    )
+
+
 def create_attachment(attachment_data):
     new_attachment, created = Attachment.objects.update_or_create(
         id=attachment_data['id'],
@@ -160,7 +168,9 @@ def create_attachment(attachment_data):
     )
     # handle multiple file names
     if new_attachment.filename:
-        new_attachment.filename = new_attachment.filename + JOIN_STRING + attachment_data['filename']
+        # check to see if the new file name already exists... only add new filenames
+        if not _filename_exists(new_attachment.filename, attachment_data['filename']):
+            new_attachment.filename = new_attachment.filename + JOIN_STRING + attachment_data['filename']
     else:
         new_attachment.filename = attachment_data['filename']
     new_attachment.save()

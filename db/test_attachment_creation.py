@@ -29,7 +29,6 @@ def test_duplicate_attachment_filenames():
     attachment.save()
     assert attachment.filename == 'test.xml|||bingo.txt'
 
-    # TODO: I've never tested this case and am not sure what will happen when an attachment is created with the same name :)
     attachment = TestData.create_attachment('test.xml')
     attachment.save()
     assert attachment.filename == 'test.xml|||bingo.txt'

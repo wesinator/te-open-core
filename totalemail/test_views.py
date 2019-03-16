@@ -75,7 +75,7 @@ class ViewTests(TestCase):
             "/email/{}".format(utility.sha256(TestData.single_attachment_email_text.replace('\n', '\r\n'))),
         )
 
-        print(Email.objects.all())
+        assert len(Email.objects.all()) == 2
 
         # make sure both emails were created
         assert Email.objects.get(id=utility.sha256(TestData.email_text.replace('\n', '\r\n')))
@@ -83,6 +83,7 @@ class ViewTests(TestCase):
 
     def test_empty_save_without_following_redirect(self):
         response = self.client.post('/save/', {})
+        assert response.status_code == 302
         self.assertEqual(response.url, "/")
 
     def test_empty_save_following_redirect(self):

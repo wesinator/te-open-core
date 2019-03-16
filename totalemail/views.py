@@ -24,7 +24,7 @@ from .settings import (
 class IndexView(generic.TemplateView):
     """Display an import page on the landing page."""
 
-    template_name = 'totalemail/index-import.html'
+    template_name = 'totalemail/index.html'
 
 
 class AboutView(generic.TemplateView):

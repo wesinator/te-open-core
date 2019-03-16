@@ -7,7 +7,6 @@ import json
 # from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
-from django.urls import reverse
 from django.views import generic
 
 from db.models import Email
@@ -28,6 +27,11 @@ def _get_related_headers_and_bodies(network_data_object, email, get_related_head
             for link in body.links:
                 links.append({'link': '/{}'.format(link), 'text': body.emails.all()[0].header.subject})
     return links
+
+
+def redirect_to_homepage(request):
+    """Save an email to the DB."""
+    return HttpResponseRedirect('/')
 
 
 class EmailDetailView(generic.DetailView):

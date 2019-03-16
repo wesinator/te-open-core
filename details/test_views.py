@@ -2,12 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import html
-import os
 
 from django.test import TestCase
 
-from utility import utility
-from db.models import Email
 from test_resources import DefaultTestObject
 
 TestData = DefaultTestObject()
@@ -17,7 +14,7 @@ def ensure_payload_displayed(payloads, response):
     """Assert payload contents are shown."""
     for payload in payloads:
         if not payload.is_multipart():
-            str_payload = html.escape(str(payload).replace("\n", "\\n"))
+            str_payload = html.escape(str(payload).strip().replace("\n", "\\n"))
             assert str_payload in str(response.content)
 
 
@@ -42,25 +39,6 @@ class ViewTests(TestCase):
 
         ensure_payload_displayed(TestData.email_message.get_payload(), response)
         # TODO: add more tests to the test_email_details_view function (3)
-
-    def test_email_details_view_network_data(self):
-        """Make sure network data is displayed well."""
-        emails = TestData.create_emails_with_same_host_in_body()
-        TestData.create_email()
-
-        response_0 = self.client.get("/email/{}/".format(emails[0].id))
-        string_data_0 = response_0.content.decode("utf-8")
-        assert (
-            'This email address was also the email: <a href="/email/eab5bd1488bd546155249dcb3e8e4c40c23bad2c9601faa04cf75ac431289676#header">consider adding to python project template</a>'
-            in string_data_0
-        )
-
-        response_1 = self.client.get("/email/{}/".format(emails[1].id))
-        string_data_1 = response_1.content.decode("utf-8")
-        assert (
-            'This email address was also the email: <a href="/email/eab5bd1488bd546155249dcb3e8e4c40c23bad2c9601faa04cf75ac431289676#header">consider adding to python project template</a>'
-            in string_data_1
-        )
 
     def test_email_details_view_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
@@ -128,15 +106,3 @@ Content-Type: text/html; charset=utf-8
         # ensure email created and system redirects to new email
         empty_redaction = """                    : """
         assert empty_redaction not in str(response.content)
-
-    def test_email_body_network_data_parsing(self):
-        """Make sure network data is parsed from the email's body as expected."""
-        new_bodies = TestData.create_email().bodies.all()
-        assert len(new_bodies) == 2
-
-        # make sure the network data is shown on the details page
-        response = self.client.get('/email/{}/'.format(TestData.email_id))
-        assert 'URLs:' in str(response.content)
-        assert 'Domain names:' in str(response.content)
-        assert 'IP addresses:' in str(response.content)
-        assert 'Email addresses:' in str(response.content)

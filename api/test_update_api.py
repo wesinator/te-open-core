@@ -4,7 +4,7 @@
 from rest_framework.test import APITestCase
 
 from test_resources import DefaultTestObject
-from importer.models import Email, Body, Host, IPAddress, EmailAddress, Url
+from db.models import Email, Body, Host, IPAddress, EmailAddress, Url
 from .api_test_utility import get_user_token
 
 TestData = DefaultTestObject()

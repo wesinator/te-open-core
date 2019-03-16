@@ -6,9 +6,9 @@ import os
 
 from django.test import TestCase
 
-from .models import Email
+from utility import utility
+from db.models import Email
 from test_resources import DefaultTestObject
-from .db_creator import create_sha256_id
 
 TestData = DefaultTestObject()
 
@@ -23,44 +23,6 @@ def ensure_payload_displayed(payloads, response):
 
 class ViewTests(TestCase):
     """View related tests."""
-
-    def test_save_view(self):
-        response = self.client.post('/save/', {'full_text': TestData.email_text})
-        # ensure email created and system redirects to new email
-        self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
-
-    def test_save_view_with_data_redaction(self):
-        original_sha256 = create_sha256_id(TestData.email_text.replace('\n', '\r\n'))
-        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_data': True})
-        # ensure email created and system redirects to new email
-        self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
-        # make sure the original_sha256 is correct
-        email_object = Email.objects.get(id=TestData.email_id)
-        # assert email_object.cleaned_id == original_sha256
-        assert email_object.id != email_object.cleaned_id
-        assert original_sha256 == email_object.id
-
-    def test_save_view_with_multiple_file_upload(self):
-        """Try to save multiple emails at once."""
-        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), '../test_resources/emails/test.eml'))) as f1:
-            with open(
-                os.path.abspath(
-                    os.path.join(os.path.dirname(__file__), '../test_resources/emails/single_attachment_test.eml')
-                )
-            ) as f2:
-                response = self.client.post('/save/', {'email_file': [f1, f2], 'redact_data': True})
-
-        # ensure email created and system redirects to new email
-        self.assertEqual(
-            response.url,
-            "/email/{}".format(create_sha256_id(TestData.single_attachment_email_text.replace('\n', '\r\n'))),
-        )
-
-        print(Email.objects.all())
-
-        # make sure both emails were created
-        assert Email.objects.get(id=create_sha256_id(TestData.email_text.replace('\n', '\r\n')))
-        assert Email.objects.get(id=create_sha256_id(TestData.single_attachment_email_text.replace('\n', '\r\n')))
 
     def test_email_details_view(self):
         created_content = TestData.create_email()

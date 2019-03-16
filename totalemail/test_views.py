@@ -6,9 +6,9 @@ import os
 
 from django.test import TestCase
 
-from .models import Email
+from db.models import Email
 from test_resources import DefaultTestObject
-from .db_creator import create_sha256_id
+from utility import utility
 
 TestData = DefaultTestObject()
 
@@ -43,7 +43,7 @@ class ViewTests(TestCase):
         self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
 
     def test_save_view_with_data_redaction(self):
-        original_sha256 = create_sha256_id(TestData.email_text.replace('\n', '\r\n'))
+        original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
         response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_data': True})
         # ensure email created and system redirects to new email
         self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
@@ -56,7 +56,6 @@ class ViewTests(TestCase):
     def test_save_view_with_duplicate_uploads(self):
         """Try saving an email without redaction and then saving it with redaction."""
         self.client.post('/save/', {'full_text': TestData.email_text})
-
         self.client.post('/save/', {'full_text': TestData.email_text, 'redact_data': True})
         # if the two requests ^^ above don't cause this test to fail, that is good enough
 
@@ -73,14 +72,14 @@ class ViewTests(TestCase):
         # ensure email created and system redirects to new email
         self.assertEqual(
             response.url,
-            "/email/{}".format(create_sha256_id(TestData.single_attachment_email_text.replace('\n', '\r\n'))),
+            "/email/{}".format(utility.sha256(TestData.single_attachment_email_text.replace('\n', '\r\n'))),
         )
 
         print(Email.objects.all())
 
         # make sure both emails were created
-        assert Email.objects.get(id=create_sha256_id(TestData.email_text.replace('\n', '\r\n')))
-        assert Email.objects.get(id=create_sha256_id(TestData.single_attachment_email_text.replace('\n', '\r\n')))
+        assert Email.objects.get(id=utility.sha256(TestData.email_text.replace('\n', '\r\n')))
+        assert Email.objects.get(id=utility.sha256(TestData.single_attachment_email_text.replace('\n', '\r\n')))
 
     def test_empty_save_without_following_redirect(self):
         response = self.client.post('/save/', {})

@@ -43,7 +43,7 @@ class EmailDetailView(generic.DetailView):
         except ObjectDoesNotExist:
             # TODO: it would be nice to print a message to the user if they visit the page that doesn't exist (as I attempted below) (3)
             # messages.error(request, 'No email found with the ID: {}'.format(email_id))
-            return HttpResponseRedirect(reverse('totalemail:index'))
+            return HttpResponseRedirect('/')
 
         # get the "To" field and put it in a format that is easy to use
         try:

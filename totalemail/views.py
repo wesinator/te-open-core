@@ -56,7 +56,7 @@ def save(request):
         full_email_texts.append(request.POST['full_text'])
     else:
         messages.error(request, 'Please upload an email or paste the text of an email to analyze it')
-        return HttpResponseRedirect(reverse('totalemail:index'))
+        return HttpResponseRedirect('/')
 
     for full_email_text in full_email_texts:
         if request.POST.get('redact_data') and request.POST.get('redaction_values'):
@@ -71,7 +71,7 @@ def save(request):
         else:
             new_email = process_email(full_email_text, _get_request_data(request), redact_email_data=False)
 
-    return HttpResponseRedirect(reverse('totalemail:details', args=(new_email.id,)))
+    return HttpResponseRedirect(reverse('details:details', args=(new_email.id,)))
 
 
 def error_500_handler(request):

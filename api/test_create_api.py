@@ -3,9 +3,10 @@
 
 from rest_framework.test import APITestCase
 
-from test_resources import DefaultTestObject
-from db.models import Email, Body, Host, IPAddress, EmailAddress, Url
 from .api_test_utility import get_user_token
+from db.models import Email, Body, Host, IPAddress, EmailAddress, Url
+from test_resources import DefaultTestObject
+from utility import utility
 
 TestData = DefaultTestObject()
 
@@ -212,12 +213,13 @@ class NetworkDataAPITest(APITestCase):
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
-        response = self.client.post('/api/v1/urls/?test=1', {'url': TestData.url, 'bodies': [body_id], 'headers': []})
+        response = self.client.post('/api/v1/urls/?test=1', {'url': TestData.url, 'bodies': [body_id]})
         assert response.status_code == 201
 
         # make sure the email was created in the db correctly
         urls = Url.objects.all()
         assert len(urls) == 1
+        assert urls[0].id == utility.sha256(TestData.url)
         assert urls[0].url == TestData.url
         assert urls[0].bodies.all()[0].id == body_id
         assert urls[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
@@ -231,7 +233,7 @@ class NetworkDataAPITest(APITestCase):
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
         url = 'https://bit.ly/1234#1234'
-        response = self.client.post('/api/v1/urls/?test=1', {'url': url, 'bodies': [body_id], 'headers': []})
+        response = self.client.post('/api/v1/urls/?test=1', {'url': url, 'bodies': [body_id]})
         assert response.status_code == 201
 
         # make sure the email was created in the db correctly

@@ -7,6 +7,8 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 
+from utility import utility
+
 JOIN_STRING = '|||'
 
 
@@ -244,6 +246,7 @@ class EmailAddress(models.Model):
         """On save, update timestamps"""
         if not self.first_seen:
             self.first_seen = timezone.now()
+            # TODO: parse out the domain name of the email address and make the relationship
         self.modified = timezone.now()
         return super(EmailAddress, self).save(*args, **kwargs)
 
@@ -265,6 +268,8 @@ class Url(models.Model):
         """On save, update timestamps"""
         if not self.first_seen:
             self.first_seen = timezone.now()
+            self.id = utility.sha256(self.url)
+            # TODO: parse out the domain name/ip address of the url and make the relationship
         self.modified = timezone.now()
         return super(Url, self).save(*args, **kwargs)
 

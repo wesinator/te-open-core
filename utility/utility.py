@@ -3,9 +3,15 @@
 
 import base64
 import hashlib
+import ipaddress
 import json
 import os
 import requests
+try:
+    import urllib.parse as urlparse
+except ImportError:
+    import urlparse
+
 
 from totalemail import settings
 
@@ -80,3 +86,19 @@ def decode_base64(data):
         else:
             data += b'=' * (4 - missing_padding)
     return base64.decodestring(data)
+
+
+def url_domain_name(url):
+    """Get the domain name of the given url."""
+    domain_name = urlparse.urlparse(url).netloc
+    return domain_name
+
+
+def is_ip_address(text):
+    """Determine if the given text is an IP address or not."""
+    try:
+        ipaddress.ip_address(text)
+    except ValueError:
+        return False
+    else:
+        return True

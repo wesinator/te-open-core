@@ -269,7 +269,14 @@ class Url(models.Model):
         if not self.first_seen:
             self.first_seen = timezone.now()
             self.id = utility.sha256(self.url)
-            # TODO: parse out the domain name/ip address of the url and make the relationship
+            host_name = utility.url_domain_name(self.url)
+            # NOTE: no need to make a connection between the host and the email body as this will be made when the host is created (it will be parsed out of the body too)
+            if utility.is_ip_address(host_name):
+                ip_address, created = IPAddress.objects.update_or_create(ip_address=host_name)
+                self.ip_address = ip_address
+            else:
+                host, created = Host.objects.update_or_create(host_name=host_name)
+                self.host = host
         self.modified = timezone.now()
         return super(Url, self).save(*args, **kwargs)
 

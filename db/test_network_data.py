@@ -54,3 +54,15 @@ class UrlCreationTests(TestCase):
         new_object_b = TestData.create_url()
         assert new_object_a.first_seen == new_object_b.first_seen
         assert new_object_a.modified != new_object_b.modified
+
+    def test_url_id(self):
+        new_url = TestData.create_url()
+        assert len(new_url.id) == 64
+
+    def test_url_hostname(self):
+        new_url = TestData.create_url()
+        assert new_url.host.host_name == 'example.com'
+
+    def test_url_hostname_with_ip_address(self):
+        new_url = TestData.create_url(TestData.url_ip_hostname)
+        assert new_url.ip_address.ip_address == '192.168.0.1'

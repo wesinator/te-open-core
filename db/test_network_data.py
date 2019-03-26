@@ -42,6 +42,14 @@ class EmailAddressCreationTests(TestCase):
         assert new_object_a.first_seen == new_object_b.first_seen
         assert new_object_a.modified != new_object_b.modified
 
+    def test_email_address_hostname(self):
+        new_email_address = TestData.create_email_address()
+        assert new_email_address.host.host_name == 'gmail.com'
+
+    def test_email_address_hostname_with_ip_address(self):
+        new_email_address = TestData.create_email_address(TestData.email_address_ip_hostname)
+        assert new_email_address.ip_address.ip_address == '192.168.0.1'
+
 
 class UrlCreationTests(TestCase):
     def test_url_str(self):

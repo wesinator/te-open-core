@@ -246,7 +246,15 @@ class EmailAddress(models.Model):
         """On save, update timestamps"""
         if not self.first_seen:
             self.first_seen = timezone.now()
-            # TODO: parse out the domain name of the email address and make the relationship
+            # NOTE: I'm stripping off '[' and ']' in case the hostname is an ip address
+            host_name = self.email_address.split('@')[-1].strip('[').strip(']')
+            # NOTE: no need to make a connection between the host and the email body as this will be made when the host is created (it will be parsed out of the body too)
+            if utility.is_ip_address(host_name):
+                ip_address, created = IPAddress.objects.update_or_create(ip_address=host_name)
+                self.ip_address = ip_address
+            else:
+                host, created = Host.objects.update_or_create(host_name=host_name)
+                self.host = host
         self.modified = timezone.now()
         return super(EmailAddress, self).save(*args, **kwargs)
 

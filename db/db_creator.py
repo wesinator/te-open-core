@@ -14,6 +14,8 @@ import analyzer
 created_network_data = {'ip_addresses': list(), 'hosts': list(), 'email_addresses': list(), 'urls': list()}
 
 
+# TODO: could all of these functions be moved into the `save` functions in the classes in models.py?
+
 def create_analysis(notes, source, new_email):
     """Create an analysis for the email."""
     new_analysis = Analysis(notes=";".join(notes), source=source, score=0, email=new_email)

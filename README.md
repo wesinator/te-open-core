@@ -117,6 +117,20 @@ heroku run python manage.py migrate
 
 Assuming this finishes successfully, you are good to go!
 
+### Viewing database tables
+
+To view the structure of your database run:
+
+```shell
+psql
+```
+
+and then:
+
+```
+\dt
+```
+
 ## Common Errors
 
 - `Missing staticfiles manifest entry for 'styles.css'`: run `make collect`

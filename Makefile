@@ -51,3 +51,6 @@ clean-pyc:
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
+
+heroku: ## update the code on heroku
+	cp ./.gitignore ../heroku_core && cp -r ./* ../heroku_core && git status

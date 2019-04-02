@@ -53,4 +53,4 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -fr {} +
 
 heroku: ## update the code on heroku
-	cp ./.gitignore ../heroku_core && cp -r ./* ../heroku_core && git status
+	cp -r ./* ../heroku_core && git status

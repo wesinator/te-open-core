@@ -23,9 +23,10 @@ def clean_email(email_text, redaction_values=None):
     if to_fields:
         for field in to_fields:
             for recipient in field:
-                cleaned_email = re.sub(re.escape(recipient['email']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
-                if recipient['name']:
-                    cleaned_email = re.sub(re.escape(recipient['name']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
+                if recipient:
+                    cleaned_email = re.sub(re.escape(recipient['email']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
+                    if recipient['name']:
+                        cleaned_email = re.sub(re.escape(recipient['name']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
     else:
         message = "No 'To' field found in the email text below. It may have been redacted or this may be an error in the cleaning function. {}.".format(
             email_text

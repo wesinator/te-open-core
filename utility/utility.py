@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import collections
+from email import _header_value_parser as parser
+import email
+from email.policy import default
 import hashlib
 import ipaddress
 import json
@@ -12,8 +16,9 @@ try:
 except ImportError:
     import urlparse
 
-
 from totalemail import settings
+
+EmailAddress = collections.namedtuple('EmailAddress', ['display_name', 'username', 'domain'])
 
 
 def is_running_locally():
@@ -102,3 +107,14 @@ def is_ip_address(text):
         return False
     else:
         return True
+
+
+def email_read(email_text):
+    """Return an email object for the given email text."""
+    return email.message_from_string(email_text, policy=default)
+
+
+def parse_email_address(email_address):
+    parsed_email_address = parser.get_address(email_address)[0]
+    mailbox = parsed_email_address.all_mailboxes[0]
+    return EmailAddress(display_name=mailbox.display_name, username=mailbox.local_part, domain=mailbox.domain)

@@ -6,6 +6,7 @@ import json
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib.postgres.fields import JSONField
 
 from utility import utility
 
@@ -39,51 +40,9 @@ class Email(models.Model):
 
 class Header(models.Model):
     id = models.CharField(max_length=64, primary_key=True)
+    data = JSONField()
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
-    full_text = models.TextField()
-
-    accept_language = models.CharField(max_length=50, null=True, blank=True)
-    alternate_recipient = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # models.ManyToManyField(EmailAddress)
-    bcc = models.CharField(max_length=1000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    cc = models.CharField(max_length=3000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    content_language = models.CharField(max_length=20, null=True, blank=True)
-    content_location = models.CharField(max_length=20, null=True, blank=True)
-    content_md5 = models.CharField(max_length=32, null=True, blank=True)
-    content_type = models.CharField(max_length=100, null=True, blank=True)
-    content_translation_type = models.CharField(max_length=50, null=True, blank=True)
-    date = models.DateTimeField(null=True, blank=True)
-    delivery_date = models.DateTimeField(null=True, blank=True)
-    dkim = models.CharField(max_length=1000, null=True, blank=True)  # TODO: Implement class for dkim
-    message_id = models.CharField(max_length=500, null=True, blank=True)
-    encoding = models.CharField(max_length=50, null=True, blank=True)
-    _from = models.CharField(max_length=1000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    original_from = models.CharField(max_length=1000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    original_recipient = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # models.ManyToManyField(EmailAddress)
-    original_subject = models.CharField(max_length=500, null=True, blank=True)
-    originator_return_address = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # models.ManyToManyField(EmailAddress)
-    received = models.CharField(max_length=1000, null=True, blank=True)  # TODO: Implement class for received
-    received_spf = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # TODO: Definitely implement class for received spf
-    reply_to = models.CharField(max_length=1000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    return_path = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # models.ManyToManyField(EmailAddress)  # This header contains more data than just an email address, should get its own class
-    sender = models.CharField(
-        max_length=1000, null=True, blank=True
-    )  # models.ManyToManyField(EmailAddress)  # Same deal as return path
-    subject = models.CharField(max_length=1000, null=True, blank=True)
-    to = models.CharField(max_length=3000, null=True, blank=True)  # models.ManyToManyField(EmailAddress)
-    x_originating_ip = models.GenericIPAddressField(null=True, blank=True)
-    # good description of this field here: https://www.techwalla.com/articles/what-is-a-x-mailer-header
-    x_mailer = models.CharField(max_length=100, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         """On save, update timestamps"""
@@ -97,18 +56,24 @@ class Header(models.Model):
         """Return a link to the first email with the header."""
         return 'email/{}{}'.format(self.email_set.all()[0].id, '#header')
 
-    # TODO: not sure if we need this, but I made it and figured I'd keep it in here for now
     @property
-    def full_from_field(self):
-        try:
-            from_json = json.loads(self._from)
-        except json.JSONDecodeError:
-            return self._from
-        else:
-            return '{} <{}>'.format(from_json['name'], from_json['email'])
+    def get_json_data(self):
+        return json.dumps(self.data)
+
+    @property
+    def subject(self):
+        for header_key, header_value in self.data:
+            if header_key.lower() == 'subject':
+                return header_value
+        return 'N/A'
 
     def __str__(self):
-        return str(self.id)
+        string = ''
+
+        for header_key, header_value in self.data:
+            string += '{}: {}\n'.format(header_key, header_value)
+
+        return string
 
 
 class Body(models.Model):

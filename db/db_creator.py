@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """Utility to create entities in the database."""
 
+import json
+
 from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
@@ -67,63 +69,14 @@ def create_email(
         return email_in_db
 
 
-def create_header(header_fields, header_string, perform_external_analysis=True):
-    try:
-        with transaction.atomic():
-            new_header, created = Header.objects.update_or_create(
-                accept_language=header_fields.get('Accept_Language'),
-                alternate_recipient=header_fields.get('Alternate_Recipient'),
-                bcc=header_fields.get('Bcc'),
-                cc=header_fields.get('Cc'),
-                content_language=header_fields.get('Content_Language'),
-                content_location=header_fields.get('Content_Location'),
-                content_md5=header_fields.get('Content_MD5'),
-                content_type=header_fields.get('Content_Type'),
-                content_translation_type=header_fields.get('Content_Translation_Type'),
-                date=header_fields.get('Date'),
-                delivery_date=header_fields.get('Delivery_Date'),
-                dkim=header_fields.get('DKIM_Signature'),
-                message_id=header_fields.get('Message_ID'),
-                encoding=header_fields.get('Encoding'),
-                _from=header_fields.get('From'),
-                original_from=header_fields.get('Original_From'),
-                original_recipient=header_fields.get('Original_Recipient'),
-                original_subject=header_fields.get('Original_Subject'),
-                originator_return_address=header_fields.get('Originator_Return_Address'),
-                received=header_fields.get('Received'),
-                received_spf=header_fields.get('Received_SPF'),
-                reply_to=header_fields.get('Reply_To'),
-                return_path=header_fields.get('Return_Path'),
-                sender=header_fields.get('Sender'),
-                subject=header_fields.get('Subject'),
-                to=header_fields.get('To'),
-                x_originating_ip=header_fields.get('x_originating_ip'),
-                # TODO: do we need the "recipient_email" property which is commented out below? (3)
-                # recipient_email=header_fields.get('to', [{}])[0].get('email'), # Implement list handling for data type with multple entries
-                full_text=header_string,
-                id=utility.sha256(header_string),
-            )
-    except Exception as e:
-        try:
-            message = "Error trying to save header for the 1st time: {}".format(e)
-            utility.create_alerta_alert('Header creation error', 'warning', message)
-            # If the first creation failed, try to create a header with less fields
-            with transaction.atomic():
-                new_header, created = Header.objects.update_or_create(
-                    full_text=header_string,
-                    id=utility.sha256(header_string),
-                    subject=header_fields.get('Subject'),
-                    to=header_fields.get('To'),
-                    _from=header_fields.get('From'),
-                )
-        except Exception as e:
-            message = "Error trying to save header for the 2nd time: {}".format(e)
-            utility.create_alerta_alert('Header creation error', 'warning', message)
-            # If the first and second creation attempts failed, just record the bare minimum
-            with transaction.atomic():
-                new_header, created = Header.objects.update_or_create(
-                    full_text=header_string, id=utility.sha256(header_string)
-                )
+def create_header(header_json, perform_external_analysis=True):
+    header_string = json.dumps(header_json)
+
+    with transaction.atomic():
+        new_header, created = Header.objects.update_or_create(
+            id=utility.sha256(header_string),
+            data=header_json
+        )
 
     if perform_external_analysis:
         analyzer.external_analysis.find_network_data(header_string, new_header.id, 'header')

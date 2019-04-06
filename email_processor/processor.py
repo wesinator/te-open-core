@@ -6,7 +6,7 @@ import email
 from .cleaner import clean_email
 from .formatter import format_email_for_db
 from .parse_attachments import parse_attachment
-from .parse_headers import parse_header, get_header_string
+from .parse_headers import parse_header
 from db import db_creator
 from utility import utility
 from totalemail import settings
@@ -73,7 +73,6 @@ def process_email(
     request_details,
     redact_email_data=False,
     perform_external_analysis=True,
-    log_mising_properties=True,
     redaction_values=None,
 ):
     """Process the email text into a form that is ready for the database."""
@@ -99,10 +98,9 @@ def process_email(
     email_message = email.message_from_string(email_text)
 
     # parse and create headers
-    header_fields = parse_header(email_message, log_mising_properties=log_mising_properties)
-    header_string = get_header_string(email_message)
+    header_json = parse_header(email_text)
     email_header = db_creator.create_header(
-        header_fields, header_string, perform_external_analysis=perform_external_analysis
+        header_json, perform_external_analysis=perform_external_analysis
     )
 
     # parse and create attachments and bodies (the `_get_email_structure` function will create bodies and attachments)

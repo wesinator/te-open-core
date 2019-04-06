@@ -1,38 +1,3 @@
-<h5>Interesting Fields:</h5>
-
 <ul>
-    {% if email.header.subject %}
-        <li><b>Subject:</b> {{ email.header.subject }}</li>
-    {% endif %}
-    {% if header_to_list %}
-        <li><b>To:</b></li>
-        <ul>
-            {% for recipient in header_to_list %}
-                <li>{% if recipient.name %}
-                    "{{ recipient.name }}" 
-                {% endif %}{{ recipient.email }} </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    {% if header_from %}
-        <li><b>From:</b>
-            <ul>
-                <li>{% if header_from.name %}
-                    "{{ header_from.name }}" 
-                {% endif %}{{ header_from.email }}</li>
-            </ul>
-        </li>
-    {% endif %}
-    {% if email.header.x_mailer %}
-        <li><b>X-Mailer:</b> {{ email.header.x_mailer }}</li>
-    {% endif %}
-    <!-- TODO: Find a good way to iterate through all of the headers info and display it here (1) -->
-</ul>
-
-<br>
-
-<h5>Full Header Text:</h5>
-
-<ul>
-    <pre style="background-color: lightgrey;">{{ email.header.full_text }}</pre>
+    <pre style="background-color: lightgrey;">{{ email.header }}</pre>
 </ul>

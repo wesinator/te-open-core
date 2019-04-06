@@ -86,3 +86,53 @@ def test_cleaner_casing():
     assert 'Yours truly' not in cleaned_email
     assert '//github.com' not in cleaned_email
     assert 'Bob' not in cleaned_email
+
+
+def test_multi_instance_name_parsing():
+    s = """Subject: Buy bitcoin now!
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+Hi Alice Asimov!"""
+
+    cleaned_email = clean_email(s)
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'Alice Asimov' not in cleaned_email
+    assert 'alice@gmail.com' not in cleaned_email
+
+
+def test_cleaner_simple_to_field():
+    s = """Subject: Buy bitcoin now!
+From: Bob Bradbury <bob@gmail.com>
+To: alice@gmail.com
+
+Hi Alice Asimov!"""
+
+    cleaned_email = clean_email(s)
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'alice@gmail.com' not in cleaned_email
+
+
+def test_multi_recipient():
+    s = """Subject: Buy bitcoin now!
+From: Bob Bradbury <bob@gmail.com>
+To: alice@gmail.com, foo@bar.com, Charlee <charlee@gmail.com>
+
+Hi Alice Asimov (and Charlee)!"""
+
+    cleaned_email = clean_email(s)
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'alice@gmail.com' not in cleaned_email
+    assert 'Charlee' not in cleaned_email
+    assert 'charlee@gmail.com' not in cleaned_email
+
+    s = """Subject: Buy bitcoin now!
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>, foo@bar.com, Charlee <charlee@gmail.com>
+
+Hi Alice Asimov (and Charlee)!"""
+
+    cleaned_email = clean_email(s)
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'Alice Asimov' not in cleaned_email
+    assert 'alice@gmail.com' not in cleaned_email

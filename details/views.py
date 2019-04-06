@@ -49,20 +49,6 @@ class EmailDetailView(generic.DetailView):
             # messages.error(request, 'No email found with the ID: {}'.format(email_id))
             return HttpResponseRedirect('/')
 
-        # get the "To" field and put it in a format that is easy to use
-        try:
-            if email.header.to:
-                context['header_to_list'] = json.loads(email.header.to.replace("'", '"').replace('None', 'null'))
-        except AttributeError:
-            pass
-
-        # get the "From" field and put it in a format that is easy to use
-        try:
-            if email.header._from:
-                context['header_from'] = json.loads(email.header._from.replace("'", '"').replace('None', 'null'))
-        except AttributeError:
-            pass
-
         # prepare the network data
         network_data = {
             'header': {'hosts': {}, 'ip_addresses': {}, 'email_addresses': {}},

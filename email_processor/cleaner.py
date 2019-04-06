@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import email
 import re
 
 from .parse_headers import parse_header
@@ -10,28 +9,37 @@ from utility import utility
 
 def clean_email(email_text, redaction_values=None):
     """Clean an email."""
-    to_fields = []
+    FIELDS_TO_REDACT = ['to', 'delivered-to']
+    values_to_redact = []
     cleaned_email = email_text
-    # I am not logging missing properties this time through (because this will be done when importing the email officially)
-    header_fields = parse_header(email.message_from_string(cleaned_email), log_mising_properties=False)
-    for field in header_fields:
-        if field.lower() == 'to':
-            to_fields.append(header_fields[field])
-        elif field.lower() == 'delivered_to':
-            to_fields.append([{'name': None, 'email': header_fields[field]}])
 
-    if to_fields:
-        for field in to_fields:
-            for recipient in field:
-                if recipient:
-                    cleaned_email = re.sub(re.escape(recipient['email']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
-                    if recipient['name']:
-                        cleaned_email = re.sub(re.escape(recipient['name']), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
-    else:
-        message = "No 'To' field found in the email text below. It may have been redacted or this may be an error in the cleaning function. {}.".format(
-            email_text
-        )
-        utility.create_alerta_alert('Missing "to" field', 'warning', message)
+    email_header_json = parse_header(email_text)
+
+    for header_key, header_value in email_header_json:
+        print('header_key {}'.format(header_key))
+        print('header_value {}'.format(header_value))
+        if header_key.lower() in FIELDS_TO_REDACT:
+            values_to_redact.append(header_value)
+
+    print('values_to_redact {}'.format(values_to_redact))
+
+    for value in values_to_redact:
+        if ',' in value:
+            values = value.split(',')
+        else:
+            values = [value]
+
+        print('values {}'.format(values))
+
+        for value in values:
+            parsed_email_address = utility.parse_email_address(value)
+
+            if parsed_email_address.display_name:
+                cleaned_email = re.sub(re.escape(parsed_email_address.display_name), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
+
+            if parsed_email_address.username and parsed_email_address.domain:
+                email_address = '{}@{}'.format(parsed_email_address.username, parsed_email_address.domain)
+                cleaned_email = re.sub(re.escape(email_address), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
 
     if redaction_values:
         for value in redaction_values.split(','):

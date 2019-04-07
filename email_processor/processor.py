@@ -16,9 +16,10 @@ def _get_email_structure(
     msg, email_body_objects, email_attachment_objects, structure="", level=0, perform_external_analysis=True
 ):
     """Get the structure of the email (this function is modified from https://github.com/python/cpython/blob/master/Lib/email/iterators.py#L59 - which is described here: https://docs.python.org/3.5/library/email.iterators.html?highlight=_structure#email.iterators._structure)."""
-    tab = '|'.join([('&nbsp;' * 8) for i in range(0, level + 1)])
+    # TODO: simplify this
+    indent_sequence = '|'.join([('&nbsp;' * 8) for i in range(0, level + 1)])
     if msg.is_multipart():
-        structure += "\n" + tab + msg.get_content_type()
+        structure += "\n" + indent_sequence + msg.get_content_type()
         for subpart in msg.get_payload():
             structure, email_body_objects, email_attachment_objects = _get_email_structure(
                 subpart,
@@ -54,6 +55,8 @@ def _get_email_structure(
                 new_id = new_attachment.id
                 email_attachment_objects.append(new_attachment)
                 level -= 1
+                # recalculate the indent_sequence (this may have changed if this object is the first attachment)
+                indent_sequence = '|'.join([('&nbsp;' * 8) for i in range(0, level + 1)])
                 if 'Attachments:' not in structure:
                     structure += '\n<a href="#attachments"><b>Attachments:</b></a>'
             else:
@@ -62,9 +65,7 @@ def _get_email_structure(
                 )
                 new_id = new_body.id
                 email_body_objects.append(new_body)
-        # recalculate the tabs (this may have changed if this object is the first attachment)
-        tab = '|'.join([('&nbsp;' * 8) for i in range(0, level + 1)])
-        structure += "\n" + tab + "<a href='#{}'>".format(new_id) + msg.get_content_type() + "</a>"
+        structure += "\n" + indent_sequence + "<a href='#{}'>".format(new_id) + msg.get_content_type() + "</a>"
         return structure, email_body_objects, email_attachment_objects
 
 
@@ -79,8 +80,8 @@ def process_email(
     if email_text == '':
         return None
 
-    email_body_objects = list()
-    email_attachment_objects = list()
+    email_body_objects = []
+    email_attachment_objects = []
     processed_request_data = settings._process_request_data(request_details)
 
     # format

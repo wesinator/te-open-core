@@ -46,10 +46,12 @@ class EmailAPITests(APITestCase):
     def test_related_header(self):
         new_email = TestData.create_email()
         response = self.client.get('/api/v1/emails/{}/header/'.format(new_email.id))
-        print("response {}".format(response.data))
         assert response.status_code == 200
         assert len(response.data) == 1
         assert response.data[0]['id'] == new_email.header.id
+        assert isinstance(response.data[0]['data'], list)
+        assert response.data[0]['data'][0] == ['Delivered-To', 'bob@gmail.com']
+        assert response.data[0]['data'][1] == ['Received', 'by 10.74.51.193 with SMTP id q184csp3395227ooq;        Fri, 22 Sep 2017 09:34:39 -0700 (PDT)']
 
     def test_related_bodies(self):
         new_email = TestData.create_email()

@@ -4,7 +4,7 @@ import html
 
 from django.test import TestCase
 
-from .search_mappings import get_search_to_db_mappings
+from .search_mappings import header_search_mappings
 from test_resources import DefaultTestObject
 
 EXPECTED_SEARCH_RESULTS = {"sub": "python", "to": "bob <bob@gmail.com>", "from": "Alice Underwood <alice@gmail.com>"}
@@ -13,7 +13,7 @@ EXPECTED_SEARCH_RESULTS_2 = {"sub": "pyth", "to": "bob@gmail.com", "from": "alic
 
 EXPECTED_SEARCH_RESULTS_3 = {"sub": "pyth", "to": "bob", "from": "Underwood"}
 
-SEARCH_PREFIX_TO_DB_MAPPINGS = get_search_to_db_mappings()
+SEARCH_PREFIX_TO_DB_MAPPINGS = header_search_mappings
 TestData = DefaultTestObject()
 
 

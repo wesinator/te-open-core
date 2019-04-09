@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 from django.contrib import messages
 
 from db.models import Email
-from .search_mappings import get_search_to_db_mappings
+from .search_mappings import header_search_mappings
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 
 SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
@@ -43,21 +43,19 @@ class IndexSearchView(TemplateView):
 
             _validate_search_query(query_string)
 
-            # get the search mappings
-            search_mappings = get_search_to_db_mappings()
-
             # get the custom search queries used in the search
             queries_with_custom_prefixes = re.findall(SEARCH_PREFIX_REGEX, query_string)
 
             for query in queries_with_custom_prefixes:
                 query = query.strip()
 
+                # find the prefix of the custom query
                 prefix = query.split(":")[0]
+                # find the search value of the custom query (we are joining on ':' in case the query has a colon in it)
                 search = ":".join(query.split(":")[1:])
 
-                if prefix in search_mappings:
-                    query_keyword = {search_mappings[prefix]: search.replace('"', '')}
-                    results = Email.objects.filter(**query_keyword)
+                if prefix in header_search_mappings:
+                    results = [email for email in Email.objects.all() if search in email.header.get_value(header_search_mappings[prefix])]
                     emails.extend(_add_email_results(emails, results))
 
                     # remove the query from the full search query

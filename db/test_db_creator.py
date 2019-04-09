@@ -89,7 +89,7 @@ class EmailTests(TestCase):
 
     def test_header_retrieval(self):
         new_email = TestData.create_email()
-        assert new_email.header.get_value('from') == 'Alice Asimov'
+        assert new_email.header.get_value('from') == 'Alice Underwood <alice@gmail.com>'
 
     def test_related_bodies(self):
         """Make sure a header and body are related to a created email."""
@@ -146,7 +146,7 @@ class EmailTests(TestCase):
 
         Bob"""
         new_email = TestData.create_email(email_text)
-        assert new_email.header.full_text == ''
+        assert new_email.header.data == []
 
     def test_email_str(self):
         """Test email string."""
@@ -184,7 +184,7 @@ class EmailTests(TestCase):
         # TODO: make sure the hash created by this function corresponds with the one created by the UI (this hash was previously `c44c6a5c6b536b987ae38d517170f07f5bac14dda7c387bc2cea2a985ed1c629`)
         new_email = TestData.create_email(TestData.outlook_email_text)
         assert new_email.id == 'e971f4c5ef63c73c615e0cf82ac7b9f0bb82a36f886cdeb92d21039e37a0ac7f'
-        assert '[1.2.3.4]' in new_email.header.full_text
+        assert '[1.2.3.4]' in str(new_email.header)
 
 
 class HeaderTests(TestCase):
@@ -197,7 +197,7 @@ class HeaderTests(TestCase):
     def test_bad_content_type(self):
         new_header = TestData.create_email(TestData.bad_content_type_email_text).header
         assert new_header is not None
-        assert new_header.subject == '[ILUG] STOP THE MLM INSANITY'
+        assert new_header.get_value('subject') == '[ILUG] STOP THE MLM INSANITY'
 
     def test_creation_of_duplicate_headers(self):
         new_headers = TestData.create_emails_with_same_header()

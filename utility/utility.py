@@ -39,7 +39,6 @@ def sha256(text):
 
 def create_alerta_alert(event, severity, text):
     """Handle the interface with Alerta."""
-
     if is_running_locally():
         print('Running locally, so no alert will be sent to alerta. Here are the details about the alert:')
         print('event: {}'.format(event))

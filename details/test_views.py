@@ -24,13 +24,15 @@ class ViewTests(TestCase):
     def test_email_details_view(self):
         created_content = TestData.create_email()
         response = self.client.get("/email/{}/".format(created_content.id))
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
 
-        self.assertContains(response, created_content.header.get_value('Subject'))
-        self.assertContains(response, created_content.header.get_value('To'))
-        self.assertContains(response, created_content.header.get_value('From'))
-        self.assertContains(response, 'First submitted:')
-        self.assertContains(response, 'Most recently submitted:')
-        self.assertContains(response, 'minutes ago.')
+        assert html.escape(created_content.header.get_value('Subject')) in response_content
+        assert html.escape(created_content.header.get_value('To')) in response_content
+        assert html.escape(created_content.header.get_value('From')) in response_content
+        assert 'First submitted:' in response_content
+        assert 'Most recently submitted:' in response_content
+        assert 'minutes ago.' in response_content
 
         assert html.escape(str(created_content.header)) in response.content.decode("utf-8")
 
@@ -40,11 +42,13 @@ class ViewTests(TestCase):
     def test_email_details_view_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
         response = self.client.get("/email/{}/".format(created_content.id))
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
 
         # assert header contents are shown
-        self.assertContains(response, created_content.header.get_value('Subject'))
-        self.assertContains(response, created_content.header.get_value('To'))
-        self.assertContains(response, created_content.header.get_value('From'))
+        assert html.escape(created_content.header.get_value('Subject')) in response_content
+        assert html.escape(created_content.header.get_value('To')) in response_content
+        assert html.escape(created_content.header.get_value('From')) in response_content
 
         ensure_payload_displayed(TestData.attachment_email_message.get_payload(), response)
 

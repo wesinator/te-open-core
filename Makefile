@@ -27,6 +27,9 @@ mg: ## migrate
 up: ## run the django test webserver
 	docker-compose up
 
+shell: ## run a shell with the app model's imported
+	docker-compose run web python3 manage.py shell
+
 build: ## rebuild the docker container
 	docker-compose up --build
 

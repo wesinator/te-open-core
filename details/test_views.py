@@ -25,17 +25,14 @@ class ViewTests(TestCase):
         created_content = TestData.create_email()
         response = self.client.get("/email/{}/".format(created_content.id))
 
-        self.assertContains(response, created_content.header.subject)
-        for to_field in created_content.header.to:
-            self.assertContains(response, to_field['name'])
-            self.assertContains(response, to_field['email'])
-        self.assertContains(response, created_content.header._from['name'])
-        self.assertContains(response, created_content.header._from['email'])
+        self.assertContains(response, created_content.header.get_value('Subject'))
+        self.assertContains(response, created_content.header.get_value('To'))
+        self.assertContains(response, created_content.header.get_value('From'))
         self.assertContains(response, 'First submitted:')
         self.assertContains(response, 'Most recently submitted:')
         self.assertContains(response, 'minutes ago.')
 
-        assert html.escape(str(created_content.header.full_text)) in response.content.decode("utf-8")
+        assert html.escape(str(created_content.header)) in response.content.decode("utf-8")
 
         ensure_payload_displayed(TestData.email_message.get_payload(), response)
         # TODO: add more tests to the test_email_details_view function (3)
@@ -45,12 +42,9 @@ class ViewTests(TestCase):
         response = self.client.get("/email/{}/".format(created_content.id))
 
         # assert header contents are shown
-        self.assertContains(response, created_content.header.subject)
-        for to_field in created_content.header.to:
-            self.assertContains(response, to_field['name'])
-            self.assertContains(response, to_field['email'])
-        self.assertContains(response, created_content.header._from['name'])
-        self.assertContains(response, created_content.header._from['email'])
+        self.assertContains(response, created_content.header.get_value('Subject'))
+        self.assertContains(response, created_content.header.get_value('To'))
+        self.assertContains(response, created_content.header.get_value('From'))
 
         ensure_payload_displayed(TestData.attachment_email_message.get_payload(), response)
 

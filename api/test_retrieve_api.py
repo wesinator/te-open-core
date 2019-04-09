@@ -49,10 +49,7 @@ class EmailAPITests(APITestCase):
         print("response {}".format(response.data))
         assert response.status_code == 200
         assert len(response.data) == 1
-
-        for count, header_field in enumerate(response.data):
-            assert header_field.get('id') == new_email.header.id
-            assert header_field.get('full_text') == new_email.header.full_text
+        assert response.data[0]['id'] == new_email.header.id
 
     def test_related_bodies(self):
         new_email = TestData.create_email()
@@ -131,17 +128,13 @@ class HeaderAPITests(APITestCase):
         assert len(response.data) == 2
         print("response {}".format(response.data))
         assert response.data['id'] == new_header.id
-        assert response.data['full_text'] == new_header.full_text
 
     def test_related_email(self):
         new_email = TestData.create_email()
         response = self.client.get('/api/v1/headers/{}/emails/'.format(new_email.header.id))
         assert response.status_code == 200
         assert len(response.data) == 1
-
-        for count, email_field in enumerate(response.data):
-            assert email_field.get('id') == new_email.id
-            assert email_field.get('full_text') == new_email.full_text
+        assert response.data[0]['id'] == new_email.id
 
     # def test_related_indicators(self):
     #     new_header = TestData.create_email().header

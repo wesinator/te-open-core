@@ -57,13 +57,12 @@ class Header(models.Model):
         return 'email/{}{}'.format(self.email_set.all()[0].id, '#header')
 
     @property
-    def get_json_data(self):
-        return json.dumps(self.data)
-
-    @property
     def subject(self):
+        return self.get_value('subject')
+
+    def get_value(self, header_key):
         for header_key, header_value in self.data:
-            if header_key.lower() == 'subject':
+            if header_key.lower() == header_key.lower():
                 return header_value
         return 'N/A'
 

@@ -16,20 +16,14 @@ def clean_email(email_text, redaction_values=None):
     email_header_json = parse_header(email_text)
 
     for header_key, header_value in email_header_json:
-        print('header_key {}'.format(header_key))
-        print('header_value {}'.format(header_value))
         if header_key.lower() in FIELDS_TO_REDACT:
             values_to_redact.append(header_value)
-
-    print('values_to_redact {}'.format(values_to_redact))
 
     for value in values_to_redact:
         if ',' in value:
             values = value.split(',')
         else:
             values = [value]
-
-        print('values {}'.format(values))
 
         for value in values:
             parsed_email_address = utility.parse_email_address(value)

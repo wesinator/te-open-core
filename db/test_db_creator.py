@@ -87,6 +87,10 @@ class EmailTests(TestCase):
         new_email = TestData.create_email('')
         assert new_email is None
 
+    def test_header_retrieval(self):
+        new_email = TestData.create_email()
+        assert new_email.header.get_value('from') == 'Alice Asimov'
+
     def test_related_bodies(self):
         """Make sure a header and body are related to a created email."""
         new_email = TestData.create_email()

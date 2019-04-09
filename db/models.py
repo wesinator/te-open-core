@@ -60,9 +60,9 @@ class Header(models.Model):
     def subject(self):
         return self.get_value('subject')
 
-    def get_value(self, header_key):
+    def get_value(self, desired_header_key):
         for header_key, header_value in self.data:
-            if header_key.lower() == header_key.lower():
+            if header_key.lower() == desired_header_key.lower():
                 return header_value
         return 'N/A'
 

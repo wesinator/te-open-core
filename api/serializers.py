@@ -27,7 +27,6 @@ class EmailCreateSerializer(serializers.ModelSerializer):
             self.data['full_text'],
             request_details,
             perform_external_analysis=perform_external_analysis,
-            log_mising_properties=perform_external_analysis,
             redact_email_data=redact_recipient_info,
             redaction_values=redaction_values,
         )
@@ -43,7 +42,7 @@ class AnalysisSerializer(serializers.ModelSerializer):
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
-        fields = ('full_text', 'id')
+        fields = ('id', 'data')
 
 
 class BodySerializer(serializers.ModelSerializer):

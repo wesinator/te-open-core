@@ -8,7 +8,7 @@ from django.views.generic.base import TemplateView
 from django.contrib import messages
 
 from db.models import Email
-from .search_mappings import header_search_mappings
+from .search_mappings import header_search_mappings, body_search_mappings, network_data_search_mappings
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 
 SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
@@ -21,6 +21,7 @@ def _add_email_results(existing_email_list, new_emails):
     for email in new_emails:
         if email.id not in existing_email_ids:
             unique_new_emails.append(email)
+            existing_email_ids.append(email.id)
 
     return unique_new_emails
 
@@ -60,6 +61,23 @@ class IndexSearchView(TemplateView):
 
                     # remove the query from the full search query
                     query_string = query_string.replace(query, '')
+                elif prefix in body_search_mappings:
+                    if prefix == 'bod':
+                        results = Email.objects.filter(bodies__full_text__icontains=search)
+                        emails.extend(_add_email_results(emails, results))
+
+                        # remove the query from the full search query
+                        query_string = query_string.replace(query, '')
+                elif prefix in network_data_search_mappings:
+                    # find emails with the domain
+                    if prefix == 'dom':
+                        results = Email.objects.filter()
+                    # find emails with the domain in the header
+                    elif prefix == 'hdom':
+                        results = Email.objects.filter(header__host__host_name__icontains=search)
+                    # find emails with the domain in the body
+                    elif prefix == 'bdom':
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search)
                 else:
                     # TODO: may want to do something else here - 3
                     print("Unable to find prefix: {}".format(prefix))

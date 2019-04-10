@@ -109,3 +109,35 @@ class SearchViewTests(TestCase):
         url = '/search?q=python+project+template'
         response = self.client.get(url)
         assert 'Found 1 email matching "python project template"' in str(response.content)
+
+    def test_prefix_bod(self):
+        TestData.create_email()
+
+        url = '/search?q=bod%3Agithub'
+        response = self.client.get(url)
+        print('response {}'.format(str(response.content)))
+        assert 'Found 1 email matching "bod:github"' in str(response.content)
+
+    def test_prefix_dom(self):
+        TestData.create_email()
+
+        url = '/search?q=dom%3Agithub.com'
+        response = self.client.get(url)
+        print('response {}'.format(str(response.content)))
+        assert 'Found 1 email matching "dom:github.com"' in str(response.content)
+
+    def test_prefix_hdom(self):
+        TestData.create_email()
+
+        url = '/search?q=hdom%3Agmail.com'
+        response = self.client.get(url)
+        print('response {}'.format(str(response.content)))
+        assert 'Found 1 email matching "hdom:gmail.com"' in str(response.content)
+
+    def test_prefix_bdom(self):
+        TestData.create_email()
+
+        url = '/search?q=bdom%3Agithub.com'
+        response = self.client.get(url)
+        print('response {}'.format(str(response.content)))
+        assert 'Found 1 email matching "bdom:github.com"' in str(response.content)

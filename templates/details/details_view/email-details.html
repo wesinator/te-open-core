@@ -5,21 +5,3 @@
 <b><!-- <a href="https://github.com/trendmicro/tlsh" target="_blank"> -->TrendMicro Locality Sensitive Hash<!-- </a> -->:</b> {{ email.tlsh_hash }}
 
 <div class="clearfix"></div>
-
-{% if email.attachments.all %}
-    <h4 id="attachments">Attachments</h4>
-
-    <ul>
-        {% for attachment in email.attachments.all %}
-            <!-- <li>
-                {{ attachment.filename }}: {{ attachment.content_type }}
-                <br>
-
-            </li> -->
-            <h5 id="{{ attachment.id }}">{{ attachment.filenames|join:", " }}</h5>
-            <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>
-            <br>
-        {% endfor %}
-    </ul>
-    <br><br>
-{% endif %}

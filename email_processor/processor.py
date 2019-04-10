@@ -70,11 +70,7 @@ def _get_email_structure(
 
 
 def process_email(
-    email_text,
-    request_details,
-    redact_email_data=False,
-    perform_external_analysis=True,
-    redaction_values=None,
+    email_text, request_details, redact_email_data=False, perform_external_analysis=True, redaction_values=None
 ):
     """Process the email text into a form that is ready for the database."""
     if email_text == '':
@@ -100,9 +96,7 @@ def process_email(
 
     # parse and create headers
     header_json = parse_header(email_text)
-    email_header = db_creator.create_header(
-        header_json, perform_external_analysis=perform_external_analysis
-    )
+    email_header = db_creator.create_header(header_json, perform_external_analysis=perform_external_analysis)
 
     # parse and create attachments and bodies (the `_get_email_structure` function will create bodies and attachments)
     email_structure, email_body_objects, email_attachment_objects = _get_email_structure(

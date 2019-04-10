@@ -18,6 +18,7 @@ created_network_data = {'ip_addresses': list(), 'hosts': list(), 'email_addresse
 
 # TODO: could all of these functions be moved into the `save` functions in the classes in models.py?
 
+
 def create_analysis(notes, source, new_email):
     """Create an analysis for the email."""
     new_analysis = Analysis(notes=";".join(notes), source=source, score=0, email=new_email)
@@ -73,10 +74,7 @@ def create_header(header_json, perform_external_analysis=True):
     header_string = json.dumps(header_json)
 
     with transaction.atomic():
-        new_header, created = Header.objects.update_or_create(
-            id=utility.sha256(header_string),
-            data=header_json
-        )
+        new_header, created = Header.objects.update_or_create(id=utility.sha256(header_string), data=header_json)
 
     if perform_external_analysis:
         analyzer.external_analysis.find_network_data(header_string, new_header.id, 'header')

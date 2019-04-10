@@ -29,7 +29,9 @@ def clean_email(email_text, redaction_values=None):
             parsed_email_address = utility.parse_email_address(value)
 
             if parsed_email_address.display_name:
-                cleaned_email = re.sub(re.escape(parsed_email_address.display_name), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
+                cleaned_email = re.sub(
+                    re.escape(parsed_email_address.display_name), 'REDACTED', cleaned_email, flags=re.IGNORECASE
+                )
 
             if parsed_email_address.username and parsed_email_address.domain:
                 email_address = '{}@{}'.format(parsed_email_address.username, parsed_email_address.domain)

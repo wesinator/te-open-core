@@ -56,7 +56,11 @@ class IndexSearchView(TemplateView):
                 search = ":".join(query.split(":")[1:])
 
                 if prefix in header_search_mappings:
-                    results = [email for email in Email.objects.all() if search in email.header.get_value(header_search_mappings[prefix])]
+                    results = [
+                        email
+                        for email in Email.objects.all()
+                        if search in email.header.get_value(header_search_mappings[prefix])
+                    ]
                     emails.extend(_add_email_results(emails, results))
 
                     # remove the query from the full search query

@@ -25,6 +25,10 @@ h1 {
       2px 2px 1px #363636;*/
 }
 
+.top-bar a {
+  text-decoration: underline;
+}
+
 
 h3 {
 /*    color: #2c2c2c;

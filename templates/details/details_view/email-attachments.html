@@ -1,0 +1,17 @@
+{% if email.attachments.all %}
+    <h3 id="attachments">Attachments</h3>
+
+    <ul>
+        {% for attachment in email.attachments.all %}
+            <!-- <li>
+                {{ attachment.filename }}: {{ attachment.content_type }}
+                <br>
+
+            </li> -->
+            <h4 id="{{ attachment.id }}">{{ attachment.filenames|join:", " }}</h4>
+            <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>
+            <br>
+        {% endfor %}
+    </ul>
+    <br><br>
+{% endif %}

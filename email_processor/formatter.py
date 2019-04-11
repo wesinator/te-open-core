@@ -22,18 +22,21 @@ def _decode_text(text):
 
 
 def _remove_line_endings(text):
+    # find all newlines NOT preceded by a carriage return
     pattern = '(?<!\r)\n'
     # add a carriage return before all newlines NOT preceded by a carriage return
     text = re.sub(pattern, '\r\n', text)
-    # I can add this newline (which matches the spec) because I stripped the email earlier
-    return text + '\r\n'
+
+    # if the text does not end in a newline, add one (this is according to spec)
+    if not text.endswith('\r\n'):
+        text = text + '\r\n'
+
+    return text
 
 
 def format_email_for_db(email_text):
     """Format the given request for being stored in the DB."""
-    # I am removing the newline at the end of the email here because I add it in the _remove_line_endings function
-    formatted_email_text = email_text.strip()
-    formatted_email_text = _decode_text(formatted_email_text)
+    formatted_email_text = _decode_text(email_text)
     formatted_email_text = _remove_line_endings(formatted_email_text)
 
     return formatted_email_text

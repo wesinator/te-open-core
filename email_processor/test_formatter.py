@@ -38,6 +38,10 @@ def test_line_endings_formatting():
     formatted = _remove_line_endings(s1)
     assert formatted == 'this is \r\n just a \r\n test\r\n'
 
-    s3 = 'this is \n just a \n test'
-    formatted = _remove_line_endings(s3)
+    s2 = 'this is \n just a \n test'
+    formatted = _remove_line_endings(s2)
     assert formatted == 'this is \r\n just a \r\n test\r\n'
+
+    s3 = 'this is \n just a \n test\n\n'
+    formatted = _remove_line_endings(s3)
+    assert formatted == 'this is \r\n just a \r\n test\r\n\r\n'

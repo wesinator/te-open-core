@@ -135,7 +135,7 @@ class Attachment(models.Model):
 
 class Analysis(models.Model):
     notes = models.TextField()
-    source = models.CharField(max_length=25)
+    source = models.CharField(max_length=50)
     score = models.IntegerField()
     # one to many relationship between an email and analysis, respectively
     email = models.ForeignKey('Email')

@@ -20,11 +20,13 @@ def analyze_externally(email_object):
         sender = context.socket(zmq.PUSH)
         sender.connect(EXTERNAL_ANALYSIS_ENDPOINT)
 
-        sender.send_json({
+        data = {
             'route': 'analysis',
             'text': """{}""".format(email_object.full_text),
             'id': email_object.id
-        }, zmq.NOBLOCK)
+        }
+
+        sender.send_json(data, zmq.NOBLOCK)
 
 
 def find_network_data(text, item_id, item_type):

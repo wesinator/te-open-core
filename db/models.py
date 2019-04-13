@@ -68,11 +68,11 @@ class Header(models.Model):
 
     def __str__(self):
         string = ''
-        tab_pattern = ' {3,}'
+        tab_pattern = '( {3,})'
 
         for header_key, header_value in self.data:
             # find all large spaces in the header_value and replace them with a newline and tab for display
-            header_value_string = re.sub(tab_pattern, '\n        ', header_value)
+            header_value_string = re.sub(tab_pattern, r'\n\1', header_value)
             string += '{}: {}\n'.format(header_key, header_value_string)
 
         return string

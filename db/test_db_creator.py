@@ -136,6 +136,14 @@ class EmailTests(TestCase):
         created_content = TestData.create_email(TestData.bad_body_email_text)
         assert 'From: pamela4701@eudoramail.com' not in created_content.bodies.all()[0].full_text
 
+    def test_email_cleaning(self):
+        """Make sure both the header content and the full_text are redacted properly."""
+        assert 'github.com' in TestData.email_text
+
+        new_email = TestData.create_email(redaction_values='github.com')
+        assert 'github.com' not in new_email.full_text
+        assert 'github.com' not in str(new_email.header)
+
     def test_no_header(self):
         """Test importing an email with no header."""
         # There may be an issue if there is an email body uploaded with a url in it (e.g. https://github.com/test/bingo.php)

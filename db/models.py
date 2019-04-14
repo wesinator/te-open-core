@@ -24,7 +24,7 @@ class Email(models.Model):
     # todo: Assumption (jan 2018): a many to one field between emails and a header is correct
     header = models.ForeignKey('Header')
     bodies = models.ManyToManyField('Body')
-    attachments = models.ManyToManyField('Attachment', null=True, blank=True)
+    attachments = models.ManyToManyField('Attachment', blank=True)
     tlsh_hash = models.CharField(max_length=70, null=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -54,7 +54,10 @@ class Header(models.Model):
     @property
     def link(self):
         """Return a link to the first email with the header."""
-        return 'email/{}{}'.format(self.email_set.all()[0].id, '#header')
+        email_set = self.email_set.all()
+
+        if any(email_set):
+            return 'email/{}{}'.format(email_set[0].id, '#header')
 
     @property
     def subject(self):

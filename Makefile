@@ -55,5 +55,5 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-heroku: ## update the code on heroku
+heroku: mmgs ## update the code on heroku
 	cp -r ./* ../heroku_core && git status

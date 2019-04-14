@@ -24,7 +24,7 @@ class Email(models.Model):
     # todo: Assumption (jan 2018): a many to one field between emails and a header is correct
     header = models.ForeignKey('Header')
     bodies = models.ManyToManyField('Body')
-    attachments = models.ManyToManyField('Attachment')
+    attachments = models.ManyToManyField('Attachment', null=True, blank=True)
     tlsh_hash = models.CharField(max_length=70, null=True, blank=True)
 
     def save(self, *args, **kwargs):

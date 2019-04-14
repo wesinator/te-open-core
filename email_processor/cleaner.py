@@ -39,6 +39,7 @@ def clean_email(email_text, redaction_values=None):
 
     if redaction_values:
         for value in redaction_values.split(','):
+            value = value.strip()
             cleaned_email = re.sub(re.escape(value), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
 
     return cleaned_email

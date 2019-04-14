@@ -88,6 +88,18 @@ def test_cleaner_casing():
     assert 'Bob' not in cleaned_email
 
 
+def test_cleaner_input_stripping():
+    assert 'Content-Transfer-Encoding' in TestData.email_text
+    assert 'Yours truly' in TestData.email_text
+    assert '//github.com' in TestData.email_text
+    assert 'Bob' in TestData.email_text
+    cleaned_email = clean_email(TestData.email_text, 'Yours truly, Content-Transfer-Encoding, //github.com, Bob')
+    assert 'Content-Transfer-Encoding' not in cleaned_email
+    assert 'Yours truly' not in cleaned_email
+    assert '//github.com' not in cleaned_email
+    assert 'Bob' not in cleaned_email
+
+
 def test_multi_instance_name_parsing():
     s = """Subject: Buy bitcoin now!
 From: Bob Bradbury <bob@gmail.com>

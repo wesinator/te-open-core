@@ -76,6 +76,21 @@ class SearchViewTests(TestCase):
             print("response content {}".format(response.content))
             assert desired_string in str(response.content)
 
+    def test_prefixed_search_casing(self):
+        """Make sure the case of a search query doesn't cause the user to miss results."""
+        TestData.create_email()
+
+        # test each available search prefix
+        for prefix in SEARCH_PREFIX_TO_DB_MAPPINGS:
+            url = '/search?q={}%3A{}'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix).title())
+            response = self.client.get(url)
+
+            desired_string = 'Found 1 email matching "{}:{}"'.format(
+                prefix, html.escape(EXPECTED_SEARCH_RESULTS.get(prefix).title())
+            )
+            print("response content {}".format(response.content))
+            assert desired_string in str(response.content)
+
     def test_loose_prefixed_search_1(self):
         """Test a search query with an email which it should match."""
         TestData.create_email()

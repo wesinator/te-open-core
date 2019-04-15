@@ -26,6 +26,7 @@ def clean_email(email_text, redaction_values=None):
             values = [value]
 
         for value in values:
+            value = value.strip()
             parsed_email_address = utility.parse_email_address(value)
 
             if parsed_email_address.display_name:

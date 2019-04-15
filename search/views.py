@@ -53,13 +53,13 @@ class IndexSearchView(TemplateView):
                 # find the prefix of the custom query
                 prefix = query.split(":")[0]
                 # find the search value of the custom query (we are joining on ':' in case the query has a colon in it)
-                search = ":".join(query.split(":")[1:])
+                search = ":".join(query.split(":")[1:]).lower()
 
                 if prefix in header_search_mappings:
                     results = [
                         email
                         for email in Email.objects.all()
-                        if search in email.header.get_value(header_search_mappings[prefix])
+                        if search in email.header.get_value(header_search_mappings[prefix]).lower()
                     ]
                     emails.extend(_add_email_results(emails, results))
 

@@ -1,9 +1,5 @@
 <div class="importBase">
-    <div>
-        <h3>Upload or paste an email to see if it is malicious</h3>
-    </div>
-    <br>
-    <div>
+    <div class="row">
         {% if messages %}
             {% for message in messages %}
                 {% autoescape off %}
@@ -17,22 +13,37 @@
     <div class="row">
         <form action="/save/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-            <div class="columns large-6">
-                <input type="file" id="email-file-import" name="email_file" placeholder="Upload an email..." multiple>
+            <div class="float-center large-8">
+                <h4>You can upload an email to see if it is malicious:</h4>
+                <p></p>
+                <div class="float-center large-4">
+                    <input type="file" id="email-file-import" name="email_file" placeholder="Upload an email..." multiple>
+                </div>
             </div>
-
-            <div class="columns large-6" style="border-left: 2px solid #2c2c2c; padding-left: 1em;">
-                <textarea style="text-align: center" id="full-text" name="full_text" placeholder="Paste email content here..." rows="10"></textarea>
-            </div>
-
-            <div class="clearfix"></div>
 
             <br><br><br>
 
-            <!-- TODO: add a tooltip over this checkbox -->
-            <label><input type="checkbox" name="redact_data" checked>Redact recipient information</label>
-            <input type="text" name="redaction_values" placeholder="Enter values you would like to remove from the email (comma seperated)">
+            <div class="float-center large-8">
+                <h4>Or paste an email here:</h4>
+                <p></p>
+                <textarea id="full-text" name="full_text" placeholder="Paste email content here..." rows="10"></textarea>
+            </div>
+
+            <br><br><br>
+
+            <div class="float-center large-8">
+                <h4>Remove sensitive information from the email:</h4>
+                <p></p>
+                <!-- TODO: add a tooltip over this checkbox -->
+                <label><input type="checkbox" name="redact_data" checked> Remove all names and addresses from the "To" field of the email header</label>
+
+                <br>
+                If there are other words/phrases you would like to remove from the email, enter them below (use a comma to separate multiple words and phrases):
+                <input type="text" name="redaction_values" placeholder="Enter values you would like to remove from the email (comma seperated)">
+            </div>
+
             <br>
+
             <input class="hollow large button success" id="submitButton" type="submit" value="Analyze email" onclick="disable()">
         </form>
     </div>

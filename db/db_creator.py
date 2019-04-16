@@ -8,7 +8,7 @@ from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-from .models import Email, Header, Body, Attachment, Analysis, JOIN_STRING
+from .models import Email, Header, Body, Attachment, JOIN_STRING
 from email_processor import parse_bodies
 from utility import utility
 import analyzer
@@ -17,12 +17,6 @@ created_network_data = {'ip_addresses': list(), 'hosts': list(), 'email_addresse
 
 
 # TODO: could all of these functions be moved into the `save` functions in the classes in models.py?
-
-
-def create_analysis(notes, source, new_email):
-    """Create an analysis for the email."""
-    new_analysis = Analysis(notes=";".join(notes), source=source, score=0, email=new_email)
-    new_analysis.save()
 
 
 def create_email(
@@ -55,10 +49,6 @@ def create_email(
         for attachment in email_attachment_objects:
             new_email.attachments.add(attachment)
 
-        # TODO: I've commented out the code on the 3 lines below because we are not using on internal analysis any more... the uncommented line below the commented lines below is correct and simply triggers the external analysis
-        # analyses = analyzer.start_analysis(new_email, perform_external_analysis)
-        # for analysis_source in analyses:
-        #     create_analysis(analyses[analysis_source], analysis_source, new_email)
         analyzer.start_analysis(new_email, perform_external_analysis)
         return new_email
     else:

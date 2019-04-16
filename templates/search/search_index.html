@@ -23,9 +23,9 @@
 
     <form action="{% url 'search:index' %}" method="get">
         <input id="searchBox" type="text" placeholder="Search for something here..." name="q" value="{{ q }}">
-        <input class="button" type="submit" value="Search">
+        <input class="hollow medium button success" type="submit" value="Search">
         {% if q != None %}
-            <a class="button secondary" href="{% url 'search:index' %}">Clear</a>
+            <a class="hollow medium button secondary" href="{% url 'search:index' %}">Clear</a>
         {% endif %}
     </form>
 

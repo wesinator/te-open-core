@@ -1,6 +1,6 @@
 {% extends 'totalemail/base.html' %}
 
-{% block title %}About Us{% endblock %}
+{% block title %}About TotalEmail{% endblock %}
 
 {% block content %}
 
@@ -27,29 +27,31 @@
 <br>
 
 <div class="float-center text-center large-6">
-    <h1>About Us</h1>
+    <h1>About TotalEmail</h1>
+
+    <br>
+
+    <h2>Our Objectives</h2>
+
+    <br>
 
     TotalEmail exists to help you determine whether an email is malicious, spam, or benign (or something else entirely). You can read more about why TotalEmail exists and what we hope to accomplish <a href="https://blog.totalemail.io/what-hath-god-wrought/">here</a>.
 
-    <hr>
+    <br><br><hr><br>
 
-    <h4>TotalEmail Details</h4>
+    <h2>TotalEmail Version {{ te_version_number }} Details</h2>
 
-    TotalEmail is on version {{ te_version_number }} (also known as <a href="{{ te_version_link }}">{{ te_version_name }}</a>). Each release is named after a <a href="https://es.wikipedia.org/wiki/Anexo:Constelaciones">Constellation</a> and you can find release notes for some of the significant features in this version <a href="{{ te_version_link }}">here</a>.
+    <br>
 
-    <br><br>
+    TotalEmail is on version {{ te_version_number }}, known as <a href="{{ te_version_link }}">{{ te_version_name }}</a> (versions are named after <a href="https://es.wikipedia.org/wiki/Anexo:Constelaciones">Constellation</a>). You can find release notes for some of the significant features in this version <a href="{{ te_version_link }}">here</a>.
 
-    API (and soon SDK) documentation is available at <a href="https://docs.totalemail.io/">https://docs.totalemail.io/</a>.
+    <br><br><hr><br>
 
-    <hr>
+    Check out our <a href="https://blog.totalemail.io">blog</a> &nbsp;•&nbsp; Start <a href="{% url 'search:index' %}">searching the emails</a> &nbsp;•&nbsp; View the <a href="https://docs.totalemail.io/">API/SDK Documentation</a> &nbsp;•&nbsp; <a href="mailto:info@totalemail.io" target="_top">Email us</a>
 
-    If you have any questions, comments, or feedback please contact us at <a href="mailto:info@totalemail.io" target="_top">info@totalemail.io</a>.
-
-    <br><br>
-
-    <div class="footer">
+    <!-- <div class="footer">
         Check out our <a href="https://blog.totalemail.io">blog</a> &nbsp;•&nbsp; Start <a href="{% url 'search:index' %}">searching the emails</a>
-    </div>
+    </div> -->
 </div>
 
 {% endblock %}

@@ -11,7 +11,8 @@ from db.models import Email
 from .search_mappings import header_search_mappings, body_search_mappings, network_data_search_mappings
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 
-SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
+# SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
+SEARCH_PREFIX_REGEX = '(\w*\(.*?\))'
 
 
 def _add_email_results(existing_email_list, new_emails):
@@ -51,9 +52,9 @@ class IndexSearchView(TemplateView):
                 query = query.strip()
 
                 # find the prefix of the custom query
-                prefix = query.split(":")[0]
-                # find the search value of the custom query (we are joining on ':' in case the query has a colon in it)
-                search = ":".join(query.split(":")[1:]).lower()
+                prefix = query.split('(')[0]
+                # find the search value of the custom query (we are joining on '(' in case the query has a colon in it)
+                search = '('.join(query.split('(')[1:]).lower().strip(')')
                 prefix_found = False
 
                 if prefix in header_search_mappings:

@@ -40,8 +40,8 @@ class SearchViewTests(TestCase):
     def test_empty_prefixed_search(self):
         """Test a search query without any emails."""
         TestData.create_email()
-        response = self.client.get('/search?q=to%3Amicrosoft')
-        assert 'No results found for "to:microsoft"' in str(response.content)
+        response = self.client.get('/search?q=to(microsoft)')
+        assert 'No results found for "to(microsoft)"' in str(response.content)
 
     def test_error_message_on_short_queries(self):
         TestData.create_email()
@@ -67,10 +67,10 @@ class SearchViewTests(TestCase):
 
         # test each available search prefix
         for prefix in SEARCH_PREFIX_TO_DB_MAPPINGS:
-            url = '/search?q={}%3A{}'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix))
+            url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}:{}"'.format(
+            desired_string = 'Found 1 email matching "{}({})"'.format(
                 prefix, html.escape(EXPECTED_SEARCH_RESULTS.get(prefix))
             )
             print("response content {}".format(response.content))
@@ -82,10 +82,10 @@ class SearchViewTests(TestCase):
 
         # test each available search prefix
         for prefix in SEARCH_PREFIX_TO_DB_MAPPINGS:
-            url = '/search?q={}%3A{}'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix).title())
+            url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix).title())
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}:{}"'.format(
+            desired_string = 'Found 1 email matching "{}({})"'.format(
                 prefix, html.escape(EXPECTED_SEARCH_RESULTS.get(prefix).title())
             )
             print("response content {}".format(response.content))
@@ -97,10 +97,10 @@ class SearchViewTests(TestCase):
 
         # test each available search prefix
         for prefix in SEARCH_PREFIX_TO_DB_MAPPINGS:
-            url = '/search?q={}%3A{}'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
+            url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}:{}"'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
+            desired_string = 'Found 1 email matching "{}({})"'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
             print("response content {}".format(response.content))
             assert desired_string in str(response.content)
 
@@ -110,10 +110,10 @@ class SearchViewTests(TestCase):
 
         # test each available search prefix
         for prefix in SEARCH_PREFIX_TO_DB_MAPPINGS:
-            url = '/search?q={}%3A{}'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
+            url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}:{}"'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
+            desired_string = 'Found 1 email matching "{}({})"'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
             assert desired_string in str(response.content)
 
     def test_search_with_spaces(self):
@@ -128,31 +128,31 @@ class SearchViewTests(TestCase):
     def test_prefix_bod(self):
         TestData.create_email()
 
-        url = '/search?q=bod%3Agithub'
+        url = '/search?q=bod(github)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "bod:github"' in str(response.content)
+        assert 'Found 1 email matching "bod(github)"' in str(response.content)
 
     def test_prefix_dom(self):
         TestData.create_email()
 
-        url = '/search?q=dom%3Agithub.com'
+        url = '/search?q=dom(github.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "dom:github.com"' in str(response.content)
+        assert 'Found 1 email matching "dom(github.com)"' in str(response.content)
 
-    def test_prefix_hdom(self):
+    def test_prefix_domh(self):
         TestData.create_email()
 
-        url = '/search?q=hdom%3Agmail.com'
+        url = '/search?q=domh(gmail.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "hdom:gmail.com"' in str(response.content)
+        assert 'Found 1 email matching "domh(gmail.com)"' in str(response.content)
 
-    def test_prefix_bdom(self):
+    def test_prefix_domb(self):
         TestData.create_email()
 
-        url = '/search?q=bdom%3Agithub.com'
+        url = '/search?q=domb(github.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "bdom:github.com"' in str(response.content)
+        assert 'Found 1 email matching "domb(github.com)"' in str(response.content)

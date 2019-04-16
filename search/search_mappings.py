@@ -6,4 +6,4 @@ header_search_mappings = {'sub': 'subject', 'to': 'to', 'from': 'from'}
 
 body_search_mappings = ['bod']
 
-network_data_search_mappings = ['dom', 'hdom', 'bdom']
+network_data_search_mappings = ['dom', 'domh', 'domb']

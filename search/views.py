@@ -54,8 +54,10 @@ class IndexSearchView(TemplateView):
                 prefix = query.split(":")[0]
                 # find the search value of the custom query (we are joining on ':' in case the query has a colon in it)
                 search = ":".join(query.split(":")[1:]).lower()
+                prefix_found = False
 
                 if prefix in header_search_mappings:
+                    prefix_found = True
                     results = [
                         email
                         for email in Email.objects.all()
@@ -63,28 +65,29 @@ class IndexSearchView(TemplateView):
                     ]
                     emails.extend(_add_email_results(emails, results))
 
-                    # remove the query from the full search query
-                    query_string = query_string.replace(query, '')
                 elif prefix in body_search_mappings:
+                    prefix_found = True
                     if prefix == 'bod':
                         results = Email.objects.filter(bodies__full_text__icontains=search)
                         emails.extend(_add_email_results(emails, results))
-
-                        # remove the query from the full search query
-                        query_string = query_string.replace(query, '')
                 elif prefix in network_data_search_mappings:
+                    prefix_found = True
                     # find emails with the domain
                     if prefix == 'dom':
-                        results = Email.objects.filter()
+                        results = Email.objects.filter(header__host__host_name__icontains=search)
+                        emails.extend(_add_email_results(emails, results))
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search)
                     # find emails with the domain in the header
-                    elif prefix == 'hdom':
+                    elif prefix == 'domh':
                         results = Email.objects.filter(header__host__host_name__icontains=search)
                     # find emails with the domain in the body
-                    elif prefix == 'bdom':
+                    elif prefix == 'domb':
                         results = Email.objects.filter(bodies__host__host_name__icontains=search)
-                else:
-                    # TODO: may want to do something else here - 3
-                    print("Unable to find prefix: {}".format(prefix))
+                    emails.extend(_add_email_results(emails, results))
+
+                if prefix_found:
+                    # remove the query from the full search query
+                    query_string = query_string.replace(query, '')
 
             query_string = query_string.strip()
             if query_string:

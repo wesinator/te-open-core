@@ -34,14 +34,14 @@ class SearchViewTests(TestCase):
     def test_basic_search(self):
         TestData.create_email()
         response = self.client.get("/search?q=github")
-        assert 'Found 1 email matching "github"' in str(response.content)
+        assert 'Found 1 email matching "<i>github</i>"' in str(response.content)
         assert 'No results' not in str(response.content)
 
     def test_empty_prefixed_search(self):
         """Test a search query without any emails."""
         TestData.create_email()
         response = self.client.get('/search?q=to(microsoft)')
-        assert 'No results found for "to(microsoft)"' in str(response.content)
+        assert 'No results found for "<i>to(microsoft)</i>"' in str(response.content)
 
     def test_error_message_on_short_queries(self):
         TestData.create_email()
@@ -70,7 +70,7 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}({})"'.format(
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(
                 prefix, html.escape(EXPECTED_SEARCH_RESULTS.get(prefix))
             )
             print("response content {}".format(response.content))
@@ -85,7 +85,7 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS.get(prefix).title())
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}({})"'.format(
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(
                 prefix, html.escape(EXPECTED_SEARCH_RESULTS.get(prefix).title())
             )
             print("response content {}".format(response.content))
@@ -100,7 +100,7 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}({})"'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(prefix, EXPECTED_SEARCH_RESULTS_2.get(prefix))
             print("response content {}".format(response.content))
             assert desired_string in str(response.content)
 
@@ -113,7 +113,7 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "{}({})"'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(prefix, EXPECTED_SEARCH_RESULTS_3.get(prefix))
             assert desired_string in str(response.content)
 
     def test_search_with_spaces(self):
@@ -123,7 +123,7 @@ class SearchViewTests(TestCase):
 
         url = '/search?q=python+project+template'
         response = self.client.get(url)
-        assert 'Found 1 email matching "python project template"' in str(response.content)
+        assert 'Found 1 email matching "<i>python project template</i>"' in str(response.content)
 
     def test_prefix_bod(self):
         TestData.create_email()
@@ -131,7 +131,7 @@ class SearchViewTests(TestCase):
         url = '/search?q=bod(github)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "bod(github)"' in str(response.content)
+        assert 'Found 1 email matching "<i>bod(github)</i>"' in str(response.content)
 
     def test_prefix_dom(self):
         TestData.create_email()
@@ -139,7 +139,7 @@ class SearchViewTests(TestCase):
         url = '/search?q=dom(github.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "dom(github.com)"' in str(response.content)
+        assert 'Found 1 email matching "<i>dom(github.com)</i>"' in str(response.content)
 
     def test_prefix_domh(self):
         TestData.create_email()
@@ -147,7 +147,7 @@ class SearchViewTests(TestCase):
         url = '/search?q=domh(gmail.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "domh(gmail.com)"' in str(response.content)
+        assert 'Found 1 email matching "<i>domh(gmail.com)</i>"' in str(response.content)
 
     def test_prefix_domb(self):
         TestData.create_email()
@@ -155,4 +155,4 @@ class SearchViewTests(TestCase):
         url = '/search?q=domb(github.com)'
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
-        assert 'Found 1 email matching "domb(github.com)"' in str(response.content)
+        assert 'Found 1 email matching "<i>domb(github.com)</i>"' in str(response.content)

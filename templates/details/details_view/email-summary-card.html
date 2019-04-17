@@ -9,4 +9,10 @@
         {{ email.structure|linebreaksbr }}
         {% endautoescape %}
     </div>
+    <div class="card-divider">
+        Actions
+    </div>
+    <div class="card-section">
+        <a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a>
+    </div>
 </div>

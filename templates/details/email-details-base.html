@@ -30,6 +30,17 @@
 
       <br>
 
+      <div class="row">
+          {% if messages %}
+              {% for message in messages %}
+                  {% autoescape off %}
+                      <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                  {% endautoescape %}
+              {% endfor %}
+          {% endif %}
+          <br><br>
+      </div>
+
       <div class="large-9 medium-9 float-left">
         <ul class="emailDetailsList">
           <li class="emailDetailsItem">

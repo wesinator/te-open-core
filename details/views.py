@@ -2,14 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-import json
 
-# from django.contrib import messages
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views import generic
 
 from db.models import Email
+import analyzer
 
 
 def _get_related_headers_and_bodies(network_data_object, email, get_related_headers=True):
@@ -42,12 +43,8 @@ class EmailDetailView(generic.DetailView):
         context = super(EmailDetailView, self).get_context_data(**kwargs)
         email_id = self.object.id
 
-        try:
-            email = Email.objects.get(pk=email_id)
-        except ObjectDoesNotExist:
-            # TODO: it would be nice to print a message to the user if they visit the page that doesn't exist (as I attempted below) (3)
-            # messages.error(request, 'No email found with the ID: {}'.format(email_id))
-            return HttpResponseRedirect('/')
+        # note: we don't need to handle cases where the given email id is invalid because this is handled by the parent class (generic.DetailView)
+        email = Email.objects.get(pk=email_id)
 
         # prepare the network data
         network_data = {
@@ -111,3 +108,16 @@ class EmailDetailView(generic.DetailView):
             pass
 
         return context
+
+
+def reanalyze_email(request, **kwargs):
+    """Resubmit an email for analysis."""
+    try:
+        email = Email.objects.get(pk=kwargs['pk'])
+    except ObjectDoesNotExist:
+        messages.error(request, 'No email found with the ID: {}'.format(kwargs['pk']))
+        return HttpResponseRedirect('/')
+    else:
+        analyzer.start_analysis(email, True)
+        messages.info(request, 'Email submitted for reanalysis. Updated results should be posted shortly.')
+        return HttpResponseRedirect(reverse('details:details', args=(kwargs['pk'],)))

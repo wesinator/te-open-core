@@ -64,18 +64,32 @@
 
     <br><hr><br>
 
-    <div class="large-6 medium-7 float-center">
+    <div class="large-8 medium-9 float-center">
         <h4>Search Prefixes</h4>
         <p>Every search can be prefixed with one of the values below to specify where you would like to find a specific value:</p>
 
         <ul style="list-style: none;">
-            <li><i><b>sub</b>({subject})</i> - Search for emails with the given subject<p>(e.g. <a href="{% url 'search:index' %}?q=sub(spam)">sub(spam)</a>, <a href="{% url 'search:index' %}?q=sub(talk to)">sub(talk to)</a>)</p></li>
-            <li><i><b>to</b>({recipient address/name})</i> - Search for emails with the given recipient address<p>(e.g. <a href="{% url 'search:index' %}?q=to(redacted)">to(redacted)</a>)</p></li>
-            <li><i><b>from</b>({sending address/name})</i> - Search for emails with the given sending address<p>(e.g. <a href="{% url 'search:index' %}?q=from(tulip.ocn.ne.jp)">from(tulip.ocn.ne.jp)</a>, <a href="{% url 'search:index' %}?q=from(Fedex.shipping@ikexpress.com)">from(Fedex.shipping@ikexpress.com)</a>, <a href="{% url 'search:index' %}?q=from(Thank You)">from(Thank You)</a>)</p></li>
-            <li><i><b>bod</b>({text})</i> - Search for emails with the given text in the body<p>(e.g. <a href="{% url 'search:index' %}?q=bod(money)">bod(money)</a>, <a href="{% url 'search:index' %}?q=bod(good day)">bod(good day)</a>)</p></li>
-            <li><i><b>dom</b>({domain name})</i> - Search for emails with the given domain name<p>(e.g. <a href="{% url 'search:index' %}?q=dom(tulip.ocn.ne.jp)">dom(tulip.ocn.ne.jp)</a>)</p></li>
-            <li><i><b>domh</b>({domain name})</i> - Search for emails with the given domain name in the header<p>(e.g. <a href="{% url 'search:index' %}?q=domh(tulip.ocn.ne.jp)">domh(tulip.ocn.ne.jp)</a>)</p></li>
-            <li><i><b>domb</b>({domain name})</i> - Search for emails with the given domain name in a body<p>(e.g. <a href="{% url 'search:index' %}?q=domb(bit.ly)">domb(bit.ly)</a>)</p></li>
+            <li>
+                <b>sub</b>({subject}) - Search for emails with the given subject - examples: <a href="{% url 'search:index' %}?q=sub(spam)">sub(spam)</a>, <a href="{% url 'search:index' %}?q=sub(talk to)">sub(talk to)</a>
+            </li>
+            <li>
+                <b>to</b>({recipient address/name}) - Search for emails with the given recipient address - <a href="{% url 'search:index' %}?q=to(redacted)">to(redacted)</a>
+            </li>
+            <li>
+                <b>from</b>({sending address/name}) - Search for emails with the given sending address - <a href="{% url 'search:index' %}?q=from(tulip.ocn.ne.jp)">from(tulip.ocn.ne.jp)</a>, <a href="{% url 'search:index' %}?q=from(Fedex.shipping@ikexpress.com)">from(Fedex.shipping@ikexpress.com)</a>, <a href="{% url 'search:index' %}?q=from(Thank You)">from(Thank You)</a>
+            </li>
+            <li>
+                <b>bod</b>({text}) - Search for emails with the given text in the body - <a href="{% url 'search:index' %}?q=bod(money)">bod(money)</a>, <a href="{% url 'search:index' %}?q=bod(good day)">bod(good day)</a>
+            </li>
+            <li>
+                <b>dom</b>({domain name}) - Search for emails with the given domain name - <a href="{% url 'search:index' %}?q=dom(tulip.ocn.ne.jp)">dom(tulip.ocn.ne.jp)</a>
+            </li>
+            <li>
+                <b>domh</b>({domain name}) - Search for emails with the given domain name in the header - <a href="{% url 'search:index' %}?q=domh(tulip.ocn.ne.jp)">domh(tulip.ocn.ne.jp)</a>
+            </li>
+            <li>
+                <b>domb</b>({domain name}) - Search for emails with the given domain name in a body - <a href="{% url 'search:index' %}?q=domb(bit.ly)">domb(bit.ly)</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -83,6 +97,15 @@
 <script>
     window.onload = function() {
         $(document).foundation();
+
+        // $('#searchBox').on({
+        //     keyup: function(event) {
+        //         var currentSearchValue = $('#searchBox').val();
+        //         if (event.key === '(' && currentSearchValue.indexOf('(') === currentSearchValue.length - 1) {
+        //             $('#searchBox').val(currentSearchValue + ')');
+        //         }
+        //     }
+        // });
     }
 </script>
 

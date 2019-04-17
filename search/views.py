@@ -15,13 +15,16 @@ from totalemail.settings import _validate_search_query, MAX_RESULTS
 SEARCH_PREFIX_REGEX = '(\w*\(.*?\))'
 
 
-def _add_email_results(existing_email_list, new_emails):
+def _add_email_results(existing_email_list, new_emails, search_query):
     unique_new_emails = []
-    existing_email_ids = [email.id for email in existing_email_list]
+    existing_email_ids = [email['email'].id for email in existing_email_list]
 
     for email in new_emails:
         if email.id not in existing_email_ids:
-            unique_new_emails.append(email)
+            unique_new_emails.append({
+                'email': email,
+                'search_query': search_query
+            })
             existing_email_ids.append(email.id)
 
     return unique_new_emails
@@ -64,19 +67,18 @@ class IndexSearchView(TemplateView):
                         for email in Email.objects.all()
                         if search in email.header.get_value(header_search_mappings[prefix]).lower()
                     ]
-                    emails.extend(_add_email_results(emails, results))
-
+                    emails.extend(_add_email_results(emails, results, query))
                 elif prefix in body_search_mappings:
                     prefix_found = True
                     if prefix == 'bod':
                         results = Email.objects.filter(bodies__full_text__icontains=search)
-                        emails.extend(_add_email_results(emails, results))
+                        emails.extend(_add_email_results(emails, results, query))
                 elif prefix in network_data_search_mappings:
                     prefix_found = True
                     # find emails with the domain
                     if prefix == 'dom':
                         results = Email.objects.filter(header__host__host_name__icontains=search)
-                        emails.extend(_add_email_results(emails, results))
+                        emails.extend(_add_email_results(emails, results, query))
                         results = Email.objects.filter(bodies__host__host_name__icontains=search)
                     # find emails with the domain in the header
                     elif prefix == 'domh':
@@ -84,7 +86,7 @@ class IndexSearchView(TemplateView):
                     # find emails with the domain in the body
                     elif prefix == 'domb':
                         results = Email.objects.filter(bodies__host__host_name__icontains=search)
-                    emails.extend(_add_email_results(emails, results))
+                    emails.extend(_add_email_results(emails, results, query))
 
                 if prefix_found:
                     # remove the query from the full search query
@@ -94,7 +96,7 @@ class IndexSearchView(TemplateView):
             if query_string:
                 # search for the remaining query (which has the queries with custom prefixes removed)
                 results = Email.objects.filter(full_text__icontains=query_string)
-                emails.extend(_add_email_results(emails, results))
+                emails.extend(_add_email_results(emails, results, query_string))
 
             return render(
                 request,

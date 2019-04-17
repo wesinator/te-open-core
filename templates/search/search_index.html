@@ -37,19 +37,19 @@
         {% if results %}
             {% if total_result_count > max_results %}
                 <!-- TODO: Add a tooltip to this message explaining why we are limiting the results -->
-                Showing {{ results|length }} of {{ total_result_count }} emails matching "{{ q }}":
+                Showing {{ results|length }} of {{ total_result_count }} emails matching "<i>{{ q }}</i>":
             {% else %}
-                Found {{ results|length }} email{{ results|length|pluralize }} matching "{{ q }}":
+                Found {{ results|length }} email{{ results|length|pluralize }} matching "<i>{{ q }}</i>":
             {% endif %}
             <br><br>
-            <ul>
+            <ul style="list-style: none;">
             {% for email in results %}
-                <li><a href="{% url 'details:details' email.id %}" target="_blank">{{ email.header.subject }}</a></li>
+                <li><a href="{% url 'details:details' email.email.id %}" target="_blank">{{ email.email.header.subject }}</a> - (<i>{{ email.search_query }}</i>)</li>
             {% endfor %}
             </ul>
         {% else %}
             {% if q != None %}
-                No results found for "{{ q }}"
+                No results found for "<i>{{ q }}</i>"
             {% endif %}
             <script>
                 window.onload = function() {

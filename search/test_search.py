@@ -29,7 +29,7 @@ class SearchViewTests(TestCase):
         TestData.create_email()
         response = self.client.get("/search?q=microsoft")
         assert "Emails matching" not in str(response.content)
-        assert 'No results found for "microsoft"' in str(response.content)
+        assert 'No results found for "<i>microsoft</i>"' in str(response.content)
 
     def test_basic_search(self):
         TestData.create_email()

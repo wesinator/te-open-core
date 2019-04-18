@@ -115,5 +115,9 @@ def email_read(email_text):
 
 def parse_email_address(email_address):
     parsed_email_address = parser.get_address(email_address)[0]
-    mailbox = parsed_email_address.all_mailboxes[0]
-    return EmailAddress(display_name=mailbox.display_name, username=mailbox.local_part, domain=mailbox.domain)
+
+    if parsed_email_address.all_mailboxes:
+        mailbox = parsed_email_address.all_mailboxes[0]
+        return EmailAddress(display_name=mailbox.display_name, username=mailbox.local_part, domain=mailbox.domain)
+    else:
+        return EmailAddress(display_name='', username='', domain='')

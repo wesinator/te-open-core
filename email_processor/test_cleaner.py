@@ -148,3 +148,21 @@ Hi Alice Asimov (and Charlee)!"""
     print('cleaned_email {}'.format(cleaned_email))
     assert 'Alice Asimov' not in cleaned_email
     assert 'alice@gmail.com' not in cleaned_email
+
+
+def test_utf_header_cleaning():
+    s = """Subject: =?UTF-8?B?Q29uZmlybWF0aW9uIE5lZWRlZDogZXhhbXBsZUBnbWFpbC5jb20=?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+Foo"""
+    cleaned_email = clean_email(s, redaction_values='example@gmail.com')
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'Q29uZmlybWF0aW9uIE5lZWRlZDogZXhhbXBsZUBnbWFpbC5jb20=' not in cleaned_email
+    assert 'Q29uZmlybWF0aW9uIE5lZWRlZDogUkVEQUNURUQ=' in cleaned_email
+
+    s = 'Subject: =?UTF-8?B?Zm9vIGV4YW1wbGVAZ21haWwuY29tIHRlc3RpbmcgY29uZmlybWF0aW9u?='
+    cleaned_email = clean_email(s, redaction_values='example@gmail.com')
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'GV4YW1wbGVAZ21haWwuY29t' not in cleaned_email
+    assert 'Zm9vIFJFREFDVEVEIHRlc3RpbmcgY29uZmlybWF0aW9u' in cleaned_email

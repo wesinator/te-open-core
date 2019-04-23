@@ -121,3 +121,19 @@ def parse_email_address(email_address):
         return EmailAddress(display_name=mailbox.display_name, username=mailbox.local_part, domain=mailbox.domain)
     else:
         return EmailAddress(display_name='', username='', domain='')
+
+
+def base64_encode(text):
+    """Base64 encode the given text."""
+    import base64
+
+    result = base64.standard_b64encode(text.encode('utf-8'))
+    return result.decode('utf-8')
+
+
+def base64_decode(text):
+    """Base64 decode the given text."""
+    import base64
+
+    result = base64.standard_b64decode(text.encode('utf-8'))
+    return result.decode('utf-8')

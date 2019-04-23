@@ -166,3 +166,26 @@ Foo"""
     print('cleaned_email {}'.format(cleaned_email))
     assert 'GV4YW1wbGVAZ21haWwuY29t' not in cleaned_email
     assert 'Zm9vIFJFREFDVEVEIHRlc3RpbmcgY29uZmlybWF0aW9u' in cleaned_email
+
+
+def test_utf_invalid_header():
+    s = """Subject: =?UTF-8?B?Q29uZm9ybSE==?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+Foo"""
+    cleaned_email = clean_email(s, redaction_values='Conform')
+    assert 'Q29uZm9ybSE==' not in cleaned_email
+    assert 'Subject: =?UTF-8?B?UkVEQUNURUQh?=' in cleaned_email
+
+
+def test_redaction_of_email_address_name_from_utf_encoded_subject():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+Foo"""
+    cleaned_email = clean_email(s)
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'aGkgYWxpY2UgYXNpbW92' not in cleaned_email
+    assert 'Subject: =?UTF-8?B?aGkgUkVEQUNURUQ=?=' in cleaned_email

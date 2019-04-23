@@ -48,7 +48,7 @@ def clean_email(email_text, redaction_values=None):
         cleaned_content = decoded_content
 
         for redaction_value in redaction_value_list:
-            if redaction_value in decoded_content:
+            if redaction_value.lower() in decoded_content.lower():
                 cleaned_content = re.sub(re.escape(redaction_value), 'REDACTED', decoded_content, flags=re.IGNORECASE)
 
         # encode the content and replace it in the email
@@ -58,8 +58,6 @@ def clean_email(email_text, redaction_values=None):
     # TODO: we also need to make sure that things are properly removed from base64 encoded bodies
     # TODO: we need to make sure we are not changing the content of an attachment in the redaction process
     for redaction_value in redaction_value_list:
-        print('redaction_value {}'.format(redaction_value))
-        print('cleaned_email {}'.format(cleaned_email))
         cleaned_email = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
 
     return cleaned_email

@@ -113,6 +113,20 @@ def email_read(email_text):
     return email.message_from_string(email_text, policy=default)
 
 
+def email_bodies(email_object):
+    """."""
+    bodies = []
+
+    if email_object.is_multipart():
+        for subpart in email_object.get_payload():
+            bodies.extend(email_bodies(subpart))
+    else:
+        if email_object.get_content_disposition() != "attachment":
+            bodies.append(email_object)
+
+    return bodies
+
+
 def parse_email_address(email_address):
     parsed_email_address = parser.get_address(email_address)[0]
 

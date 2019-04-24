@@ -60,4 +60,22 @@ def clean_email(email_text, redaction_values=None):
     for redaction_value in redaction_value_list:
         cleaned_email = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
 
+    # redact the bodies which are base64 encoded
+    email_object = utility.email_read(email_text)
+    if email_object['Content-Transfer-Encoding'] and email_object['Content-Transfer-Encoding'].lower() == 'base64':
+        bodies = utility.email_bodies(email_object)
+        for body in bodies:
+            # decode the body
+            decoded_body = utility.base64_decode(body.get_payload())
+            cleaned_body = decoded_body
+
+            # redact
+            for redaction_value in redaction_value_list:
+                if redaction_value.lower() in decoded_body.lower():
+                    cleaned_body = re.sub(re.escape(redaction_value), 'REDACTED', decoded_body, flags=re.IGNORECASE)
+
+            # reencode and replace the body
+            encoded_body = utility.base64_encode(cleaned_body)
+            cleaned_email = re.sub(re.escape(body.get_payload()), encoded_body, cleaned_email, flags=re.IGNORECASE)
+
     return cleaned_email

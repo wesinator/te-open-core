@@ -6,6 +6,8 @@ import re
 from .parse_headers import parse_header
 from utility import utility
 
+# TODO: make this code beautiful (1)
+
 
 def clean_email(email_text, redaction_values=None):
     """Clean an email."""
@@ -40,6 +42,15 @@ def clean_email(email_text, redaction_values=None):
                     cleaned_email = re.sub(re.escape(email_address), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
                     redaction_value_list.append(email_address)
 
+    # redact the headers
+    for header in email_header_json:
+        original_header_content = ': '.join(header)
+        cleaned_header = original_header_content
+        for redaction_value in redaction_value_list:
+            if redaction_value.lower() in cleaned_header.lower():
+                cleaned_header = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_header, flags=re.IGNORECASE)
+        cleaned_email = re.sub(re.escape(original_header_content), cleaned_header, cleaned_email, flags=re.IGNORECASE)
+
     # find all base64 encoded header values
     base64_encoded_header_pattern = '=\?[a-zA-Z0-9\-]+\?B\?([a-zA-Z0-9+\/=]+)\?='
     for base64_content in re.findall(base64_encoded_header_pattern, email_text):
@@ -55,18 +66,14 @@ def clean_email(email_text, redaction_values=None):
         encoded_content = utility.base64_encode(cleaned_content)
         cleaned_email = re.sub(re.escape(base64_content), encoded_content, cleaned_email, flags=re.IGNORECASE)
 
-    # TODO: we also need to make sure that things are properly removed from base64 encoded bodies
-    # TODO: we need to make sure we are not changing the content of an attachment in the redaction process
-    for redaction_value in redaction_value_list:
-        cleaned_email = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_email, flags=re.IGNORECASE)
-
-    # redact the bodies which are base64 encoded
-    email_object = utility.email_read(email_text)
-    if email_object['Content-Transfer-Encoding'] and email_object['Content-Transfer-Encoding'].lower() == 'base64':
-        bodies = utility.email_bodies(email_object)
-        for body in bodies:
+    # redact the bodies
+    email_object = utility.email_read(cleaned_email)
+    bodies = utility.email_bodies(email_object)
+    for body in bodies:
+        body_content = body.get_payload()
+        if email_object['Content-Transfer-Encoding'] and email_object['Content-Transfer-Encoding'].lower() == 'base64':
             # decode the body
-            decoded_body = utility.base64_decode(body.get_payload())
+            decoded_body = utility.base64_decode(body_content)
             cleaned_body = decoded_body
 
             # redact
@@ -76,6 +83,12 @@ def clean_email(email_text, redaction_values=None):
 
             # reencode and replace the body
             encoded_body = utility.base64_encode(cleaned_body)
-            cleaned_email = re.sub(re.escape(body.get_payload()), encoded_body, cleaned_email, flags=re.IGNORECASE)
+            cleaned_email = re.sub(re.escape(body_content), encoded_body, cleaned_email, flags=re.IGNORECASE)
+        else:
+            cleaned_body = body_content
+            for redaction_value in redaction_value_list:
+                if redaction_value.lower() in cleaned_body.lower():
+                    cleaned_body = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_body, flags=re.IGNORECASE)
+            cleaned_email = re.sub(re.escape(body_content), cleaned_body, cleaned_email, flags=re.IGNORECASE)
 
     return cleaned_email

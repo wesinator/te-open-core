@@ -7,6 +7,36 @@ from test_resources import DefaultTestObject
 
 TestData = DefaultTestObject()
 
+ATTACHMENT_EMAIL = """MIME-Version: 1.0
+Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: multipart/mixed; boundary="000000000000c4860205873c8e43"
+
+--000000000000c4860205873c8e43
+Content-Type: multipart/alternative; boundary="000000000000c485ff05873c8e41"
+
+--000000000000c485ff05873c8e41
+Content-Type: text/plain; charset="UTF-8"
+
+This foobar is a test
+
+--000000000000c485ff05873c8e41
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">This foobar is a test</div>
+
+--000000000000c485ff05873c8e41--
+--000000000000c4860205873c8e43
+Content-Type: text/plain; charset="US-ASCII"; name="test.txt"
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_juujbxeu0
+Content-ID: <f_juujbxeu0>
+
+Zm9vYmFyCg==
+--000000000000c4860205873c8e43--"""
+
 
 def test_cleaner():
     """Make sure the cleaner is working as expected."""
@@ -77,24 +107,26 @@ Content-Type: text/html; charset=utf-8
 
 
 def test_cleaner_casing():
-    assert 'Content-Transfer-Encoding' in TestData.email_text
+    assert 'Date' in TestData.email_text
     assert 'Yours truly' in TestData.email_text
     assert '//github.com' in TestData.email_text
     assert 'Bob' in TestData.email_text
-    cleaned_email = clean_email(TestData.email_text, 'Yours truly,Content-Transfer-Encoding,//github.com,Bob')
-    assert 'Content-Transfer-Encoding' not in cleaned_email
+    cleaned_email = clean_email(TestData.email_text, 'Yours truly,Date,//github.com,Bob')
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'Date' not in cleaned_email
     assert 'Yours truly' not in cleaned_email
     assert '//github.com' not in cleaned_email
     assert 'Bob' not in cleaned_email
 
 
 def test_cleaner_input_stripping():
-    assert 'Content-Transfer-Encoding' in TestData.email_text
+    assert 'X-Google-Smtp-Source' in TestData.email_text
     assert 'Yours truly' in TestData.email_text
     assert '//github.com' in TestData.email_text
     assert 'Bob' in TestData.email_text
-    cleaned_email = clean_email(TestData.email_text, 'Yours truly, Content-Transfer-Encoding, //github.com, Bob')
-    assert 'Content-Transfer-Encoding' not in cleaned_email
+    cleaned_email = clean_email(TestData.email_text, 'Yours truly, X-Google-Smtp-Source, //github.com, Bob')
+    print('cleaned_email {}'.format(cleaned_email))
+    assert 'X-Google-Smtp-Source' not in cleaned_email
     assert 'Yours truly' not in cleaned_email
     assert '//github.com' not in cleaned_email
     assert 'Bob' not in cleaned_email
@@ -189,3 +221,32 @@ Foo"""
     print('cleaned_email {}'.format(cleaned_email))
     assert 'aGkgYWxpY2UgYXNpbW92' not in cleaned_email
     assert 'Subject: =?UTF-8?B?aGkgUkVEQUNURUQ=?=' in cleaned_email
+
+
+def test_base64_encoded_body_redaction():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: base64
+
+SSdtIHNvcnJ5IERhdmUsIEknbSBhZnJhaWQgSSBjYW4ndCBkbyB0aGF0
+
+"""
+    cleaned_email = clean_email(s, redaction_values='dave')
+    assert 'SSdtIHNvcnJ5IERhdmUsIEknbSBhZnJhaWQgSSBjYW4ndCBkbyB0aGF0' not in cleaned_email
+    assert 'SSdtIHNvcnJ5IFJFREFDVEVELCBJJ20gYWZyYWlkIEkgY2FuJ3QgZG8gdGhhdA==' in cleaned_email
+
+
+def test_redaction_not_touching_attachments():
+    # try to redact a value that is in the base64 decoded attachment
+    cleaned_email = clean_email(ATTACHMENT_EMAIL, redaction_values='foo')
+    # make sure the encoded attachment is not changed
+    assert 'Zm9vYmFyCg==' in cleaned_email
+    assert 'This REDACTEDbar is a test' in cleaned_email
+
+    # try to redact a value that is in the base64 encoded attachment
+    cleaned_email = clean_email(ATTACHMENT_EMAIL, redaction_values='9vY')
+    # make sure the encoded attachment is not changed
+    assert 'Zm9vYmFyCg==' in cleaned_email

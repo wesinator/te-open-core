@@ -78,6 +78,8 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
 
     decoded_text = None
 
+    # TODO: revisit this function as some of the operations done in this function can probably be moved to the utility
+
     if 'content-transfer-encoding: base64' in str(body_text).lower():
         decoded_text = parse_bodies.decode_base64(str(body_text).split('\n\n')[-1])
 

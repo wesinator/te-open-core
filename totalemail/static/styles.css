@@ -33,6 +33,10 @@ h1 {
   text-decoration: underline;
 }
 
+.top-bar-left a {
+  text-decoration: none;
+}
+
 
 h3 {
 /*    color: #2c2c2c;

@@ -56,4 +56,6 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -fr {} +
 
 heroku: mmgs ## update the code on heroku
+	cp ../heroku_core/totalemail/settings.py ../heroku_core/totalemail/foo.py
 	cp -r ./* ../heroku_core && git status
+	mv ../heroku_core/totalemail/foo.py ../heroku_core/totalemail/settings.py

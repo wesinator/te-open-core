@@ -11,6 +11,7 @@ from django.views import generic
 
 from db.models import Email
 import analyzer
+from utility import utility
 
 
 def _get_related_headers_and_bodies(network_data_object, email, get_related_headers=True):
@@ -102,6 +103,14 @@ class EmailDetailView(generic.DetailView):
 
         context['network_data'] = network_data
         context['network_data_overlaps'] = network_data_overlaps
+
+        # calculate the score for the email
+        email_analysis_score_data = {}
+        for analysis in email.analysis_set.all().order_by('-first_seen'):
+            if not email_analysis_score_data.get(analysis.source):
+                email_analysis_score_data[analysis.source] = analysis.score
+
+        context['score'] = utility.email_score_calculate(email_analysis_score_data)
 
         try:
             # check to see if email was recently uploaded (if so, how a jgrowl letting them know they can refresh the page to view the external analyses)

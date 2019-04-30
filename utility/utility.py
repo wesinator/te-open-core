@@ -151,3 +151,36 @@ def base64_decode(text):
 
     result = base64.standard_b64decode(text.encode('utf-8'))
     return result.decode('utf-8')
+
+
+SOURCE_WEIGHTINGS = {
+    'Orange Assassin': 1.3
+}
+
+
+def email_score_calculate(email_analysis_results):
+    """Calculate the score of the email from the email_analysis_results."""
+
+    """
+    email_analysis_results is a dictionary of the form:
+
+    {
+        <SOURCE NAME>: <SOURCE SCORE>
+    }
+    """
+    values_to_average = []
+
+    for source, score in email_analysis_results.items():
+        values_to_average.append(
+            float(score) * SOURCE_WEIGHTINGS.get(source, 1)
+        )
+
+    final_score = sum(values_to_average) / len(values_to_average)
+
+    # add a final gut-check to make sure that the final score is with-in the appropriate boundaries
+    if final_score > 1:
+        final_score = 1.00
+    elif final_score < -1:
+        final_score = -1.00
+
+    return final_score

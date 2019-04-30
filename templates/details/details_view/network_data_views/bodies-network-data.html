@@ -5,7 +5,11 @@
             <li>{{ host }}
               <ul>
                 {% for link in links %}
-                  <li>This host was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% if link.text == '' %}
+                    <li><a href="{{ link.link }}">...view more...</a></li>
+                  {% else %}
+                    <li>This host was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </li>
@@ -21,7 +25,11 @@
             <li>{{ address }}
               <ul>
                 {% for link in links %}
-                  <li>This IP address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% if link.text == '' %}
+                    <li><a href="{{ link.link }}">...view more...</a></li>
+                  {% else %}
+                    <li>This IP address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </li>
@@ -37,7 +45,11 @@
             <li>{{ address }}
               <ul>
                 {% for link in links %}
-                  <li>This email address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% if link.text == '' %}
+                    <li><a href="{{ link.link }}">...view more...</a></li>
+                  {% else %}
+                    <li>This email address was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </li>
@@ -53,7 +65,11 @@
             <li>{{ url }}
               <ul>
                 {% for link in links %}
+                  {% if link.text == '' %}
+                    <li><a href="{{ link.link }}">...view more...</a></li>
+                  {% else %}
                   <li>This URL was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </li>

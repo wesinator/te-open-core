@@ -16,17 +16,24 @@ import analyzer
 def _get_related_headers_and_bodies(network_data_object, email, get_related_headers=True):
     """."""
     links = []
+    related_headers = None
+    related_bodies = network_data_object.bodies.all()
 
     if get_related_headers:
         # TODO: the links for each host will need to be deduplicated (between the header and body links) - I may want to move this code to the models.py
-        for header in network_data_object.headers.all()[:5]:
+        related_headers = network_data_object.headers.all()
+        for header in related_headers[:4]:
             if header.id != email.header.id:
                 links.append({'link': '/{}'.format(header.link), 'text': header.subject})
-    for body in network_data_object.bodies.all()[:5]:
+    for body in related_bodies[:4]:
         # TODO: does this check work?
         if body.id not in email.bodies.all():
             for link in body.links:
                 links.append({'link': '/{}'.format(link), 'text': body.emails.all()[0].header.subject})
+
+    if len(related_bodies) > 4 or len(related_headers) > 4:
+        links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
+
     return links
 
 

@@ -1,18 +1,18 @@
 {% if score > 0.333 %}
     {% load static %}
-    <img src="{% static "tl_red.svg.png" %}" alt="There is evidence that this email is MALICIOUS" title="There is evidence that this email is MALICIOUS">
+    <img src="{% static "tl_red.svg.png" %}" alt="There is evidence this email is MALICIOUS" title="There is evidence this email is MALICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence that this email is MALICIOUS</i>
+    <i>There is evidence this email is MALICIOUS</i>
 {% elif score > -0.333 %}
     {% load static %}
-    <img src="{% static "tl_yellow.svg.png" %}" alt="There is evidence to believe this email is SUSPICIOUS" title="There is evidence to believe this email is SUSPICIOUS">
+    <img src="{% static "tl_yellow.svg.png" %}" alt="There is evidence this email is SUSPICIOUS" title="There is evidence this email is SUSPICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence to believe this email is SUSPICIOUS</i>
+    <i>There is evidence this email is SUSPICIOUS</i>
 {% else %}
     {% load static %}
-    <img src="{% static "tl_green.svg.png" %}" alt="There is evidence that this email is BENIGN" title="There is evidence that this email is BENIGN">
+    <img src="{% static "tl_green.svg.png" %}" alt="There is evidence this email is BENIGN" title="There is evidence this email is BENIGN">
     <div class="clearfix"><br></div>
-    <i>There is evidence that this email is BENIGN</i>
+    <i>There is evidence this email is BENIGN</i>
 {% endif %}
 
 <br><br><br>

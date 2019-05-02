@@ -32,8 +32,11 @@ def _get_related_headers_and_bodies(network_data_object, email, get_related_head
             for link in body.links:
                 links.append({'link': '/{}'.format(link), 'text': body.emails.all()[0].header.subject})
 
-    if len(related_bodies) > 4 or len(related_headers) > 4:
+    if related_bodies and len(related_bodies) > 4:
         links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
+    if related_headers and len(related_headers) > 4:
+        links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
+
 
     return links
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from decimal import Decimal
 import re
 
 from django.db import models
@@ -139,7 +140,7 @@ class Attachment(models.Model):
 class Analysis(models.Model):
     notes = models.TextField()
     source = models.CharField(max_length=50)
-    score = models.DecimalField(max_digits=5, decimal_places=2)
+    score = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.0000'))
     # one to many relationship between an email and analysis, respectively
     email = models.ForeignKey('Email')
     first_seen = models.DateTimeField(editable=False)

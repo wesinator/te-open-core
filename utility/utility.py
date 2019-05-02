@@ -154,15 +154,27 @@ def base64_decode(text):
 
 
 SOURCE_WEIGHTINGS = {
-    'Orange Assassin': 1.3
+    'Orange Assassin': '(x / 2) - 1',
+    'Earth Reflections Spam Regexes': '(2 ** x / 194) - 0.01',
+    'Hubspot Spam Keywords': '(1.8 ** x / 395) - 0.01',
+    'Ram Samudrala Spam Regexes': 'x',
 }
+
+
+def _calculate(score, source):
+    """Calculate the weighted score for the given score."""
+    if SOURCE_WEIGHTINGS.get(source):
+        score_function = SOURCE_WEIGHTINGS[source]
+        score_function = score_function.replace('x', str(score))
+        return eval(score_function)
+    else:
+        return score
 
 
 def email_score_calculate(email_analysis_results):
     """Calculate the score of the email from the email_analysis_results."""
-
     """
-    email_analysis_results is a dictionary of the form:
+    The email_analysis_results argument is a dictionary of the form:
 
     {
         <SOURCE NAME>: <SOURCE SCORE>
@@ -172,7 +184,7 @@ def email_score_calculate(email_analysis_results):
 
     for source, score in email_analysis_results.items():
         values_to_average.append(
-            float(score) * SOURCE_WEIGHTINGS.get(source, 1)
+            _calculate(score, source)
         )
 
     final_score = sum(values_to_average) / len(values_to_average)

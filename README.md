@@ -131,6 +131,16 @@ and then:
 \dt
 ```
 
+## Recipes
+
+### Adding a New Analysis Engine
+
+To add a new analysis engine:
+
+- create a new file in the `analysis_server/engines` directory with the appropriate functions
+- call the function and process the results from `analysis_server/analysis.py`
+- Add an entry for the new source with the appropriate function to the `SOURCE_WEIGHTINGS` dictionary in `utility/utility.py`
+
 ## Common Errors
 
 - `Missing staticfiles manifest entry for 'styles.css'`: run `make collect`

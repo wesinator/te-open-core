@@ -144,3 +144,13 @@ To add a new analysis engine:
 ## Common Errors
 
 - `Missing staticfiles manifest entry for 'styles.css'`: run `make collect`
+
+## Misc.
+
+### Color Codes
+
+The color codes for the stop lights are:
+
+- #6FEF87 - green
+- #F1D86C - yellow
+- #E64A48 - red

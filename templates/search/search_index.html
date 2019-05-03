@@ -44,7 +44,7 @@
             <br><br>
             <ul style="list-style: none;">
             {% for email in results %}
-                <li><a href="{% url 'details:details' email.email.id %}" target="_blank">{{ email.email.header.subject }}</a> - (<i>{{ email.search_query }}</i>)</li>
+                <li><a href="{% url 'details:details' email.email.id %}" target="_blank">{{ email.email.header.subject }}</a> {% if email.score > 0.333 %}<span style="color: #E64A48; font-size: 2em; vertical-align: middle;">•</span>{% elif email.score < -0.333 %}<span style="color: #6FEF87; font-size: 2em; vertical-align: middle;">•</span>{% else %}<span style="color: #F1D86C; font-size: 2em; vertical-align: middle;">•</span>{% endif %} (<i>{{ email.search_query }}</i>)</li>
             {% endfor %}
             </ul>
         {% else %}

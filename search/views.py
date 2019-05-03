@@ -10,6 +10,7 @@ from django.contrib import messages
 from db.models import Email
 from .search_mappings import header_search_mappings, body_search_mappings, network_data_search_mappings
 from totalemail.settings import _validate_search_query, MAX_RESULTS
+from utility import utility
 
 # SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
 SEARCH_PREFIX_REGEX = '(\w*\(.*?\))'
@@ -23,7 +24,8 @@ def _add_email_results(existing_email_list, new_emails, search_query):
         if email.id not in existing_email_ids:
             unique_new_emails.append({
                 'email': email,
-                'search_query': search_query
+                'search_query': search_query,
+                'score': utility.email_score_calculate(email)
             })
             existing_email_ids.append(email.id)
 

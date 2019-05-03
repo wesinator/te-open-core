@@ -171,19 +171,18 @@ def _calculate(score, source):
         return score
 
 
-def email_score_calculate(email_analysis_results):
-    """Calculate the score of the email from the email_analysis_results."""
-    """
-    The email_analysis_results argument is a dictionary of the form:
+def email_score_calculate(email):
+    """Calculate the score of the email from the email."""
+    # calculate the score for the email
+    email_analysis_score_data = {}
+    for analysis in email.analysis_set.all().order_by('-first_seen'):
+        if not email_analysis_score_data.get(analysis.source):
+            email_analysis_score_data[analysis.source] = analysis.score
 
-    {
-        <SOURCE NAME>: <SOURCE SCORE>
-    }
-    """
     values_to_average = []
 
-    if len(email_analysis_results) > 0:
-        for source, score in email_analysis_results.items():
+    if len(email_analysis_score_data) > 0:
+        for source, score in email_analysis_score_data.items():
             values_to_average.append(
                 _calculate(score, source)
             )

@@ -182,17 +182,20 @@ def email_score_calculate(email_analysis_results):
     """
     values_to_average = []
 
-    for source, score in email_analysis_results.items():
-        values_to_average.append(
-            _calculate(score, source)
-        )
+    if len(email_analysis_results) > 0:
+        for source, score in email_analysis_results.items():
+            values_to_average.append(
+                _calculate(score, source)
+            )
 
-    final_score = sum(values_to_average) / len(values_to_average)
+        final_score = sum(values_to_average) / len(values_to_average)
 
-    # add a final gut-check to make sure that the final score is with-in the appropriate boundaries
-    if final_score > 1:
-        final_score = 1.00
-    elif final_score < -1:
-        final_score = -1.00
+        # add a final gut-check to make sure that the final score is with-in the appropriate boundaries
+        if final_score > 1:
+            final_score = 1.00
+        elif final_score < -1:
+            final_score = -1.00
+    else:
+        final_score = 0
 
     return final_score

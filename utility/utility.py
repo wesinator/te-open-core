@@ -180,13 +180,12 @@ def email_score_calculate(email):
             email_analysis_score_data[analysis.source] = analysis.score
 
     values_to_average = []
+    for source, score in email_analysis_score_data.items():
+        values_to_average.append(
+            _calculate(score, source)
+        )
 
-    if len(email_analysis_score_data) > 0:
-        for source, score in email_analysis_score_data.items():
-            values_to_average.append(
-                _calculate(score, source)
-            )
-
+    if len(values_to_average) > 0:
         final_score = sum(values_to_average) / len(values_to_average)
 
         # add a final gut-check to make sure that the final score is with-in the appropriate boundaries

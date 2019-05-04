@@ -41,7 +41,7 @@ def _get_email_structure(
                 new_id = new_attachment.id
                 email_attachment_objects.append(new_attachment)
                 if 'Attachments:' not in structure:
-                    structure += '\n<a href="#attachments"><b>Attachments:</b></a>'
+                    structure += '\n<a href="#attachments">Attachments:</a>'
             else:
                 new_body = db_creator.create_body(
                     msg.get_payload(), msg.get_content_type(), perform_external_analysis=perform_external_analysis
@@ -58,7 +58,7 @@ def _get_email_structure(
                 # recalculate the indent_sequence (this may have changed if this object is the first attachment)
                 indent_sequence = '|'.join([('&nbsp;' * 8) for i in range(0, level + 1)])
                 if 'Attachments:' not in structure:
-                    structure += '\n<a href="#attachments"><b>Attachments:</b></a>'
+                    structure += '\n<a href="#attachments">Attachments:</a>'
             else:
                 new_body = db_creator.create_body(
                     msg, msg.get_content_type(), perform_external_analysis=perform_external_analysis

@@ -156,7 +156,7 @@ def base64_decode(text):
 SOURCE_WEIGHTINGS = {
     'Orange Assassin': '(x / 2) - 1',
     'Earth Reflections Spam Regexes': '(2 ** x / 194) - 0.01',
-    'Hubspot Spam Keywords': '(1.8 ** x / 395) - 0.01',
+    'Hubspot Spam Keywords': '(x / 3) - .1',
     'Ram Samudrala Spam Regexes': 'x',
 }
 

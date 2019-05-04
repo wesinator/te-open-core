@@ -18,20 +18,34 @@
 <br><br><br>
 
 <div class="card">
-    <div class="card-divider">
-        Email Structure
+    <div>
+        <div class="card-divider">
+            <b>Email Structure</b>
+        </div>
+        <div class="card-section">
+            <a href="#header">Header</a><br>
+            <a href="#bodies">Body</a>
+            {% autoescape off %}
+            {{ email.structure|linebreaksbr }}
+            {% endautoescape %}
+        </div>
     </div>
-    <div class="card-section">
-        <a href="#header"><b>Header</b></a><br>
-        <a href="#bodies"><b>Body</b></a>
-        {% autoescape off %}
-        {{ email.structure|linebreaksbr }}
-        {% endautoescape %}
+    <div>
+        {% if network_data_overlaps != 0 %}
+          <div class="card-divider">
+              <b>Details</b>
+          </div>
+          <div class="card-section">
+              <a href="#networkData">Network Data</a>
+          </div>
+        {% endif %}
     </div>
-    <div class="card-divider">
-        Actions
-    </div>
-    <div class="card-section">
-        <a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a>
+    <div>
+        <div class="card-divider">
+            <b>Actions</b>
+        </div>
+        <div class="card-section">
+            <a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a>
+        </div>
     </div>
 </div>

@@ -32,7 +32,7 @@
 
     <br>
 
-    <div class="large-5 medium-7 small-12 float-center">
+    <div class="large-6 medium-9 small-12 float-center">
         {% if results %}
             {% if total_result_count > max_results %}
                 <!-- TODO: Add a tooltip to this message explaining why we are limiting the results -->
@@ -43,7 +43,7 @@
             <br><br>
             <ul style="list-style: none;">
             {% for email in results %}
-                <li style="margin-bottom: -1em;" class="text-left">
+                <li style="margin-bottom: -1em;" class="text-left" title="Email score: {{ email.score }}">
                     {% if email.score > 0.333 %}
                         <span style="color: #E64A48; font-size: 2em; vertical-align: middle;">•</span>
                     {% elif email.score < -0.333 %}

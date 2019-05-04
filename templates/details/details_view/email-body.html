@@ -1,3 +1,5 @@
+<h3 id="bodies">Body</h3>
+
 <ul>
     {% for body in email.bodies.all|dictsort:"first_seen" %}
         <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>

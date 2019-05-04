@@ -1,9 +1,31 @@
-<b>First submitted:</b> {{ email.first_seen|timesince }} ago.
-<br>
-<b>Most recently submitted:</b> {{ email.modified|timesince }} ago.
-<br>
-<b><!-- <a href="https://github.com/trendmicro/tlsh" target="_blank"> -->TrendMicro Locality Sensitive Hash<!-- </a> -->:</b> {{ email.tlsh_hash }}
-<br>
-<b>Score: {{ score|floatformat:3 }}</b>
+<div class="row">
+    <div class="columns large-6">
+        <h3 id="details">Email Details & Analysis</h3>
 
-<div class="clearfix"></div>
+        <b>First submitted:</b> {{ email.first_seen|timesince }} ago.
+        <br>
+        <b>Most recently submitted:</b> {{ email.modified|timesince }} ago.
+        <br>
+        <b><!-- <a href="https://github.com/trendmicro/tlsh" target="_blank"> -->TrendMicro Locality Sensitive Hash<!-- </a> -->:</b> {{ email.tlsh_hash }}
+        <br>
+        <b>Score:</b> {{ score|floatformat:3 }}
+    </div>
+<!--     <div class="columns large-6 float-right text-center">
+        {% if score > 0.333 %}
+            {% load static %}
+            <img src="{% static "tl_red.svg.png" %}" alt="There is evidence this email is MALICIOUS" title="There is evidence this email is MALICIOUS">
+            <div class="clearfix"><br></div>
+            <i>There is evidence this email is MALICIOUS</i>
+        {% elif score < -0.333 %}
+            {% load static %}
+            <img src="{% static "tl_green.svg.png" %}" alt="There is evidence this email is BENIGN" title="There is evidence this email is BENIGN">
+            <div class="clearfix"><br></div>
+            <i>There is evidence this email is BENIGN</i>
+        {% else %}
+            {% load static %}
+            <img src="{% static "tl_yellow.svg.png" %}" alt="There is evidence this email is SUSPICIOUS" title="There is evidence this email is SUSPICIOUS">
+            <div class="clearfix"><br></div>
+            <i>There is evidence this email is SUSPICIOUS</i>
+        {% endif %}
+    </div> -->
+</div>

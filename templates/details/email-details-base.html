@@ -42,7 +42,6 @@
       <div class="large-9 medium-9 float-left">
         <ul class="emailDetailsList">
           <li class="emailDetailsItem">
-            <h3 id="details">Email Details & Analysis</h3>
             <div class="fast" id="emailDetails" data-animate="fade-in fade-out">
               {% include "details/details_view/email-details.html" %}
               <br>
@@ -50,27 +49,29 @@
             </div>
           </li><hr>
           <li class="emailDetailsItem">
-            <h3 id="header">Header</h3>
             <div class="fast" id="emailHeader" data-animate="fade-in fade-out">
               {% include "details/details_view/email-header.html" %}
             </div>
           </li><hr>
           <li class="emailDetailsItem">
-            <h3 id="bodies">Body</h3>
             <div class="fast" id="emailBody" data-animate="fade-in fade-out">
               {% include "details/details_view/email-body.html" %}
             </div>
-          </li><hr>
-          <li class="emailDetailsItem">
-            <h3 id="networkData">Network Data</h3>
-            <p><i>({{ network_data_overlaps }} overlap{{ network_data_overlaps|pluralize }} with other emails)</i></p>
-            <div class="fast" id="emailNetworkData" data-animate="fade-in fade-out">
-              {% include "details/details_view/network-data-base.html" %}
-            </div>
-          </li><hr>
-          <li class="emailDetailsItem">
-            {% include "details/details_view/email-attachments.html" %}
           </li>
+          {% if email.attachments.all %}
+            <hr>
+            <li class="emailDetailsItem">
+              {% include "details/details_view/email-attachments.html" %}
+            </li>
+          {% endif %}
+          {% if network_data_overlaps != 0 %}
+            <hr>
+            <li class="emailDetailsItem">
+              <div class="fast" id="emailNetworkData" data-animate="fade-in fade-out">
+                {% include "details/details_view/network-data-base.html" %}
+              </div>
+            </li>
+          {% endif %}
         </ul>
       </div>
       <div class="columns large-3 medium-3">

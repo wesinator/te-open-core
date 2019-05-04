@@ -12,6 +12,7 @@ from django.views import generic
 from db.models import Email
 import analyzer
 from utility import utility
+from totalemail import settings
 
 
 def _get_related_headers_and_bodies(network_data_object, email, get_related_headers=True):
@@ -41,7 +42,6 @@ def _get_related_headers_and_bodies(network_data_object, email, get_related_head
 
 
 def redirect_to_homepage(request):
-    """Save an email to the DB."""
     return HttpResponseRedirect('/')
 
 
@@ -132,3 +132,15 @@ def reanalyze_email(request, **kwargs):
         analyzer.start_analysis(email, True)
         messages.info(request, 'Email submitted for reanalysis. Updated results should be posted shortly.')
         return HttpResponseRedirect(reverse('details:details', args=(kwargs['pk'],)))
+
+
+class EmailFeedbackView(generic.DetailView):
+    model = Email
+    template_name = 'details/email-feedback.html'
+
+    def post(self, request, **kwargs):
+        """."""
+        feedback = '{}:{}:{}'.format(request.POST.get('feedback'), kwargs['pk'], settings._process_request_data(settings._get_request_data(request)))
+        utility.create_alerta_alert('Feedback: {}'.format(feedback[:16]), 'info', feedback)
+        messages.info(request, 'Thank you! Your feedback has been recorded.')
+        return HttpResponseRedirect('/')

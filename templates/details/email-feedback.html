@@ -1,0 +1,55 @@
+{% extends 'totalemail/base.html' %}
+
+{% block title %}Feedback for: "{{ email.header.subject }}"{% endblock %}
+
+{% block content %}
+  <style>
+    .emailDetailsList {
+      list-style-type: none;
+    }
+
+    .emailDetailsItem {
+      margin: 1.5em;
+    }
+
+    .topOfPageLink {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      height: 2em;
+      padding-top: 0.35em;
+      padding-left: 0.5em;
+      padding-right: 0.5em;
+    }
+  </style>
+
+  <br>
+  <div class="row">
+    <h2>Feedback for: "{{ email.header.subject|truncatechars:42 }}"</h2>
+
+    <div class="row">
+        {% if messages %}
+            {% for message in messages %}
+                {% autoescape off %}
+                    <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                {% endautoescape %}
+            {% endfor %}
+        {% endif %}
+        <br><br>
+    </div>
+
+    <div class="large-9 medium-9 float-left">
+      <p>We love feedback! It's a big part of how we improve.</p>
+
+      <p>So, how can we better help you identify if an email is malicious? What can we do better? What are we doing well?</p>
+
+      <form action="{% url 'details:feedback' email.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <textarea name="feedback" placeholder="Provide feedback here (280 characters max)..." rows="10" maxlength="280"></textarea>
+        <input id="submitButton" type="submit" value="Submit feedback">
+      </form>
+    </div>
+  </div>
+
+  <a class="topOfPageLink" href="#top">Top ^</a>
+{% endblock %}

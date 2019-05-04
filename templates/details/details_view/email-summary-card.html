@@ -45,7 +45,8 @@
             <b>Actions</b>
         </div>
         <div class="card-section">
-            <a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a>
+            <p><a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a></p>
+            <p><a href="{% url 'details:feedback' email.id %}">Provide feedback</a></p>
         </div>
     </div>
 </div>

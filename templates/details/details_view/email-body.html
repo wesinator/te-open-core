@@ -1,12 +1,18 @@
 <h3 id="bodies">Body</h3>
 
-<ul>
+<ul class="vertical menu" data-accordion-menu>
     {% for body in email.bodies.all|dictsort:"first_seen" %}
-        <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>
-        {% if body.decoded_text != None %}
-            <br>
-            <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.decoded_text }}</pre>
-        {% endif %}
-        <br>
+        <li>
+            <a href="" id="{{ body.id }}">{{ body.id }}</a>
+            <ul class="menu vertical">
+                <li class="columns">
+                    <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>
+                    {% if body.decoded_text != None %}
+                        <br>
+                        <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.decoded_text }}</pre>
+                    {% endif %}
+                </li>
+            </ul>
+        </li>
     {% endfor %}
 </ul>

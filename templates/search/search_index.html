@@ -23,17 +23,16 @@
 
     <form action="{% url 'search:index' %}" method="get">
         <input id="searchBox" type="text" placeholder="Search for something here..." name="q" value="{{ q }}">
+        <p><i>Searching {{ total_email_count }} email{{ total_email_count|pluralize }}</i></p>
         <input class="hollow medium button success" type="submit" value="Search">
         {% if q != None %}
             <a class="hollow medium button secondary" href="{% url 'search:index' %}">Clear</a>
         {% endif %}
     </form>
 
-    <span><i>Searching {{ total_email_count }} email{{ total_email_count|pluralize }}</i></span>
+    <br>
 
-    <br><br>
-
-    <div class="large-6 medium-6 small-7 float-center">
+    <div class="large-5 medium-7 small-12 float-center">
         {% if results %}
             {% if total_result_count > max_results %}
                 <!-- TODO: Add a tooltip to this message explaining why we are limiting the results -->

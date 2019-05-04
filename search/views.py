@@ -66,28 +66,28 @@ class IndexSearchView(TemplateView):
                     prefix_found = True
                     results = [
                         email
-                        for email in Email.objects.all()
+                        for email in Email.objects.all().order_by('-first_seen')
                         if search in email.header.get_value(header_search_mappings[prefix]).lower()
                     ]
                     emails.extend(_add_email_results(emails, results, query))
                 elif prefix in body_search_mappings:
                     prefix_found = True
                     if prefix == 'bod':
-                        results = Email.objects.filter(bodies__full_text__icontains=search)
+                        results = Email.objects.filter(bodies__full_text__icontains=search).order_by('-first_seen')
                         emails.extend(_add_email_results(emails, results, query))
                 elif prefix in network_data_search_mappings:
                     prefix_found = True
                     # find emails with the domain
                     if prefix == 'dom':
-                        results = Email.objects.filter(header__host__host_name__icontains=search)
+                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
                         emails.extend(_add_email_results(emails, results, query))
-                        results = Email.objects.filter(bodies__host__host_name__icontains=search)
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
                     # find emails with the domain in the header
                     elif prefix == 'domh':
-                        results = Email.objects.filter(header__host__host_name__icontains=search)
+                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
                     # find emails with the domain in the body
                     elif prefix == 'domb':
-                        results = Email.objects.filter(bodies__host__host_name__icontains=search)
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
                     emails.extend(_add_email_results(emails, results, query))
 
                 if prefix_found:
@@ -97,7 +97,7 @@ class IndexSearchView(TemplateView):
             query_string = query_string.strip()
             if query_string:
                 # search for the remaining query (which has the queries with custom prefixes removed)
-                results = Email.objects.filter(full_text__icontains=query_string)
+                results = Email.objects.filter(full_text__icontains=query_string).order_by('-first_seen')
                 emails.extend(_add_email_results(emails, results, query_string))
 
             return render(

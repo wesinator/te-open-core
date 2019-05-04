@@ -143,7 +143,7 @@ To add a new analysis engine:
 
 ## Common Errors
 
-- `Missing staticfiles manifest entry for 'styles.css'`: run `make collect`
+- `Missing staticfiles manifest entry for 'styles.css'`: run `make static`
 
 ## Misc.
 

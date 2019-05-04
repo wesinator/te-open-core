@@ -46,7 +46,8 @@
         </div>
         <div class="card-section">
             <p><a href="{% url 'details:reanalyze' email.id %}">Resubmit for analysis</a></p>
-            <p><a href="{% url 'details:feedback' email.id %}">Provide feedback</a></p>
+            <p><a href="{% url 'details:feedback' email.id %}" title="Provide feedback about this email or TotalEmail as a whole">Provide feedback</a></p>
+            <p><a href="{% url 'details:redaction' email.id %}" title="Request that information be removed from this email (e.g. PII or trade secrets)">Request email redaction</a></p>
         </div>
     </div>
 </div>

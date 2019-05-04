@@ -144,3 +144,15 @@ class EmailFeedbackView(generic.DetailView):
         utility.create_alerta_alert('Feedback: {}'.format(feedback[:16]), 'info', feedback)
         messages.info(request, 'Thank you! Your feedback has been recorded.')
         return HttpResponseRedirect('/')
+
+
+class EmailRedactionView(generic.DetailView):
+    model = Email
+    template_name = 'details/email-redaction.html'
+
+    def post(self, request, **kwargs):
+        """."""
+        redaction_request = '{}:{}:{}'.format(request.POST.get('redactionRequest'), kwargs['pk'], settings._process_request_data(settings._get_request_data(request)))
+        utility.create_alerta_alert('Redaction request: {}'.format(redaction_request[:16]), 'info', redaction_request)
+        messages.info(request, 'Thank you! Your redaction request has been recorded.')
+        return HttpResponseRedirect('/')

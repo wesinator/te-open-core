@@ -1,6 +1,6 @@
 {% extends 'totalemail/base.html' %}
 
-{% block title %}Feedback for: "{{ email.header.subject }}"{% endblock %}
+{% block title %}Redaction Request for: "{{ email.header.subject }}"{% endblock %}
 
 {% block content %}
   <style>
@@ -25,7 +25,7 @@
 
   <br>
   <div class="row">
-    <h2>Feedback for: "{{ email.header.subject|truncatechars:42 }}"</h2>
+    <h2>Redaction Request for: "{{ email.header.subject|truncatechars:42 }}"</h2>
 
     <div class="row">
         {% if messages %}
@@ -39,14 +39,12 @@
     </div>
 
     <div class="large-9 medium-9 float-left">
-      <p>We love feedback! It's a big part of how we improve.</p>
+      <p>Is there something in this email that should be removed (e.g. <a href="https://en.wikipedia.org/wiki/Personal_data">PII</a> or trade secrets)? Please let us know <i>what</i> you would like redacted from this email and <i>why</i> and we'll make it happen. Thanks!</p>
 
-      <p>So, how can we better help you identify if an email is malicious? What can we do better? What are we doing well?</p>
-
-      <form action="{% url 'details:feedback' email.id %}" method="post" enctype="multipart/form-data">
+      <form action="{% url 'details:redaction' email.id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <textarea name="feedback" placeholder="Provide feedback here (280 characters max)..." rows="5" maxlength="280"></textarea>
-        <input id="submitButton" type="submit" value="Submit feedback">
+        <textarea name="redactionRequest" placeholder="Provide details about what you would like redacted and why you would like it to be redacted here (500 characters max)..." rows="10" maxlength="500"></textarea>
+        <input id="submitButton" type="submit" value="Submit redaction request">
       </form>
     </div>
   </div>

@@ -1,17 +1,15 @@
-{% if email.attachments.all %}
-    <h3 id="attachments">Attachments</h3>
+<h3 id="attachments">Attachments</h3>
 
-    <ul class="vertical menu" data-accordion-menu>
-        {% for attachment in email.attachments.all %}
-            <li>
-              <a href="" id="{{ attachment.id }}">{{ attachment.filenames|join:", " }}</a>
-              <ul class="menu vertical">
-                <li class="columns">
-                  <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>
-                </li>
-              </ul>
+<ul class="vertical menu" data-accordion-menu>
+    {% for attachment in email.attachments.all %}
+        <li>
+          <a href="" id="{{ attachment.id }}">{{ attachment.filenames|join:", " }}</a>
+          <ul class="menu vertical">
+            <li class="columns">
+              <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>
             </li>
-        {% endfor %}
-    </ul>
-    <br><br>
-{% endif %}
+          </ul>
+        </li>
+    {% endfor %}
+</ul>
+<br><br>

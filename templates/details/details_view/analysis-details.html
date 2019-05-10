@@ -1,11 +1,14 @@
-<ul>
+<h3 id="analyses">Analyses</h3>
+
+<ul class="vertical menu" data-accordion-menu>
     {% for analysis in email.analysis_set.all %}
         <li>
-            <b>{{ analysis.source|title }}</b> - <i>{{ analysis.first_seen|date:"DATE_FORMAT" }}</i>
-            <ul>
+            <a href="">{{ analysis.source|title }} - <i>{{ analysis.first_seen|date:"DATE_FORMAT" }}</i></a>
+
+            <ul class="menu vertical">
                 {% for note in analysis.notes_strings %}
                     {% autoescape off %}
-                        <li>{{ note }}</li>
+                        <li class="columns">{{ note }}</li>
                     {% endautoescape %}
                 {% endfor %}
             </ul>

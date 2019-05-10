@@ -44,8 +44,6 @@
           <li class="emailDetailsItem">
             <div class="fast" id="emailDetails" data-animate="fade-in fade-out">
               {% include "details/details_view/email-details.html" %}
-              <br>
-              {% include "details/details_view/analysis-details.html" %}
             </div>
           </li><hr>
           <li class="emailDetailsItem">
@@ -62,6 +60,14 @@
             <hr>
             <li class="emailDetailsItem">
               {% include "details/details_view/email-attachments.html" %}
+            </li>
+          {% endif %}
+          {% if email.analysis_set.all %}
+            <hr>
+            <li class="emailDetailsItem">
+              <div class="fast" data-animate="fade-in fade-out">
+                {% include "details/details_view/analysis-details.html" %}
+              </div>
             </li>
           {% endif %}
           {% if network_data_overlaps != 0 %}

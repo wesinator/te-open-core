@@ -24,20 +24,27 @@
         </div>
         <div class="card-section">
             <a href="#header">Header</a><br>
-            <a href="#bodies">Body</a>
+            <a href="#bodies">Bodies</a>
             {% autoescape off %}
             {{ email.structure|linebreaksbr }}
             {% endautoescape %}
         </div>
     </div>
     <div>
-        {% if network_data_overlaps != 0 %}
+        {% if network_data_overlaps != 0 or email.analysis_set.all %}
           <div class="card-divider">
               <b>Details</b>
           </div>
-          <div class="card-section">
-              <a href="#networkData">Network Data</a>
-          </div>
+          {% if email.analysis_set.all %}
+              <div class="card-section">
+                  <a href="#analyses">Analyses</a>
+              </div>
+          {% endif %}
+          {% if network_data_overlaps != 0 %}
+            <div class="card-section">
+                <a href="#networkData">Network Data</a>
+            </div>
+          {% endif %}
         {% endif %}
     </div>
     <div>

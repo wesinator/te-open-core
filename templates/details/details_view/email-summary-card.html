@@ -35,16 +35,14 @@
           <div class="card-divider">
               <b>Details</b>
           </div>
-          {% if email.analysis_set.all %}
-              <div class="card-section">
-                  <a href="#analyses">Analyses</a>
-              </div>
-          {% endif %}
-          {% if network_data_overlaps != 0 %}
-            <div class="card-section">
-                <a href="#networkData">Network Data</a>
-            </div>
-          {% endif %}
+          <div class="card-section">
+              {% if email.analysis_set.all %}
+                <p><a href="#analyses">Analyses</a></p>
+              {% endif %}
+              {% if network_data_overlaps != 0 %}
+                <p><a href="#networkData">Network Data</a></p>
+              {% endif %}
+          </div>
         {% endif %}
     </div>
     <div>

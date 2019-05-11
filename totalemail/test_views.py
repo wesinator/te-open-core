@@ -44,7 +44,7 @@ class ViewTests(TestCase):
 
     def test_save_view_with_data_redaction(self):
         original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
-        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_data': True})
+        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True})
         # ensure email created and system redirects to new email
         self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
         # make sure the original_sha256 is correct
@@ -56,7 +56,7 @@ class ViewTests(TestCase):
     def test_save_view_with_duplicate_uploads(self):
         """Try saving an email without redaction and then saving it with redaction."""
         self.client.post('/save/', {'full_text': TestData.email_text})
-        self.client.post('/save/', {'full_text': TestData.email_text, 'redact_data': True})
+        self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True})
         # if the two requests ^^ above don't cause this test to fail, that is good enough
 
     def test_save_view_with_multiple_file_upload(self):
@@ -67,7 +67,7 @@ class ViewTests(TestCase):
                     os.path.join(os.path.dirname(__file__), '../test_resources/emails/single_attachment_test.eml')
                 )
             ) as f2:
-                response = self.client.post('/save/', {'email_file': [f1, f2], 'redact_data': True})
+                response = self.client.post('/save/', {'email_file': [f1, f2], 'redact_recipient_data': True})
 
         # ensure email created and system redirects to new email
         self.assertEqual(

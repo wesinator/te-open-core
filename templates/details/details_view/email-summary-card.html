@@ -31,7 +31,7 @@
         </div>
     </div>
     <div>
-        {% if network_data_overlaps != 0 or email.analysis_set.all %}
+        {% if network_data_count != 0 or email.analysis_set.all %}
           <div class="card-divider">
               <b>Details</b>
           </div>
@@ -39,7 +39,7 @@
               {% if email.analysis_set.all %}
                 <p><a href="#analyses">Analyses</a></p>
               {% endif %}
-              {% if network_data_overlaps != 0 %}
+              {% if network_data_count != 0 %}
                 <p><a href="#networkData">Network Data</a></p>
               {% endif %}
           </div>

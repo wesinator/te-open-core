@@ -69,8 +69,14 @@ class EmailDetailView(generic.DetailView):
         if email.header.host_set.exists:
             for host in email.header.host_set.all():
                 network_data_count += 1
-                data = _get_related_headers_and_bodies(host, email)
-                network_data_overlaps += len(data)
+                if utility.domain_is_common(host.host_name):
+                    data = [{
+                        'link': '/search?q={}'.format(host.host_name),
+                        'text': 'this is a common domain, click here to view more...'
+                    }]
+                else:
+                    data = _get_related_headers_and_bodies(host, email)
+                    network_data_overlaps += len(data)
                 network_data['header']['hosts'][host.host_name] = data
         if email.header.ipaddress_set.exists:
             for address in email.header.ipaddress_set.all():
@@ -90,8 +96,14 @@ class EmailDetailView(generic.DetailView):
             if body.host_set.exists:
                 for host in body.host_set.all():
                     network_data_count += 1
-                    data = _get_related_headers_and_bodies(host, email)
-                    network_data_overlaps += len(data)
+                    if utility.domain_is_common(host.host_name):
+                        data = [{
+                            'link': '/search?q={}'.format(host.host_name),
+                            'text': 'this is a common domain, click here to view more...'
+                        }]
+                    else:
+                        data = _get_related_headers_and_bodies(host, email)
+                        network_data_overlaps += len(data)
                     network_data['bodies']['hosts'][host.host_name] = data
             if body.ipaddress_set.exists:
                 for address in body.ipaddress_set.all():

@@ -6,9 +6,11 @@
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
-                    <li><a href="{{ link.link }}">...view more...</a></li>
+                    <li><a href="{{ link.link }}">view more...</a></li>
+                  {% elif link.text == 'this is a common email, click here to view more...' %}
+                    <li><a href="{{ link.link }}">{{ link.text }}</a></li>
                   {% else %}
-                    <li>This host was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
+                    <li>This domain was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
                   {% endif %}
                 {% endfor %}
               </ul>
@@ -26,7 +28,7 @@
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
-                    <li><a href="{{ link.link }}">...view more...</a></li>
+                    <li><a href="{{ link.link }}">view more...</a></li>
                   {% else %}
                     <li>This IP address was also the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
                   {% endif %}
@@ -46,7 +48,7 @@
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
-                    <li><a href="{{ link.link }}">...view more...</a></li>
+                    <li><a href="{{ link.link }}">view more...</a></li>
                   {% else %}
                     <li>This email address was also the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
                   {% endif %}

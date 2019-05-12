@@ -10,11 +10,13 @@ import hashlib
 import ipaddress
 import json
 import os
-import requests
+import re
 try:
     import urllib.parse as urlparse
 except ImportError:
     import urlparse
+
+import requests
 
 from totalemail import settings
 
@@ -154,7 +156,7 @@ def base64_decode(text):
 
 
 SOURCE_WEIGHTINGS = {
-    'Orange Assassin': '(x / 2) - 1',
+    'Orange Assassin': '(x / 3) - 1',
     'Earth Reflections Spam Regexes': '(2 ** x / 194) - 0.01',
     'Hubspot Spam Keywords': '(x / 3) - .1',
     'Ram Samudrala Spam Regexes': 'x',
@@ -197,3 +199,14 @@ def email_score_calculate(email):
         final_score = 0
 
     return final_score
+
+
+def domain_is_common(domain_name):
+    """Check to see if the domain name is common (and should not be displayed in the network data section)."""
+    whitelisted_domain_regexes = ['(?:.*\.)?google\.com', 'fonts.googleapis.com', 'amazonaws.com', 'gmail.com', 'aol.com']
+
+    for regex in whitelisted_domain_regexes:
+        if re.match(regex, domain_name):
+            return True
+
+    return False

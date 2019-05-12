@@ -7,7 +7,7 @@
                 {% for link in links %}
                   {% if link.text == '' %}
                     <li><a href="{{ link.link }}">view more...</a></li>
-                  {% elif link.text == 'this is a common email, click here to view more...' %}
+                  {% elif link.text == 'view more (this is a generic domain and no overlaps will be shown)...' %}
                     <li><a href="{{ link.link }}">{{ link.text }}</a></li>
                   {% else %}
                     <li>This domain was also in the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>

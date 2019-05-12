@@ -72,7 +72,7 @@ class EmailDetailView(generic.DetailView):
                 if utility.domain_is_common(host.host_name):
                     data = [{
                         'link': '/search?q={}'.format(host.host_name),
-                        'text': 'this is a common domain, click here to view more...'
+                        'text': 'view more (this is a generic domain and no overlaps will be shown)...'
                     }]
                 else:
                     data = _get_related_headers_and_bodies(host, email)
@@ -99,7 +99,7 @@ class EmailDetailView(generic.DetailView):
                     if utility.domain_is_common(host.host_name):
                         data = [{
                             'link': '/search?q={}'.format(host.host_name),
-                            'text': 'this is a common domain, click here to view more...'
+                            'text': 'view more (this is a generic domain and no overlaps will be shown)...'
                         }]
                     else:
                         data = _get_related_headers_and_bodies(host, email)

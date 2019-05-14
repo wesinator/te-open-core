@@ -9,7 +9,18 @@ from utility import utility
 # TODO: make this code beautiful (1)
 
 
-def clean_email(email_text, redaction_values=None):
+def _clean_pii(text):
+    """."""
+    ssn_pattern = '(\d{3}-?\d{2}-?\d{4})'
+    cleaned_text = re.sub(ssn_pattern, 'REDACTED', text, flags=re.IGNORECASE)
+
+    phone_number_pattern = '(?:\(?[0-9]{3}\)?)?([ -]?|^)[0-9]{3}[ -][0-9]{4}'
+    cleaned_text = re.sub(phone_number_pattern, 'REDACTED', cleaned_text, flags=re.IGNORECASE)
+
+    return cleaned_text
+
+
+def clean_email(email_text, redaction_values=None, redact_pii=False):
     """Clean an email."""
     FIELDS_TO_REDACT = ['to', 'delivered-to']
     cleaned_email = email_text
@@ -49,6 +60,8 @@ def clean_email(email_text, redaction_values=None):
         for redaction_value in redaction_value_list:
             if redaction_value.lower() in cleaned_header.lower():
                 cleaned_header = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_header, flags=re.IGNORECASE)
+        if redact_pii:
+            cleaned_header = _clean_pii(cleaned_header)
         cleaned_email = re.sub(re.escape(original_header_content), cleaned_header, cleaned_email, flags=re.IGNORECASE)
 
     # find all base64 encoded header values
@@ -61,6 +74,9 @@ def clean_email(email_text, redaction_values=None):
         for redaction_value in redaction_value_list:
             if redaction_value.lower() in decoded_content.lower():
                 cleaned_content = re.sub(re.escape(redaction_value), 'REDACTED', decoded_content, flags=re.IGNORECASE)
+
+        if redact_pii:
+            cleaned_content = _clean_pii(cleaned_content)
 
         # encode the content and replace it in the email
         encoded_content = utility.base64_encode(cleaned_content)
@@ -81,6 +97,9 @@ def clean_email(email_text, redaction_values=None):
                 if redaction_value.lower() in decoded_body.lower():
                     cleaned_body = re.sub(re.escape(redaction_value), 'REDACTED', decoded_body, flags=re.IGNORECASE)
 
+            if redact_pii:
+                cleaned_body = _clean_pii(cleaned_body)
+
             # reencode and replace the body
             encoded_body = utility.base64_encode(cleaned_body)
             cleaned_email = re.sub(re.escape(body_content), encoded_body, cleaned_email, flags=re.IGNORECASE)
@@ -89,6 +108,10 @@ def clean_email(email_text, redaction_values=None):
             for redaction_value in redaction_value_list:
                 if redaction_value.lower() in cleaned_body.lower():
                     cleaned_body = re.sub(re.escape(redaction_value), 'REDACTED', cleaned_body, flags=re.IGNORECASE)
+
+            if redact_pii:
+                cleaned_body = _clean_pii(cleaned_body)
+
             cleaned_email = re.sub(re.escape(body_content), cleaned_body, cleaned_email, flags=re.IGNORECASE)
 
     return cleaned_email

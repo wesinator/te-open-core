@@ -70,7 +70,7 @@ def _get_email_structure(
 
 
 def process_email(
-    email_text, request_details, redact_email_data=False, perform_external_analysis=True, redaction_values=None
+    email_text, request_details, redact_email_data=False, perform_external_analysis=True, redaction_values=None, redact_pii=False
 ):
     """Process the email text into a form that is ready for the database."""
     if email_text == '':
@@ -89,7 +89,7 @@ def process_email(
 
     # clean
     if redact_email_data or redaction_values:
-        email_text = clean_email(email_text, redaction_values)
+        email_text = clean_email(email_text, redaction_values, redact_pii=redact_pii)
         cleaned_sha256 = utility.sha256(email_text)
 
     email_message = email.message_from_string(email_text)

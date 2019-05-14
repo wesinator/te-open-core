@@ -4,6 +4,7 @@
 
 from .cleaner import clean_email
 from test_resources import DefaultTestObject
+from utility import utility
 
 TestData = DefaultTestObject()
 
@@ -250,3 +251,106 @@ def test_redaction_not_touching_attachments():
     cleaned_email = clean_email(ATTACHMENT_EMAIL, redaction_values='9vY')
     # make sure the encoded attachment is not changed
     assert 'Zm9vYmFyCg==' in cleaned_email
+
+
+def test_ssn_redaction():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+123-45-6789
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert '123-45-6789' not in cleaned_email
+
+
+def test_base64_encoded_ssn_redaction():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: base64
+
+MTIzLTQ1LTY3ODk=
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert 'MTIzLTQ1LTY3ODk' not in cleaned_email
+    assert 'UkVEQUNURUQ=' in cleaned_email
+
+    # test an ssn in the middle of a string
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: base64
+
+dGhpcyBpcyBhIHRlc3QgMTIzLTQ1LTY3ODkgZm9vCg==
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert 'dGhpcyBpcyBhIHRlc3QgMTIzLTQ1LTY3ODkgZm9vCg' not in cleaned_email
+    assert 'UkVEQUNURUQ' in cleaned_email
+
+
+def test_phone_number_redaction():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+1(800)123-4567 ext. 17
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert '1(800)123-4567' not in cleaned_email
+
+
+def test_base64_encoded_phone_number_redaction():
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: base64
+
+MSg4MDApMTIzLTQ1Njc=
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert 'MSg4MDApMTIzLTQ1Njc' not in cleaned_email
+    assert 'UkVEQUNURUQ=' in cleaned_email
+
+    # test a phone number in the middle of a string
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: base64
+
+dGhpcyBpcyBhIDEoODAwKTEyMy00NTY3IHBob25lIG51bWJlciB0ZXN0Cg==
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert 'dGhpcyBpcyBhIDEoODAwKTEyMy00NTY3IHBob25lIG51bWJlciB0ZXN0Cg' not in cleaned_email
+    assert 'UkVEQUNURUQ' in cleaned_email
+
+
+def test_phone_regex():
+    """Make sure the phone number regex is not too broad. This was previously a problem."""
+    s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Date: Wed, 08 May 2019 03:44:37 -0400
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: text/plain
+
+foo
+
+"""
+    cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
+    assert 'Wed, 08 May 2019 03:44:37 -0400' in cleaned_email

@@ -53,6 +53,25 @@ class ViewTests(TestCase):
         assert email_object.id != email_object.cleaned_id
         assert original_sha256 == email_object.id
 
+    def test_save_view_with_pii_redaction(self):
+        s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+
+123-45-6789
+
+"""
+        response = self.client.post('/save/', {'full_text': s, 'redact_recipient_data': True, 'redact_pii': True})
+        assert response.status_code == 302
+        assert '123-45-6789' not in Email.objects.all()[0].full_text
+        assert Email.objects.all()[0].full_text == """Subject: =?UTF-8?B?aGkgUkVEQUNURUQ=?=
+From: Bob Bradbury <bob@gmail.com>
+To: REDACTED <REDACTED>
+
+REDACTED
+
+""".replace('\n', '\r\n')
+
     def test_save_view_with_duplicate_uploads(self):
         """Try saving an email without redaction and then saving it with redaction."""
         self.client.post('/save/', {'full_text': TestData.email_text})

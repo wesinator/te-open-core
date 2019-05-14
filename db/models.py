@@ -14,6 +14,32 @@ from utility import utility
 JOIN_STRING = '|||'
 
 
+def _get_related_headers_and_bodies(network_data_object, email, get_related_headers=True):
+    """."""
+    links = []
+    related_headers = None
+    related_bodies = network_data_object.bodies.all()
+
+    if get_related_headers:
+        # TODO: the links for each host will need to be deduplicated (between the header and body links) - I may want to move this code to the models.py
+        related_headers = network_data_object.headers.all()
+        for header in related_headers[:4]:
+            if header.id != email.header.id:
+                links.append({'link': '/{}'.format(header.link), 'text': header.subject})
+    for body in related_bodies[:4]:
+        # TODO: does this check work?
+        if body.id not in email.bodies.all():
+            for link in body.links:
+                links.append({'link': '/{}'.format(link), 'text': body.emails.all()[0].header.subject})
+
+    if related_bodies and len(related_bodies) > 4:
+        links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
+    if related_headers and len(related_headers) > 4:
+        links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
+
+    return links
+
+
 class Email(models.Model):
     id = models.CharField(max_length=64, primary_key=True)
     cleaned_id = models.CharField(max_length=64)
@@ -34,6 +60,87 @@ class Email(models.Model):
             self.first_seen = timezone.now()
         self.modified = timezone.now()
         return super(Email, self).save(*args, **kwargs)
+
+    def network_data(self):
+        """Get the network data for the given email."""
+        # prepare the network data
+        network_data = {
+            'header': {'hosts': {}, 'ip_addresses': {}, 'email_addresses': {}},
+            'bodies': {'hosts': {}, 'ip_addresses': {}, 'email_addresses': {}, 'urls': {}},
+        }
+        # this is simply a list of all of the network data so that the user can copy it
+        network_data_flat_list = []
+        network_data_overlaps = 0
+        # right now (may, 2019), this value is primarily used to determine whether we need to display the analysis data in the template
+        network_data_count = 0
+
+        # get network data from headers
+        if self.header.host_set.exists:
+            for host in self.header.host_set.all():
+                network_data_count += 1
+                if utility.domain_is_common(host.host_name):
+                    data = [{
+                        'link': '/search?q={}'.format(host.host_name),
+                        'text': 'view more (this is a generic domain and no overlaps will be shown)...'
+                    }]
+                else:
+                    data = _get_related_headers_and_bodies(host, self)
+                    network_data_overlaps += len(data)
+                network_data['header']['hosts'][host.host_name] = data
+                network_data_flat_list.append(host.host_name)
+        if self.header.ipaddress_set.exists:
+            for address in self.header.ipaddress_set.all():
+                network_data_count += 1
+                data = _get_related_headers_and_bodies(address, self)
+                network_data_overlaps += len(data)
+                network_data['header']['ip_addresses'][address.ip_address] = data
+                network_data_flat_list.append(address.ip_address)
+        if self.header.emailaddress_set.exists:
+            for address in self.header.emailaddress_set.all():
+                network_data_count += 1
+                data = _get_related_headers_and_bodies(address, self)
+                network_data_overlaps += len(data)
+                network_data['header']['email_addresses'][address.email_address] = data
+                network_data_flat_list.append(address.email_address)
+
+        # get network data from bodies
+        for body in self.bodies.all():
+            if body.host_set.exists:
+                for host in body.host_set.all():
+                    network_data_count += 1
+                    if utility.domain_is_common(host.host_name):
+                        data = [{
+                            'link': '/search?q={}'.format(host.host_name),
+                            'text': 'view more (this is a generic domain and no overlaps will be shown)...'
+                        }]
+                    else:
+                        data = _get_related_headers_and_bodies(host, self)
+                        network_data_overlaps += len(data)
+                    network_data['bodies']['hosts'][host.host_name] = data
+                    network_data_flat_list.append(host.host_name)
+            if body.ipaddress_set.exists:
+                for address in body.ipaddress_set.all():
+                    network_data_count += 1
+                    data = _get_related_headers_and_bodies(address, self)
+                    network_data_overlaps += len(data)
+                    network_data['bodies']['ip_addresses'][address.ip_address] = data
+                    network_data_flat_list.append(address.ip_address)
+            if body.emailaddress_set.exists:
+                for address in body.emailaddress_set.all():
+                    network_data_count += 1
+                    data = _get_related_headers_and_bodies(address, self)
+                    network_data_overlaps += len(data)
+                    network_data['bodies']['email_addresses'][address.email_address] = data
+                    network_data_flat_list.append(address.email_address)
+            if body.url_set.exists:
+                for url in body.url_set.all():
+                    network_data_count += 1
+                    data = _get_related_headers_and_bodies(url, self, get_related_headers=False)
+                    network_data_overlaps += len(data)
+                    network_data['bodies']['urls'][url.url] = data
+                    network_data_flat_list.append(url.url)
+
+        return network_data, network_data_flat_list, network_data_overlaps, network_data_count
 
     def __str__(self):
         return str(self.id)

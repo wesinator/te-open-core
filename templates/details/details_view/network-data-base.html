@@ -1,21 +1,23 @@
-<h3 id="networkData">Network Data</h3>
+<h3 id="networkData">Network Data ({{ network_data_flat_list|length }})</h3>
 <p><i>({{ network_data_overlaps }} overlap{{ network_data_overlaps|pluralize }} with other emails)</i></p>
 
-<h4>Network data in headers:</h4>
+{% if network_data_header_count > 0 %}
+    <h4>Network data in headers ({{ network_data_header_count }}):</h4>
 
-{% include "details/details_view/network_data_views/header-network-data.html" %}
+    {% include "details/details_view/network_data_views/header-network-data.html" %}
+    <br>
+{% endif %}
 
-<br>
+{% if network_data_body_count > 0 %}
+    <h4>Network data in bodies ({{ network_data_body_count }}):</h4>
 
-<!-- TODO: check to see if there is any data in the body before showing it (2) -->
-<h4>Network data in bodies:</h4>
-
-{% include "details/details_view/network_data_views/bodies-network-data.html" %}
+    {% include "details/details_view/network_data_views/bodies-network-data.html" %}
+{% endif %}
 
 <button class="button secondary" onclick="copyNetworkData()">Copy Network Data</button>
 
 <!-- The styling on this element hides it from the screen (see the "Position Absolute and Offscreen" section here: https://snook.ca/archives/html_and_css/hiding-content-for-accessibility) -->
-<textarea id="networkDataHidden" style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;" cols="30" rows="10">{{ network_data_flat_list }}</textarea>
+<textarea id="networkDataHidden" style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;" cols="30" rows="10">{{ network_data_flat_list|join:',' }}</textarea>
 
 <script>
     function copyNetworkData() {

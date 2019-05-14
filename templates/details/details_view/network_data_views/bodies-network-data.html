@@ -1,8 +1,9 @@
 {% if network_data.bodies.hosts %}
-    <b>Domain names:</b>
+    <h5>Domain names ({{ network_data.bodies.hosts|length }}):</h5>
     <ul>
-        {% for host, links in network_data.bodies.hosts.items %} 
-            <li>{{ host }}
+        {% for host, links in network_data.bodies.hosts.items %}
+            <li>
+              <b>{{ host }}</b>
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
@@ -21,10 +22,11 @@
 {% endif %}
 
 {% if network_data.bodies.ip_addresses %}
-    <b>IP addresses:</b>
+    <h5>IP addresses ({{ network_data.bodies.ip_addresses|length }}):</h5>
     <ul>
-        {% for address, links in network_data.bodies.ip_addresses.items %} 
-            <li>{{ address }}
+        {% for address, links in network_data.bodies.ip_addresses.items %}
+            <li>
+              <b>{{ address }}</b>
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
@@ -41,10 +43,11 @@
 {% endif %}
 
 {% if network_data.bodies.email_addresses %}
-    <b>Email addresses:</b>
+    <h5>Email addresses ({{ network_data.bodies.email_addresses|length }}):</h5>
     <ul>
-        {% for address, links in network_data.bodies.email_addresses.items %} 
-            <li>{{ address }}
+        {% for address, links in network_data.bodies.email_addresses.items %}
+            <li>
+              <b>{{ address }}</b>
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}
@@ -61,10 +64,11 @@
 {% endif %}
 
 {% if network_data.bodies.urls %}
-    <b>URLs:</b>
+    <h5>URLs ({{ network_data.bodies.urls|length }}):</h5>
     <ul>
-        {% for url, links in network_data.bodies.urls.items %} 
-            <li>{{ url }}
+        {% for url, links in network_data.bodies.urls.items %}
+            <li>
+              <b>{{ url }}</b>
               <ul>
                 {% for link in links %}
                   {% if link.text == '' %}

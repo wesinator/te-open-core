@@ -84,7 +84,7 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
         decoded_text = parse_bodies.decode_base64(str(body_text).split('\n\n')[-1])
 
     new_body, created = Body.objects.update_or_create(
-        id=utility.sha256(body_text), defaults={'full_text': body_text, 'decoded_text': decoded_text}
+        id=utility.sha256(body_text), defaults={'full_text': body_text, 'content_type': body_content_type, 'decoded_text': decoded_text}
     )
 
     if perform_external_analysis:

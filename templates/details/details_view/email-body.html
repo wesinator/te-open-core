@@ -3,7 +3,7 @@
 <ul class="vertical menu" data-accordion-menu>
     {% for body in email.bodies.all|dictsort:"first_seen" %}
         <li>
-            <a href="" id="{{ body.id }}">{{ body.id }}</a>
+            <a href="" id="{{ body.id }}">{{ body.content_type }}</a>
             <ul class="menu vertical">
                 <li class="columns">
                     <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>

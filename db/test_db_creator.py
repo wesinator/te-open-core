@@ -99,6 +99,14 @@ class EmailTests(TestCase):
         assert '8e87067dacf77be7daa2910c6b525dddaff3e51bb0c75b5118922a02794dd578' in body_ids
         assert 'da39ab5b4dd6e13df2b2a51e050368c6517fa438d23257d63a3fca57f8cab6ad' in body_ids
 
+    def test_body_content_type(self):
+        """Make sure a header and body are related to a created email."""
+        new_email = TestData.create_email()
+        assert len(new_email.bodies.all()) == 2
+        content_types = [body.content_type for body in new_email.bodies.all()]
+        assert 'text/plain' in content_types
+        assert 'text/html' in content_types
+
     def test_related_header_body_and_attachment(self):
         """Make sure a header and body are related to a created email."""
         created_content = TestData.create_email(TestData.attachment_email_text)
@@ -253,7 +261,7 @@ class StructureTest(TestCase):
 
     def test_email_structure_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
-        desired_structure = """\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/mixed\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#4a0e8758b153672022793140e50a92fdc206078af019db59fa7974d343184ed4'>text/plain</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#94657296722ac8a5d62f7f4456846f5146cf24d86eda345ffb000a54762d6e32'>text/html</a>\n<a href="#attachments"><b>Attachments:</b></a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png</a>"""
+        desired_structure = """\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/mixed\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#4a0e8758b153672022793140e50a92fdc206078af019db59fa7974d343184ed4'>text/plain</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#94657296722ac8a5d62f7f4456846f5146cf24d86eda345ffb000a54762d6e32'>text/html</a>\n<a href="#attachments">Attachments:</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png</a>"""
         assert created_content.structure == desired_structure
 
 

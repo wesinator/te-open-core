@@ -194,6 +194,7 @@ class Body(models.Model):
     first_seen = models.DateTimeField(editable=False)
     full_text = models.TextField()
     decoded_text = models.TextField(null=True, blank=True)
+    content_type = models.CharField(max_length=50, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         """On save, update timestamps"""

@@ -11,3 +11,21 @@
 <h4>Network data in bodies:</h4>
 
 {% include "details/details_view/network_data_views/bodies-network-data.html" %}
+
+<button class="button secondary" onclick="copyNetworkData()">Copy Network Data</button>
+
+<!-- The styling on this element hides it from the screen (see the "Position Absolute and Offscreen" section here: https://snook.ca/archives/html_and_css/hiding-content-for-accessibility) -->
+<textarea id="networkDataHidden" style="position: absolute; overflow: hidden; clip: rect(0 0 0 0); height: 1px; width: 1px; margin: -1px; padding: 0; border: 0;" cols="30" rows="10">{{ network_data_flat_list }}</textarea>
+
+<script>
+    function copyNetworkData() {
+        var copyText = document.getElementById("networkDataHidden");
+        copyText.select();
+        var copied = document.execCommand("copy");
+        if (copied) {
+            $.jGrowl('Network data has been copied.', {group: 'success-growl'});
+        } else {
+            $.jGrowl('Unable to copy network data, sorry. Try upgrading your browser or using a different browser', {group: 'failure-growl'});
+        }
+    }
+</script>

@@ -61,6 +61,8 @@ class EmailDetailView(generic.DetailView):
             'header': {'hosts': {}, 'ip_addresses': {}, 'email_addresses': {}},
             'bodies': {'hosts': {}, 'ip_addresses': {}, 'email_addresses': {}, 'urls': {}},
         }
+        # this is simply a list of all of the network data so that the user can copy it
+        network_data_flat_list = []
         network_data_overlaps = 0
         # right now (may, 2019), this value is primarily used to determine whether we need to display the analysis data in the template
         network_data_count = 0
@@ -78,18 +80,21 @@ class EmailDetailView(generic.DetailView):
                     data = _get_related_headers_and_bodies(host, email)
                     network_data_overlaps += len(data)
                 network_data['header']['hosts'][host.host_name] = data
+                network_data_flat_list.append(host.host_name)
         if email.header.ipaddress_set.exists:
             for address in email.header.ipaddress_set.all():
                 network_data_count += 1
                 data = _get_related_headers_and_bodies(address, email)
                 network_data_overlaps += len(data)
                 network_data['header']['ip_addresses'][address.ip_address] = data
+                network_data_flat_list.append(address.ip_address)
         if email.header.emailaddress_set.exists:
             for address in email.header.emailaddress_set.all():
                 network_data_count += 1
                 data = _get_related_headers_and_bodies(address, email)
                 network_data_overlaps += len(data)
                 network_data['header']['email_addresses'][address.email_address] = data
+                network_data_flat_list.append(address.email_address)
 
         # get network data from bodies
         for body in email.bodies.all():
@@ -105,26 +110,31 @@ class EmailDetailView(generic.DetailView):
                         data = _get_related_headers_and_bodies(host, email)
                         network_data_overlaps += len(data)
                     network_data['bodies']['hosts'][host.host_name] = data
+                    network_data_flat_list.append(host.host_name)
             if body.ipaddress_set.exists:
                 for address in body.ipaddress_set.all():
                     network_data_count += 1
                     data = _get_related_headers_and_bodies(address, email)
                     network_data_overlaps += len(data)
                     network_data['bodies']['ip_addresses'][address.ip_address] = data
+                    network_data_flat_list.append(address.ip_address)
             if body.emailaddress_set.exists:
                 for address in body.emailaddress_set.all():
                     network_data_count += 1
                     data = _get_related_headers_and_bodies(address, email)
                     network_data_overlaps += len(data)
                     network_data['bodies']['email_addresses'][address.email_address] = data
+                    network_data_flat_list.append(address.email_address)
             if body.url_set.exists:
                 for url in body.url_set.all():
                     network_data_count += 1
                     data = _get_related_headers_and_bodies(url, email, get_related_headers=False)
                     network_data_overlaps += len(data)
                     network_data['bodies']['urls'][url.url] = data
+                    network_data_flat_list.append(url.url)
 
         context['network_data'] = network_data
+        context['network_data_flat_list'] = ','.join(network_data_flat_list)
         context['network_data_overlaps'] = network_data_overlaps
         context['network_data_count'] = network_data_count
         context['score'] = utility.email_score_calculate(email)

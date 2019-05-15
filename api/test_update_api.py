@@ -70,7 +70,7 @@ class EmailAPITests(APITestCase):
         assert len(hosts) == 1
         assert hosts[0].host_name == TestData.domain_name
         assert hosts[0].bodies.all()[0].id == body_id
-        assert hosts[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert hosts[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_multi_update_domain(self):
         # create an email
@@ -95,7 +95,7 @@ class EmailAPITests(APITestCase):
         assert len(hosts) == 1
         assert hosts[0].host_name == TestData.domain_name
         assert hosts[0].bodies.all()[0].id == body_id
-        assert hosts[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert hosts[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
         # create another email
         response = self.client.post('/api/v1/emails/?test=1', {'full_text': TestData.attachment_email_text})
@@ -139,7 +139,7 @@ class EmailAPITests(APITestCase):
         assert len(email_addresses) == 1
         assert email_addresses[0].email_address == TestData.email_address
         assert email_addresses[0].bodies.all()[0].id == body_id
-        assert email_addresses[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert email_addresses[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_update_ip_address(self):
         # create an email
@@ -165,7 +165,7 @@ class EmailAPITests(APITestCase):
         assert len(ip_addresses) == 1
         assert ip_addresses[0].ip_address == TestData.ip_address
         assert ip_addresses[0].bodies.all()[0].id == body_id
-        assert ip_addresses[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert ip_addresses[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_update_url(self):
         # create an email
@@ -187,7 +187,7 @@ class EmailAPITests(APITestCase):
         assert len(urls) == 1
         assert urls[0].url == TestData.url
         assert urls[0].bodies.all()[0].id == body_id
-        assert urls[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert urls[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_multi_update_url(self):
         # create an email

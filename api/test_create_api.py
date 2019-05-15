@@ -162,7 +162,7 @@ class NetworkDataAPITest(APITestCase):
         assert len(hosts) == 1
         assert hosts[0].host_name == TestData.domain_name
         assert hosts[0].bodies.all()[0].id == body_id
-        assert hosts[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert hosts[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_basic_ip_address_creation(self):
         # create an email
@@ -182,7 +182,7 @@ class NetworkDataAPITest(APITestCase):
         assert len(ip_addresses) == 1
         assert ip_addresses[0].ip_address == TestData.ip_address
         assert ip_addresses[0].bodies.all()[0].id == body_id
-        assert ip_addresses[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert ip_addresses[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_basic_email_address_creation(self):
         # create an email
@@ -203,7 +203,7 @@ class NetworkDataAPITest(APITestCase):
         assert len(email_addresses) == 1
         assert email_addresses[0].email_address == TestData.email_address
         assert email_addresses[0].bodies.all()[0].id == body_id
-        assert email_addresses[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert email_addresses[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_basic_url_creation(self):
         # create an email
@@ -222,7 +222,7 @@ class NetworkDataAPITest(APITestCase):
         assert urls[0].id == utility.sha256(TestData.url)
         assert urls[0].url == TestData.url
         assert urls[0].bodies.all()[0].id == body_id
-        assert urls[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert urls[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]
 
     def test_complex_url_with_fragment_creation(self):
         # create an email
@@ -241,4 +241,4 @@ class NetworkDataAPITest(APITestCase):
         assert len(urls) == 1
         assert urls[0].url == url
         assert urls[0].bodies.all()[0].id == body_id
-        assert urls[0].bodies.all()[0].id in [body.id for body in Body.objects.all()]
+        assert urls[0].bodies.all()[0].id in [body['id'] for body in Body.objects.all().values('id')]

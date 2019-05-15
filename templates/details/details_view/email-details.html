@@ -2,9 +2,9 @@
     <div class="columns large-6">
         <h3 id="details">Email Details</h3>
 
-        <b>First submitted:</b> {{ email.first_seen|timesince }} ago.
+        <span title="{{ email.first_seen }}"><b>First submitted:</b> {{ email.first_seen|timesince }} ago.</span>
         <br>
-        <b>Most recently submitted:</b> {{ email.modified|timesince }} ago.
+        <span title="{{ email.modified }}"><b>Most recently submitted:</b> {{ email.modified|timesince }} ago.</span>
         <br>
         <b><!-- <a href="https://github.com/trendmicro/tlsh" target="_blank"> -->TrendMicro Locality Sensitive Hash<!-- </a> -->:</b> {{ email.tlsh_hash }}
         <br>

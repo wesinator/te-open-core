@@ -6,7 +6,6 @@ import re
 
 from django.db import models
 from django.utils import timezone
-from django.urls import reverse
 from django.contrib.postgres.fields import JSONField
 
 from utility import utility
@@ -47,7 +46,7 @@ class Email(models.Model):
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
     submitter = models.CharField(max_length=16)
-    structure = models.TextField()
+    structure = JSONField()
     # todo: Assumption (jan 2018): a many to one field between emails and a header is correct
     header = models.ForeignKey('Header')
     bodies = models.ManyToManyField('Body')

@@ -117,6 +117,9 @@ def email_read(email_text):
 
 def email_bodies(email_object):
     """."""
+    if isinstance(email_object, str):
+        email_object = email_read(email_object)
+
     bodies = []
 
     if email_object.is_multipart():
@@ -127,6 +130,23 @@ def email_bodies(email_object):
             bodies.append(email_object)
 
     return bodies
+
+
+def email_attachments(email_object):
+    """."""
+    if isinstance(email_object, str):
+        email_object = email_read(email_object)
+
+    attachments = []
+
+    if email_object.is_multipart():
+        for subpart in email_object.get_payload():
+            attachments.extend(email_attachments(subpart))
+    else:
+        if email_object.get_content_disposition() == "attachment":
+            attachments.append(email_object)
+
+    return attachments
 
 
 def parse_email_address(email_address):
@@ -210,3 +230,33 @@ def domain_is_common(domain_name):
             return True
 
     return False
+
+
+def _email_structure_iterator(email_object, email_structure=None):
+    """Iterate through the given email_object and find its structure. This function is called from the `emailStructure` function."""
+    if email_structure is None:
+        email_structure = {}
+
+    email_structure['type'] = email_object.get_content_type()
+    email_structure['content_disposition'] = email_object.get_content_disposition()
+    email_structure['children'] = []
+
+    if email_object.is_multipart():
+        for subpart in email_object.get_payload():
+            email_structure['children'].append(_email_structure_iterator(subpart))
+
+            if email_object.get_content_disposition() == 'attachment':
+                pass
+
+    return email_structure
+
+
+def email_structure(email_text):
+    """Get the structure of the email (this function was inspired by the function here: https://github.com/python/cpython/blob/4993cc0a5b34dc91da2b41c50e33d809f0191355/Lib/email/iterators.py#L59 - which is described here: https://docs.python.org/3.5/library/email.iterators.html?highlight=_structure#email.iterators._structure)."""
+    # the `_email_structure_iterator` and `emailStructure` functions are from the Democritus project
+    if isinstance(email_text, str):
+        email_object = email_read(email_text)
+    else:
+        email_object = email_text
+
+    return _email_structure_iterator(email_object)

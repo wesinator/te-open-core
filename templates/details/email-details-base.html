@@ -98,7 +98,7 @@
     {% if new %}
         <script>
             window.setTimeout(function() {
-                $.jGrowl('This email has likely been analyzed by email analysis engines. Refresh the page to view the results.', {group: 'success-growl'});
+                $.jGrowl('This email has likely been analyzed by email analysis engines. Refresh the page to view the results.', {group: 'success-growl', life: 7500});
             }, 20000);
         </script>
     {% endif %}

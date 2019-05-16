@@ -24,10 +24,17 @@
     <form action="{% url 'search:index' %}" method="get">
         <input id="searchBox" type="text" placeholder="Search for something here..." name="q" value="{{ q }}">
         <p><i>Searching {{ total_email_count }} email{{ total_email_count|pluralize }}</i></p>
-        <input class="hollow medium button success" type="submit" value="Search">
-        {% if q != None %}
-            <a class="hollow medium button secondary" href="{% url 'search:index' %}">Clear</a>
-        {% endif %}
+        <p>
+            <input class="hollow medium button success" type="submit" value="Search">
+            {% if q != None %}
+                <a class="hollow medium button secondary" href="{% url 'search:index' %}">Clear</a>
+            {% endif %}
+        </p>
+        <p>
+            {% if q == None %}
+                No sure what to search for? <a href="{% url 'search:index' %}?q=subject">View recent emails</a>.
+            {% endif %}
+        </p>
     </form>
 
     <br>
@@ -57,15 +64,8 @@
             </ul>
         {% else %}
             {% if q != None %}
-                No results found for "<i>{{ q }}</i>"
+                No results found for "<i>{{ q }}</i>". <a href="{% url 'search:index' %}?q=subject">View recent emails</a>.
             {% endif %}
-            <script>
-                window.onload = function() {
-                    window.setTimeout(function() {
-                        $('#searchBox').click();
-                    }, 100);
-                }
-            </script>
             <br>
         {% endif %}
     </div>
@@ -105,6 +105,10 @@
 <script>
     window.onload = function() {
         $(document).foundation();
+
+        window.setTimeout(function() {
+            $('#searchBox').select();
+        }, 100);
 
         // $('#searchBox').on({
         //     keyup: function(event) {

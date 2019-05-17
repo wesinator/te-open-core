@@ -20,13 +20,23 @@
 <div class="card">
     <div>
         <div class="card-divider">
-            <b>Email Structure</b>
+            <b>Email Sections</b>
         </div>
         <div class="card-section">
             <a href="#header">Header</a><br>
-            <a href="#bodies">Bodies</a>
+            <a href="#bodies">Bodies</a><br>
+            {% if email.attachments.all %}
+            <a href="#attachments">Attachments</a>
+            {% endif %}
+        </div>
+    </div>
+    <div>
+        <div class="card-divider">
+            <b>Email Structure</b>
+        </div>
+        <div class="card-section">
             {% autoescape off %}
-            {{ email.structure|linebreaksbr }}
+                {{ email.structure_as_html }}
             {% endautoescape %}
         </div>
     </div>

@@ -60,6 +60,65 @@ class Email(models.Model):
         self.modified = timezone.now()
         return super(Email, self).save(*args, **kwargs)
 
+    def _structure_as_html_iterator(self, current_structure, html_structure='', indent_sequence=''):
+        TAB = '&nbsp;' * 8
+        # TODO: there may be a way/ways to improve the efficiency of this function... it would be worth investigating in the future (3)
+
+        # handle multipart entries
+        if 'multipart' in current_structure['type']:
+            html_structure += '<br>{}{}'.format(indent_sequence, current_structure['type'])
+        # handle attachments
+        elif current_structure['content_disposition'] == 'attachment':
+            attachments = self.attachments.all()
+            attachments_by_content_type = {}
+
+            for attachment in attachments:
+                if not attachments_by_content_type.get(attachment.content_type):
+                    attachments_by_content_type[attachment.content_type] = []
+                # we are inserting every new attachment id to the first index so that they attachment ids can be popped off later when creating the structure
+                attachments_by_content_type[attachment.content_type].append(attachment.id)
+
+            if attachments_by_content_type.get(current_structure['type']):
+                current_attachment_id = attachments_by_content_type[current_structure['type']].pop()
+                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_attachment_id) + current_structure['type'] + "</a>"
+            else:
+                # TODO: log an error message???
+                pass
+        # handle bodies
+        else:
+            bodies = self.bodies.all()
+            bodies_by_content_type = {}
+
+            for body in bodies:
+                if not bodies_by_content_type.get(body.content_type):
+                    bodies_by_content_type[body.content_type] = []
+                # we are inserting every new body id to the first index so that they body ids can be popped off later when creating the structure
+                bodies_by_content_type[body.content_type].append(body.id)
+
+            if bodies_by_content_type.get(current_structure['type']):
+                current_body_id = bodies_by_content_type[current_structure['type']].pop()
+                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_body_id) + current_structure['type'] + "</a>"
+            else:
+                # TODO: log an error message???
+                pass
+
+        # TODO: test with multiple attachments/bodies of the same type
+
+        if current_structure['children']:
+            indent_sequence += TAB
+            for child in current_structure['children']:
+                html_structure += self._structure_as_html_iterator(child, indent_sequence=indent_sequence)
+
+        return html_structure
+
+    @property
+    def structure_as_html(self):
+        """Convert the email's structure to html."""
+        structure = self._structure_as_html_iterator(self.structure)
+        if structure.startswith('<br>'):
+            structure = structure[4:]
+        return structure
+
     def network_data(self):
         """Get the network data for the given email."""
         # prepare the network data

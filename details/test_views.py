@@ -104,3 +104,34 @@ Content-Type: text/html; charset=utf-8
         # ensure email created and system redirects to new email
         empty_redaction = """                    : """
         assert empty_redaction not in str(response.content)
+
+
+class StructureTest(TestCase):
+    """Make sure email structures are properly displayed."""
+
+    def test_email_html_structure(self):
+        created_content = TestData.create_email()
+        response = self.client.get("/email/{}/".format(created_content.id))
+        assert response.status_code == 200
+
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
+        assert "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#da39ab5b4dd6e13df2b2a51e050368c6517fa438d23257d63a3fca57f8cab6ad'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#8e87067dacf77be7daa2910c6b525dddaff3e51bb0c75b5118922a02794dd578'>text/html</a>" in response_content
+
+    def test_email_html_structure_with_attachments(self):
+        created_content = TestData.create_email(TestData.attachment_email_text)
+        response = self.client.get("/email/{}/".format(created_content.id))
+        assert response.status_code == 200
+
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
+        assert "multipart/mixed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#4a0e8758b153672022793140e50a92fdc206078af019db59fa7974d343184ed4'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#94657296722ac8a5d62f7f4456846f5146cf24d86eda345ffb000a54762d6e32'>text/html</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png</a>" in response_content
+
+    def test_outlook_html_structure(self):
+        created_content = TestData.create_email(TestData.outlook_email_text)
+        response = self.client.get("/email/{}/".format(created_content.id))
+        assert response.status_code == 200
+
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
+        assert "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b40a561dc943e97aefee8240ca255cef5d88920fc90516dffafbd9e0e312f466'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#7b0cf18e6b6069d87d57d0a720135d2dfd6718b20b10ea2a8e4131a296d35e38'>text/html</a>" in response_content

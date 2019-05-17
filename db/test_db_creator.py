@@ -202,6 +202,12 @@ class EmailTests(TestCase):
         assert new_email.id == 'e971f4c5ef63c73c615e0cf82ac7b9f0bb82a36f886cdeb92d21039e37a0ac7f'
         assert '[1.2.3.4]' in str(new_email.header)
 
+    def test_email_structure_as_html(self):
+        new_email = TestData.create_email(TestData.outlook_email_text)
+        assert new_email.id == 'e971f4c5ef63c73c615e0cf82ac7b9f0bb82a36f886cdeb92d21039e37a0ac7f'
+        print(new_email.structure_as_html)
+        assert new_email.structure_as_html == """multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b40a561dc943e97aefee8240ca255cef5d88920fc90516dffafbd9e0e312f466'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#7b0cf18e6b6069d87d57d0a720135d2dfd6718b20b10ea2a8e4131a296d35e38'>text/html</a>"""
+
 
 class HeaderTests(TestCase):
     # TODO: expand the tests in this section (3)
@@ -256,13 +262,39 @@ class StructureTest(TestCase):
 
     def test_email_structure(self):
         created_content = TestData.create_email()
-        desired_structure = """\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#da39ab5b4dd6e13df2b2a51e050368c6517fa438d23257d63a3fca57f8cab6ad'>text/plain</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#8e87067dacf77be7daa2910c6b525dddaff3e51bb0c75b5118922a02794dd578'>text/html</a>"""
+        desired_structure = {'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}
+        print(created_content.structure)
         assert created_content.structure == desired_structure
 
     def test_email_structure_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
-        desired_structure = """\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/mixed\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#4a0e8758b153672022793140e50a92fdc206078af019db59fa7974d343184ed4'>text/plain</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#94657296722ac8a5d62f7f4456846f5146cf24d86eda345ffb000a54762d6e32'>text/html</a>\n<a href="#attachments">Attachments:</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml</a>\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png</a>"""
+        desired_structure = {'type': 'multipart/mixed', 'content_disposition': None, 'children': [{'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}, {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []}, {'type': 'image/png', 'content_disposition': 'attachment', 'children': []}]}
+        print(created_content.structure)
         assert created_content.structure == desired_structure
+
+    def test_outlook_structure(self):
+        created_content = TestData.create_email(TestData.outlook_email_text)
+        desired_structure = {'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}
+        print(created_content.structure)
+        assert created_content.structure == desired_structure
+
+    def test_email_html_structure(self):
+        created_content = TestData.create_email()
+        desired_structure = """multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#da39ab5b4dd6e13df2b2a51e050368c6517fa438d23257d63a3fca57f8cab6ad'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#8e87067dacf77be7daa2910c6b525dddaff3e51bb0c75b5118922a02794dd578'>text/html</a>"""
+        print(created_content.structure_as_html)
+        assert created_content.structure_as_html == desired_structure
+
+    def test_email_html_structure_with_attachments(self):
+        created_content = TestData.create_email(TestData.attachment_email_text)
+        desired_structure = """multipart/mixed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#4a0e8758b153672022793140e50a92fdc206078af019db59fa7974d343184ed4'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#94657296722ac8a5d62f7f4456846f5146cf24d86eda345ffb000a54762d6e32'>text/html</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png</a>"""
+        print(created_content.structure_as_html)
+        assert created_content.structure_as_html == desired_structure
+
+    def test_outlook_html_structure(self):
+        created_content = TestData.create_email(TestData.outlook_email_text)
+        desired_structure = """multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b40a561dc943e97aefee8240ca255cef5d88920fc90516dffafbd9e0e312f466'>text/plain</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#7b0cf18e6b6069d87d57d0a720135d2dfd6718b20b10ea2a8e4131a296d35e38'>text/html</a>"""
+        print(created_content.structure_as_html)
+        assert created_content.structure_as_html == desired_structure
 
 
 class AnalysisTests(TestCase):

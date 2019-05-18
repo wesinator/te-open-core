@@ -1,0 +1,42 @@
+{% extends 'totalemail/base.html' %}
+
+{% block title %}Vote!{% endblock %}
+
+{% block content %}
+
+<br>
+
+<div class="text-center row">
+    <h1>Vote to Identify Malicious Emails!</h1>
+    <br><br>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% autoescape off %}
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+                <br>
+            {% endautoescape %}
+        {% endfor %}
+        <br>
+    {% endif %}
+
+    <div class="large-6 medium-9 small-12 float-center">
+        <ul style="list-style: none;">
+            {% for subject_entry in subjects %}
+                <li style="margin-bottom: 2em;">
+                    <button class="button success hollow" style="vertical-align: baseline;">good</button>
+                    <a style="padding: 1em; text-align: center;" href="/{{ subject_entry.link }}" target="_blank"><b>{{ subject_entry.subject }}</b></a>
+                    <button class="button alert hollow" style="vertical-align: baseline;">bad</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.onload = function() {
+        $(document).foundation();
+    }
+</script>
+
+{% endblock %}

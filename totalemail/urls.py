@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^about/', views.AboutView.as_view(), name='about'),
     url(r'^email/', include('details.urls')),
     url(r'^search', include('search.urls')),
+    url(r'^vote/', include('vote.urls'), name='vote'),
     # url(r'^accounts/', include('accounts.urls')),
     url(r'^admin/', admin.site.urls),
 ]

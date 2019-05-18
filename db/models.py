@@ -208,9 +208,8 @@ class Header(models.Model):
     data = JSONField()
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
-    # todo: do I need a default here?
-    subject_malicious_votes = models.IntegerField()
-    subject_nonmalicious_votes = models.IntegerField()
+    subject_malicious_votes = models.IntegerField(default=0)
+    subject_nonmalicious_votes = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """On save, update timestamps"""

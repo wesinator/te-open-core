@@ -75,29 +75,39 @@
                 }
             },
             recordVote: function(itemId, value) {
+                let _this = this;
+                if (this.message == '') {
+                    this.message = 'Thanks for voting! Every little bit helps and we really appreciate your contribution.';
+                }
+
                 // todo: I think there is a better way to do this
-                api_endpoint = '/api/v1/headers/' + itemId + '/vote/';
-                // todo: implement post
-                post({
-                    'value': '', // whether malicious or not
-                    'type': '', // the type of vote - in this case, it has to do with classifying subject lines
-                });
-            },
-            voteNotMalicious: function(headerId) {
-                console.log("good header id: ", headerId);
-                this.removeItem(headerId);
-                if (this.message == '') {
-                    this.message = 'Thanks for voting! Every little bit helps and we really appreciate your contribution.';
+                var apiEndpoint = '/api/v1/headers/' + itemId + '/vote/';
+
+                var data = {
+                    "value": value, // whether malicious or not
+                    "type": "subject", // the type of vote - in this case, it has to do with classifying subject lines
+                };
+
+                function reqListener () {
+                  // if there was a failure, let the user know
+                  if (this.responseText.indexOf('failure') != -1) {
+                    $.jGrowl('There appears to be a problem recording your vote... sorry about that. The maintainers have been notified', {group: 'failure-growl'});
+                  } else {
+                    _this.removeItem(itemId);
+                  }
                 }
-                this.recordVote(headerId, 'not malicious');
+
+                var request = new XMLHttpRequest();
+                request.addEventListener("load", reqListener);
+                request.open("PUT", apiEndpoint);
+                request.setRequestHeader('Content-type', 'application/json');
+                request.send(JSON.stringify(data));
             },
-            voteMalicious: function(headerId) {
-                console.log("bad header id: ", headerId);
-                this.removeItem(headerId);
-                if (this.message == '') {
-                    this.message = 'Thanks for voting! Every little bit helps and we really appreciate your contribution.';
-                }
-                this.recordVote(headerId, 'malicious');
+            voteNotMalicious: function(itemId) {
+                this.recordVote(itemId, 'not malicious');
+            },
+            voteMalicious: function(itemId) {
+                this.recordVote(itemId, 'malicious');
             }
           }
         });

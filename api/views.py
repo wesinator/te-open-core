@@ -145,7 +145,6 @@ class HeaderEmails(generics.ListAPIView):
 class HeaderVotes(generics.RetrieveUpdateAPIView):
     queryset = Header.objects.all()
     serializer_class = HeaderVotesSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         header = Header.objects.get(id=self.kwargs['pk'])
@@ -154,12 +153,17 @@ class HeaderVotes(generics.RetrieveUpdateAPIView):
     def put(self, request, pk):
         header = Header.objects.get(id=pk)
 
-        # todo: pull the values out of the request and save them (as an automic operation)
+        data = request.data
 
-        # todo: not sure what to return here...
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
-
-    # todo: test these functions and see what happens when we post to this endpoint
+        if data.get('value') and data.get('type'):
+            if data['type'] == 'subject' and data['value'] == 'not malicious':
+                header.subject_nonmalicious_votes += 1
+            elif data['type'] == 'subject' and data['value'] == 'malicious':
+                header.subject_malicious_votes += 1
+            header.save()
+            return Response({'result': 'success'}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'result': 'failure'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BodyDetail(generics.RetrieveAPIView):

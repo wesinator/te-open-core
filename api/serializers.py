@@ -45,6 +45,12 @@ class HeaderSerializer(serializers.ModelSerializer):
         fields = ('id', 'data')
 
 
+class HeaderVotesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Header
+        fields = ('subject_malicious_votes', 'subject_nonmalicious_votes')
+
+
 class BodySerializer(serializers.ModelSerializer):
     class Meta:
         model = Body

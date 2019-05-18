@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^emails/(?P<pk>[0-9a-f]{64})/analysis/$', views.EmailAnalysis.as_view()),
     url(r'^headers/(?P<pk>[0-9a-f]{64})/$', views.HeaderDetail.as_view()),
     url(r'^headers/(?P<pk>[0-9a-f]{64})/emails/$', views.HeaderEmails.as_view()),
+    url(r'^headers/(?P<pk>[0-9a-f]{64})/vote/$', views.HeaderVotes.as_view()),
     url(r'^bodies/(?P<pk>[0-9a-f]{64})/$', views.BodyDetail.as_view()),
     url(r'^bodies/(?P<pk>[0-9a-f]{64})/emails/$', views.BodyEmails.as_view()),
     url(r'^attachments/(?P<pk>[0-9a-f]{64})/$', views.AttachmentDetail.as_view()),

@@ -13,6 +13,7 @@ from api.serializers import (
     EmailCreateSerializer,
     AnalysisSerializer,
     HeaderSerializer,
+    HeaderVotesSerializer,
     BodySerializer,
     AttachmentSerializer,
     DomainSerializer,
@@ -139,6 +140,26 @@ class HeaderEmails(generics.ListAPIView):
     def get_queryset(self):
         header = Header.objects.get(id=self.kwargs['pk'])
         return Email.objects.filter(header=header)
+
+
+class HeaderVotes(generics.RetrieveUpdateAPIView):
+    queryset = Header.objects.all()
+    serializer_class = HeaderVotesSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        header = Header.objects.get(id=self.kwargs['pk'])
+        return header
+
+    def put(self, request, pk):
+        header = Header.objects.get(id=pk)
+
+        # todo: pull the values out of the request and save them (as an automic operation)
+
+        # todo: not sure what to return here...
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+    # todo: test these functions and see what happens when we post to this endpoint
 
 
 class BodyDetail(generics.RetrieveAPIView):

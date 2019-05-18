@@ -263,7 +263,7 @@ class Body(models.Model):
     def links(self):
         links = []
         for email in self.email_set.all():
-            'email/{}{}'.format(email.id, '#bodies')
+            links.append('email/{}{}'.format(email.id, '#bodies'))
         return links
 
     def __str__(self):

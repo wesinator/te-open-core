@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import json
 import random
 
 from django.shortcuts import render
@@ -25,18 +26,19 @@ class IndexView(TemplateView):
         for header in headers:
             subject_data.append({
                 'subject': header.subject,
-                'link': header.link
+                'link': '/{}'.format(header.link),
+                'id': header.id
             })
 
         if len(subject_data) > MAX_SUBJECTS_DISPLAYED:
             selected_subjects = random.sample(subject_data, MAX_SUBJECTS_DISPLAYED)
         else:
-            selected_subjects = random.sample(subject_data, len(subject_data))
+            selected_subjects = subject_data
 
         return render(
             request,
             template_name,
             {
-                "subjects": selected_subjects
+                "subjects": json.dumps(selected_subjects)
             },
         )

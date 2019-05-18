@@ -4,11 +4,13 @@
 
 {% block content %}
 
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
 <br>
 
 <div class="text-center row">
     <h1>Vote to Identify Malicious Emails!</h1>
-    <br><br>
+    <br>
 
     {% if messages %}
         {% for message in messages %}
@@ -20,23 +22,77 @@
         <br>
     {% endif %}
 
-    <div class="large-6 medium-9 small-12 float-center">
-        <ul style="list-style: none;">
-            {% for subject_entry in subjects %}
-                <li style="margin-bottom: 2em;">
-                    <button class="button success hollow" style="vertical-align: baseline;">good</button>
-                    <a style="padding: 1em; text-align: center;" href="/{{ subject_entry.link }}" target="_blank"><b>{{ subject_entry.subject }}</b></a>
-                    <button class="button alert hollow" style="vertical-align: baseline;">bad</button>
-                </li>
-            {% endfor %}
+    <p>
+        Here are some subject lines from emails recently uploaded into TotalEmail. <b>If you have a few seconds, vote on whether or not you think each subject line represents a malicious email.</b> You don't have to do any investigation into the email itself (although you certainly can!); <b>just go with your gut</b>!
+    </p>
+
+    <br><br>
+
+    <textarea id="hiddenSubjectData" hidden="hidden">{{ subjects }}</textarea>
+
+    <div class="large-8 medium-9 small-12 float-center" id="voteApp">
+        <ul style="list-style: none;" v-if="visible">
+            <li style="margin-bottom: 2em;" v-for="item in items">
+                <button class="button success hollow" style="vertical-align: baseline;" v-on:click="voteNotMalicious(item.id)">not malicious</button>
+                <a style="padding: 1em; text-align: center;" :href="item.link" target="_blank">${ item.subject }</a>
+                <button class="button alert hollow" style="vertical-align: baseline;" v-on:click="voteMalicious(item.id)">malicious</button>
+            </li>
         </ul>
+
+        <br>
+        <p>
+            ${ message }
+        </p>
+
+        <a href="" v-if="message !== ''" style="text-decoration: underline;">Load more items</a>
     </div>
 </div>
 
 <script>
     window.onload = function() {
         $(document).foundation();
-    }
+
+        var voteApp = new Vue({
+          el: '#voteApp',
+          delimiters: ['${','}'],
+          data: {
+            visible: false,
+            items: [],
+            message: ''
+          },
+          methods: {
+            getSubjects: function() {
+                var subject_data = document.getElementById('hiddenSubjectData').value;
+                this.items = JSON.parse(subject_data);
+                this.visible = true;
+            },
+            removeItem: function(item_id) {
+                for (var i = this.items.length - 1; i >= 0; i--) {
+                    if (this.items[i]['id'] === item_id) {
+                        this.items.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+            voteNotMalicious: function(headerId) {
+                console.log("good header id: ", headerId);
+                this.removeItem(headerId);
+                if (this.message == '') {
+                    this.message = 'Thanks for voting! Every little bit helps and we really appreciate your contribution.'
+                }
+            },
+            voteMalicious: function(headerId) {
+                console.log("bad header id: ", headerId);
+                this.removeItem(headerId);
+                if (this.message == '') {
+                    this.message = 'Thanks for voting! Every little bit helps and we really appreciate your contribution.'
+                }
+            }
+          }
+        });
+
+        voteApp.getSubjects();
+    };
 </script>
 
 {% endblock %}

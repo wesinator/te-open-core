@@ -71,17 +71,18 @@ class Email(models.Model):
         elif current_structure['content_disposition'] == 'attachment':
             if attachments_by_content_type.get(current_structure['type']):
                 current_attachment_id = attachments_by_content_type[current_structure['type']].pop()
-                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_attachment_id) + current_structure['type'] + "</a>"
+                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_attachment_id) + current_structure['type'] + " (attachment)</a>"
             else:
-                # TODO: log an error message???
+                # TODO: log an error message??? - this occurs if the structure dictates the presence of an attachment that is not really there
                 pass
+
         # handle bodies
         else:
             if bodies_by_content_type.get(current_structure['type']):
                 current_body_id = bodies_by_content_type[current_structure['type']].pop()
-                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_body_id) + current_structure['type'] + "</a>"
+                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_body_id) + current_structure['type'] + " (body)</a>"
             else:
-                # TODO: log an error message???
+                # TODO: log an error message??? - this occurs if the structure dictates the presence of an email body that is not really there
                 pass
 
         # TODO: test with multiple attachments/bodies of the same type

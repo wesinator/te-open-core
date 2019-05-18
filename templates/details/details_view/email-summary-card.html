@@ -24,7 +24,9 @@
         </div>
         <div class="card-section">
             <a href="#header">Header</a><br>
+            {% if email.bodies.all %}
             <a href="#bodies">Bodies</a><br>
+            {% endif %}
             {% if email.attachments.all %}
             <a href="#attachments">Attachments</a>
             {% endif %}

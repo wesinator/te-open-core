@@ -3,7 +3,7 @@
 <ul class="vertical menu" data-accordion-menu>
     {% for attachment in email.attachments.all %}
         <li>
-          <a href="" id="{{ attachment.id }}">{{ attachment.filenames|join:", " }}</a>
+          <a href="" id="{{ attachment.id }}">{{ attachment.content_type }} ({{ attachment.filenames|join:", " }})</a>
           <ul class="menu vertical">
             <li class="columns">
               <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>

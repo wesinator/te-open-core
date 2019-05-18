@@ -6,14 +6,6 @@
     color: blue;
 }
 
-body {
-  background-image: url(/static/mail_badge_low_op.svg);
-  background-repeat: no-repeat;
-  background-position: bottom -40% right -7%;
-  background-size: 40em;
-  background-attachment: fixed;
-}
-
 h1 {
     color: #2c2c2c;
     /*font-size: 4em;*/

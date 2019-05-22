@@ -5,7 +5,6 @@ import base64
 import collections
 from email import _header_value_parser as parser
 import email
-from email.policy import default
 import hashlib
 import ipaddress
 import json
@@ -110,9 +109,12 @@ def is_ip_address(text):
         return True
 
 
-def email_read(email_text):
+def email_read(email_text, policy='default'):
     """Return an email object for the given email text."""
-    return email.message_from_string(email_text, policy=default)
+    if policy == 'default':
+        return email.message_from_string(email_text, policy=email.policy.default)
+    else:
+        return email.message_from_string(email_text)
 
 
 def email_bodies(email_object):

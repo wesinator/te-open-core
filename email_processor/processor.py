@@ -41,7 +41,7 @@ def process_email(
     body_objects = []
     for body in bodies:
         new_body = db_creator.create_body(
-            body, body.get_content_type(), perform_external_analysis=perform_external_analysis
+            body['payload'], body['content_type'], perform_external_analysis=perform_external_analysis
         )
         body_objects.append(new_body)
 

@@ -129,7 +129,10 @@ def email_bodies(email_object):
             bodies.extend(email_bodies(subpart))
     else:
         if email_object.get_content_disposition() != "attachment":
-            bodies.append(email_object)
+            bodies.append({
+                'content_type': email_object.get_content_type(),
+                'payload': email_object.get_payload()
+            })
 
     return bodies
 

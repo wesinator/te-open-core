@@ -59,7 +59,13 @@ def save(request):
         return HttpResponseRedirect('/')
 
     for full_email_text in full_email_texts:
-        new_email = process_email(full_email_text, _get_request_data(request), redact_email_data=request.POST.get('redact_recipient_data', False), redact_pii=request.POST.get('redact_pii', False))
+        new_email = process_email(
+            full_email_text,
+            _get_request_data(request),
+            redact_email_data=request.POST.get('redact_recipient_data', False),
+            redact_pii=request.POST.get('redact_pii', False),
+            redaction_values=request.POST.get('redaction_values', None)
+        )
 
     return HttpResponseRedirect(reverse('details:details', args=(new_email.id,)))
 

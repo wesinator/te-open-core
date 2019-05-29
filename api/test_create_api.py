@@ -4,7 +4,7 @@
 from rest_framework.test import APITestCase
 
 from .api_test_utility import get_user_token
-from db.models import Email, Body, Host, IPAddress, EmailAddress, Url
+from db.models import Email, Header, Body, Host, IPAddress, EmailAddress, Url
 from test_resources import DefaultTestObject
 from utility import utility
 
@@ -123,6 +123,83 @@ class BadEmailTests(APITestCase):
         assert response.status_code == 400
         emails = Email.objects.all()
         assert len(emails) == 0
+
+
+class HeaderVotesTests(APITestCase):
+    def test_header_votes_simple(self):
+        response = self.client.post(
+            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
+        )
+        assert response.status_code == 201
+
+        created_email_header = Email.objects.all()[0].header
+        assert created_email_header.subject_malicious_votes == 0
+        assert created_email_header.subject_nonmalicious_votes == 0
+
+        response = self.client.put(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id), {'value': 'malicious', 'type': 'subject'}
+        )
+        assert response.status_code == 201
+        header = Header.objects.all()[0]
+        assert header.subject_malicious_votes == 1
+        assert header.subject_nonmalicious_votes == 0
+
+        response = self.client.put(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id), {'value': 'not malicious', 'type': 'subject'}
+        )
+        assert response.status_code == 201
+        header = Header.objects.all()[0]
+        assert header.subject_malicious_votes == 1
+        assert header.subject_nonmalicious_votes == 1
+
+        response = self.client.put(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id), {'value': 'not malicious', 'type': 'subject'}
+        )
+        assert response.status_code == 201
+        header = Header.objects.all()[0]
+        assert header.subject_malicious_votes == 1
+        assert header.subject_nonmalicious_votes == 2
+
+    def test_header_votes_post(self):
+        response = self.client.post(
+            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
+        )
+        assert response.status_code == 201
+
+        created_email_header = Email.objects.all()[0].header
+        assert created_email_header.subject_malicious_votes == 0
+        assert created_email_header.subject_nonmalicious_votes == 0
+
+        response = self.client.post(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id), {'value': 'malicious', 'type': 'subject'}
+        )
+        assert response.status_code == 405
+
+    def test_header_votes_get(self):
+        response = self.client.post(
+            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
+        )
+        assert response.status_code == 201
+
+        created_email_header = Email.objects.all()[0].header
+        assert created_email_header.subject_malicious_votes == 0
+        assert created_email_header.subject_nonmalicious_votes == 0
+
+        response = self.client.put(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id), {'value': 'malicious', 'type': 'subject'}
+        )
+        assert response.status_code == 201
+        header = Header.objects.all()[0]
+        assert header.subject_malicious_votes == 1
+        assert header.subject_nonmalicious_votes == 0
+
+        # TODO: as of may 2019, this test is not working... at the time of writing, I don't think this is a problem and am not going to fix this
+        response = self.client.get(
+            '/api/v1/headers/{}/vote/'.format(created_email_header.id)
+        )
+        assert response.status_code == 200
+        print('response {}'.format(response.data))
+        assert 1 == 2
 
 
 class UnauthenticatedEmailAPITests(APITestCase):

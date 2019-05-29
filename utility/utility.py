@@ -202,6 +202,8 @@ def email_score_calculate(email):
     """Calculate the score of the email from the email."""
     # calculate the score for the email
     email_analysis_score_data = {}
+
+    # collect (and create the score) based only on the most recent analysis from each source (ignore older analyses)
     for analysis in email.analysis_set.all().order_by('-first_seen'):
         if not email_analysis_score_data.get(analysis.source):
             email_analysis_score_data[analysis.source] = analysis.score
@@ -218,10 +220,11 @@ def email_score_calculate(email):
         # add a final gut-check to make sure that the final score is with-in the appropriate boundaries
         if final_score > 1:
             final_score = 1.00
-        elif final_score < -1:
-            final_score = -1.00
+        elif final_score < 0:
+            final_score = 0
+    # if there are no analyses yet, default to 0.5
     else:
-        final_score = 0
+        final_score = 0.5
 
     return final_score
 

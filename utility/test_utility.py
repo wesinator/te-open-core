@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .utility import base64_decode, domain_is_common, email_bodies, email_read, email_attachments
+from .utility import base64_decode, domain_is_common, email_bodies, email_read, email_attachments, _calculate, SOURCE_WEIGHTINGS
 
 ATTACHMENT_EMAIL = """MIME-Version: 1.0
 Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
@@ -63,3 +63,12 @@ def test_email_attachments():
 
     attachments = email_attachments(ATTACHMENT_EMAIL)
     assert len(attachments) == 1
+
+
+def test_calculate_1():
+    for source_name, function in SOURCE_WEIGHTINGS.items():
+        print('\n{}'.format(source_name))
+        for i in range(10):
+            print('{}: {}'.format(i, _calculate(i, source_name)))
+
+    assert 1 == 2

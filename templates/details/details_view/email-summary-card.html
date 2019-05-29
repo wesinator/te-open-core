@@ -1,9 +1,9 @@
-{% if score > 0.333 %}
+{% if score > 0.666 %}
     {% load static %}
     <img src="{% static "tl_red.svg.png" %}" alt="There is evidence this email is MALICIOUS" title="There is evidence this email is MALICIOUS">
     <div class="clearfix"><br></div>
     <i>There is evidence this email is MALICIOUS</i>
-{% elif score < -0.333 %}
+{% elif score < 0.334 %}
     {% load static %}
     <img src="{% static "tl_green.svg.png" %}" alt="There is evidence this email is BENIGN" title="There is evidence this email is BENIGN">
     <div class="clearfix"><br></div>

@@ -51,9 +51,9 @@
             <ul style="list-style: none;">
             {% for email in results %}
                 <li style="margin-bottom: -1em;" class="text-left" title="Email score: {{ email.score }}">
-                    {% if email.score > 0.333 %}
+                    {% if email.score > 0.666 %}
                         <span style="color: #E64A48; font-size: 2em; vertical-align: middle;">•</span>
-                    {% elif email.score < -0.333 %}
+                    {% elif email.score < 0.334 %}
                         <span style="color: #6FEF87; font-size: 2em; vertical-align: middle;">•</span>
                     {% else %}
                         <span style="color: #F1D86C; font-size: 2em; vertical-align: middle;">•</span>

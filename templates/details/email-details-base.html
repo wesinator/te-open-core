@@ -45,12 +45,15 @@
             <div class="fast" id="emailDetails" data-animate="fade-in fade-out">
               {% include "details/details_view/email-details.html" %}
             </div>
-          </li><hr>
-          <li class="emailDetailsItem">
-            <div class="fast" id="emailHeader" data-animate="fade-in fade-out">
-              {% include "details/details_view/email-header.html" %}
-            </div>
           </li>
+          <hr>
+          {% if email.header %}
+            <li class="emailDetailsItem">
+              <div class="fast" id="emailHeader" data-animate="fade-in fade-out">
+                {% include "details/details_view/email-header.html" %}
+              </div>
+            </li>
+          {% endif %}
           {% if email.bodies.all %}
             <hr>
             <li class="emailDetailsItem">

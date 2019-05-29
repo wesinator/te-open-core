@@ -228,7 +228,11 @@ class Header(models.Model):
 
     @property
     def subject(self):
-        return self.get_value('subject')
+        # if the email has been run through SpamAssassin, the subject will be changed and the original subject is stored in the "X-Spam-Prev-Subject" field
+        if self.get_value('x-spam-prev-subject') != 'N/A':
+            return self.get_value('x-spam-prev-subject')
+        else:
+            return self.get_value('subject')
 
     def get_value(self, desired_header_key):
         for header_key, header_value in self.data:

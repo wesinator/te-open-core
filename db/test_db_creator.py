@@ -227,6 +227,10 @@ class HeaderTests(TestCase):
         assert new_headers[0].header.first_seen == new_headers[1].header.first_seen
         assert new_headers[0].header.modified != new_headers[1].header.modified
 
+    def test_header_with_subject_line_changed_by_SpamAssassin(self):
+        # TODO: implement this
+        assert 1 == 3
+
 
 class BodyTests(TestCase):
     # TODO: expand the tests in this section (3)

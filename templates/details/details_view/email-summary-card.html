@@ -23,7 +23,9 @@
             <b>Email Sections</b>
         </div>
         <div class="card-section">
+            {% if email.header|slugify != '' %}
             <a href="#header">Header</a><br>
+            {% endif %}
             {% if email.bodies.all %}
             <a href="#bodies">Bodies</a><br>
             {% endif %}

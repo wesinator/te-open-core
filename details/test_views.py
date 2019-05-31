@@ -40,6 +40,21 @@ class ViewTests(TestCase):
         ensure_payload_displayed(TestData.email_message.get_payload(), response)
         # TODO: add more tests to the test_email_details_view function (3)
 
+    def test_email_details_view_without_header(self):
+        # create an email without a header
+        created_content = TestData.create_email("foobar buzz bang")
+        response = self.client.get("/email/{}/".format(created_content.id))
+        response_content = response.content.decode("utf-8")
+        print('response_content {}'.format(response_content))
+
+        # make sure the email is uploaded and displayed properly
+        assert 'First submitted:' in response_content
+        assert 'Most recently submitted:' in response_content
+        assert 'minutes ago.' in response_content
+
+        # make sure the header section is not shown
+        assert 'Header' not in response_content
+
     def test_email_details_view_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
         response = self.client.get("/email/{}/".format(created_content.id))

@@ -24,11 +24,12 @@ class IndexView(TemplateView):
         subject_data = []
 
         for header in headers:
-            subject_data.append({
-                'subject': header.subject,
-                'link': '/{}'.format(header.link),
-                'id': header.id
-            })
+            if header.subject != 'N/A':
+                subject_data.append({
+                    'subject': header.subject,
+                    'link': '/{}'.format(header.link),
+                    'id': header.id
+                })
 
         if len(subject_data) > MAX_SUBJECTS_DISPLAYED:
             selected_subjects = random.sample(subject_data, MAX_SUBJECTS_DISPLAYED)

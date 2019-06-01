@@ -23,7 +23,7 @@
     {% endif %}
 
     <p>
-        Here are some subject lines from emails recently uploaded into TotalEmail. <b>If you have a few seconds, vote on whether or not you think each subject line represents a malicious email.</b> You don't have to do any investigation into the email itself (although you certainly can!); <b>just go with your gut</b>!
+        Here are some subject lines from emails recently uploaded into TotalEmail. <b>Take a few seconds and vote on whether you think each subject line is suspicious or not.</b> You don't have to do any investigation into the email itself (although you certainly can!); <b>just go with your gut</b>!
     </p>
 
     <br><br>
@@ -33,9 +33,9 @@
     <div class="large-8 medium-9 small-12 float-center" id="voteApp">
         <ul style="list-style: none;" v-if="visible">
             <li style="margin-bottom: 2em;" v-for="item in items">
-                <button class="button success hollow" style="vertical-align: baseline;" v-on:click="voteNotMalicious(item.id)">not malicious</button>
+                <button class="button success hollow" style="vertical-align: baseline;" v-on:click="voteNotSuspicious(item.id)">not suspicious</button>
                 <a style="padding: 1em; text-align: center;" :href="item.link" target="_blank">${ item.subject }</a>
-                <button class="button alert hollow" style="vertical-align: baseline;" v-on:click="voteMalicious(item.id)">malicious</button>
+                <button class="button alert hollow" style="vertical-align: baseline;" v-on:click="voteSuspicious(item.id)">suspicious</button>
             </li>
         </ul>
 
@@ -84,7 +84,7 @@
                 var apiEndpoint = '/api/v1/headers/' + itemId + '/vote/';
 
                 var data = {
-                    "value": value, // whether malicious or not
+                    "value": value, // whether suspicious or not
                     "type": "subject", // the type of vote - in this case, it has to do with classifying subject lines
                 };
 
@@ -103,11 +103,11 @@
                 request.setRequestHeader('Content-type', 'application/json');
                 request.send(JSON.stringify(data));
             },
-            voteNotMalicious: function(itemId) {
-                this.recordVote(itemId, 'not malicious');
+            voteNotSuspicious: function(itemId) {
+                this.recordVote(itemId, 'not suspicious');
             },
-            voteMalicious: function(itemId) {
-                this.recordVote(itemId, 'malicious');
+            voteSuspicious: function(itemId) {
+                this.recordVote(itemId, 'suspicious');
             }
           }
         });

@@ -15,17 +15,17 @@
             </ul>
         </li>
     {% endfor %}
-    {% if email.header.subject_nonmalicious_votes %}
+    {% if email.header.subject_not_suspicious_votes %}
         <li>
             <p>
-                The subject line of this email has been voted as <b>non-malicious {{ email.header.subject_nonmalicious_votes }} time{{ email.header.subject_nonmalicious_votes|pluralize }}</b>
+                The subject line of this email has been voted as <b>non-malicious {{ email.header.subject_not_suspicious_votes }} time{{ email.header.subject_not_suspicious_votes|pluralize }}</b>
             </p>
         </li>
     {% endif %}
-    {% if email.header.subject_malicious_votes %}
+    {% if email.header.subject_suspicious_votes %}
         <li>
             <p>
-                The subject line of this email has been voted as <b>malicious {{ email.header.subject_malicious_votes }} time{{ email.header.subject_malicious_votes|pluralize }}</b>
+                The subject line of this email has been voted as <b>malicious {{ email.header.subject_suspicious_votes }} time{{ email.header.subject_suspicious_votes|pluralize }}</b>
             </p>
         </li>
     {% endif %}

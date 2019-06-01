@@ -48,7 +48,7 @@ class HeaderSerializer(serializers.ModelSerializer):
 class HeaderVotesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
-        fields = ('subject_malicious_votes', 'subject_nonmalicious_votes')
+        fields = ('subject_suspicious_votes', 'subject_not_suspicious_votes')
 
 
 class BodySerializer(serializers.ModelSerializer):

@@ -208,8 +208,8 @@ class Header(models.Model):
     data = JSONField()
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
-    subject_malicious_votes = models.IntegerField(default=0)
-    subject_nonmalicious_votes = models.IntegerField(default=0)
+    subject_suspicious_votes = models.IntegerField(default=0)
+    subject_not_suspicious_votes = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         """On save, update timestamps"""

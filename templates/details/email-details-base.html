@@ -68,7 +68,7 @@
               {% include "details/details_view/email-attachments.html" %}
             </li>
           {% endif %}
-          {% if email.analysis_set.all or email.header.subject_nonmalicious_votes or email.header.subject_malicious_votes %}
+          {% if email.analysis_set.all or email.header.subject_not_suspicious_votes or email.header.subject_suspicious_votes %}
             <hr>
             <li class="emailDetailsItem">
               <div class="fast" data-animate="fade-in fade-out">

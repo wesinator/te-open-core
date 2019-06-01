@@ -156,10 +156,10 @@ class HeaderVotes(generics.RetrieveUpdateAPIView):
         data = request.data
 
         if data.get('value') and data.get('type'):
-            if data['type'] == 'subject' and data['value'] == 'not malicious':
-                header.subject_nonmalicious_votes += 1
-            elif data['type'] == 'subject' and data['value'] == 'malicious':
-                header.subject_malicious_votes += 1
+            if data['type'] == 'subject' and data['value'] == 'not suspicious':
+                header.subject_not_suspicious_votes += 1
+            elif data['type'] == 'subject' and data['value'] == 'suspicious':
+                header.subject_suspicious_votes += 1
             header.save()
             return Response({'result': 'success'}, status=status.HTTP_201_CREATED)
         else:

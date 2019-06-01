@@ -45,12 +45,12 @@
         </div>
     </div>
     <div>
-        {% if network_data_count != 0 or email.analysis_set.all or email.header.subject_nonmalicious_votes or email.header.subject_malicious_votes %}
+        {% if network_data_count != 0 or email.analysis_set.all or email.header.subject_not_suspicious_votes or email.header.subject_suspicious_votes %}
           <div class="card-divider">
               <b>Details</b>
           </div>
           <div class="card-section">
-              {% if email.analysis_set.all or email.header.subject_nonmalicious_votes or email.header.subject_malicious_votes %}
+              {% if email.analysis_set.all or email.header.subject_not_suspicious_votes or email.header.subject_suspicious_votes %}
                 <p><a href="#analyses">Analyses</a></p>
               {% endif %}
               {% if network_data_count != 0 %}

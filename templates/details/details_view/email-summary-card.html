@@ -2,17 +2,17 @@
     {% load static %}
     <img src="{% static "tl_red.svg.png" %}" alt="There is evidence this email is MALICIOUS" title="There is evidence this email is MALICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is MALICIOUS</i>
+    <i>There is evidence this email is MALICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
 {% elif score < 0.334 %}
     {% load static %}
     <img src="{% static "tl_green.svg.png" %}" alt="There is evidence this email is BENIGN" title="There is evidence this email is BENIGN">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is BENIGN</i>
+    <i>There is evidence this email is BENIGN</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
 {% else %}
     {% load static %}
     <img src="{% static "tl_yellow.svg.png" %}" alt="There is evidence this email is SUSPICIOUS" title="There is evidence this email is SUSPICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is SUSPICIOUS</i>
+    <i>There is evidence this email is SUSPICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
 {% endif %}
 
 <br><br><br>

@@ -6,10 +6,11 @@
         <br>
         <span title="{{ email.modified }}"><b>Most recently submitted:</b> {{ email.modified|timesince }} ago.</span>
         <br>
-        <b><!-- <a href="https://github.com/trendmicro/tlsh" target="_blank"> -->TrendMicro Locality Sensitive Hash<!-- </a> -->:</b> {{ email.tlsh_hash }}
+        <b>TrendMicro Locality Sensitive Hash:</b> {{ email.tlsh_hash }} <a href="https://github.com/trendmicro/tlsh" target="_blank" title="The TrendMicro Locality Sensitive Hash is a fuzzy hash developed by TrendMicro. Click here to learn more."><i class="fa fa-question-circle"></i></a>
         <br>
-        <b>Score:</b> {{ score|floatformat:3 }}
+        <b>Score:</b> {{ score|floatformat:3 }} <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
     </div>
+
 <!--     <div class="columns large-6 float-right text-center">
         {% if score > 0.666 %}
             {% load static %}

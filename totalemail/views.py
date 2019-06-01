@@ -70,6 +70,10 @@ def save(request):
     return HttpResponseRedirect(reverse('details:details', args=(new_email.id,)))
 
 
+def error_404_handler(request):
+    return render(request, '404.html', status=404)
+
+
 def error_500_handler(request):
     error_type, error_value, error_traceback = sys.exc_info()
     error_traceback_string = ''.join(traceback.format_list(traceback.extract_tb(error_traceback)))

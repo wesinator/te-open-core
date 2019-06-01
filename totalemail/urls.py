@@ -16,3 +16,4 @@ urlpatterns = [
 ]
 urlpatterns += staticfiles_urlpatterns()
 handler500 = 'totalemail.views.error_500_handler'
+handler404 = 'totalemail.views.error_404_handler'

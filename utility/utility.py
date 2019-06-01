@@ -185,6 +185,14 @@ SOURCE_WEIGHTINGS = {
     'Earth Reflections Spam Regexes': '(2 ** x / 194) - 0.01',
     'Hubspot Spam Keywords': '(x / 3) - .1',
     'Ram Samudrala Spam Regexes': 'x',
+    'X-Amavis-Alert Header Field': 'x',
+    'X-Spam... SpamAssassin Header Fields': '(x / 3) - 1',
+    'X-Bogosity Header Field': 'x',
+    'X-Microsoft-Antispam Header Field': 'x',
+    'X-Forefront-Antispam-Report Header Field': 'x',
+    'X-Antivirus-Status Header Field': 'x',
+    # todo: the weight below is fairly arbitrary as I'm not sure what range of values to expect from this field
+    'X-SmarterMail-TotalSpamWeight Header Field': '(x / 3) - 1',
 }
 
 

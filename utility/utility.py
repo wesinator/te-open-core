@@ -239,7 +239,7 @@ def email_score_calculate(email):
 
 def domain_is_common(domain_name):
     """Check to see if the domain name is common (and should not be displayed in the network data section)."""
-    whitelisted_domain_regexes = ['(?:.*\.)?google\.com', 'fonts.googleapis.com', 'amazonaws.com', 'gmail.com', 'aol.com']
+    whitelisted_domain_regexes = ['(?:.*\.)?google\.com', 'fonts.googleapis.com', 'amazonaws.com', 'gmail.com', 'aol.com', 'protection.outlook.com', 'google.ru']
 
     for regex in whitelisted_domain_regexes:
         if re.match(regex, domain_name):

@@ -229,16 +229,21 @@ class Header(models.Model):
     @property
     def subject(self):
         # if the email has been run through SpamAssassin, the subject will be changed and the original subject is stored in the "X-Spam-Prev-Subject" field
-        if self.get_value('x-spam-prev-subject') != 'N/A':
+        if self.get_value('x-spam-prev-subject'):
             return self.get_value('x-spam-prev-subject')
         else:
-            return self.get_value('subject')
+            subject_value = self.get_value('subject')
+            # if there is a subject for this email, return the subject... otherwise return 'N/A' (I'm returning a string rather than None because this function is often used to display the subject line in the UI)
+            if subject_value:
+                return subject_value
+            else:
+                return 'N/A'
 
     def get_value(self, desired_header_key):
         for header_key, header_value in self.data:
             if header_key.lower() == desired_header_key.lower():
                 return header_value
-        return 'N/A'
+        return None
 
     def __str__(self):
         string = ''

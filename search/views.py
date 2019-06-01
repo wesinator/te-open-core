@@ -12,8 +12,8 @@ from .search_mappings import header_search_mappings, body_search_mappings, netwo
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 from utility import utility
 
-# SEARCH_PREFIX_REGEX = '(\S*:(?:(?:".*?")|\S*))'
-SEARCH_PREFIX_REGEX = '(\w*\(.*?\))'
+# SEARCH_PATTERN_REGEX = '(\S*:(?:(?:".*?")|\S*))'
+SEARCH_PATTERN_REGEX = '(\w*\(.*?\))'
 
 
 def _add_email_results(existing_email_list, new_emails, search_query):
@@ -51,52 +51,52 @@ class IndexSearchView(TemplateView):
             _validate_search_query(query_string)
 
             # get the custom search queries used in the search
-            queries_with_custom_prefixes = re.findall(SEARCH_PREFIX_REGEX, query_string)
+            queries_with_custom_functions = re.findall(SEARCH_PATTERN_REGEX, query_string)
 
-            for query in queries_with_custom_prefixes:
+            for query in queries_with_custom_functions:
                 query = query.strip()
 
-                # find the prefix of the custom query
-                prefix = query.split('(')[0]
+                # find the function of the custom query
+                function = query.split('(')[0]
                 # find the search value of the custom query (we are joining on '(' in case the query has a colon in it)
                 search = '('.join(query.split('(')[1:]).lower().strip(')')
-                prefix_found = False
+                function_found = False
 
-                if prefix in header_search_mappings:
-                    prefix_found = True
+                if function in header_search_mappings:
+                    function_found = True
                     results = [
                         email
                         for email in Email.objects.all().order_by('-first_seen')
-                        if search in email.header.get_value(header_search_mappings[prefix], '').lower()
+                        if search in email.header.get_value(header_search_mappings[function], '').lower()
                     ]
                     emails.extend(_add_email_results(emails, results, query))
-                elif prefix in body_search_mappings:
-                    prefix_found = True
-                    if prefix == 'bod':
+                elif function in body_search_mappings:
+                    function_found = True
+                    if function == 'bod':
                         results = Email.objects.filter(bodies__full_text__icontains=search).order_by('-first_seen')
                         emails.extend(_add_email_results(emails, results, query))
-                elif prefix in network_data_search_mappings:
-                    prefix_found = True
+                elif function in network_data_search_mappings:
+                    function_found = True
                     # find emails with the domain
-                    if prefix == 'dom':
+                    if function == 'dom':
                         results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
                         emails.extend(_add_email_results(emails, results, query))
                         results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
                     # find emails with the domain in the header
-                    elif prefix == 'domh':
+                    elif function == 'domh':
                         results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
                     # find emails with the domain in the body
-                    elif prefix == 'domb':
+                    elif function == 'domb':
                         results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
                     emails.extend(_add_email_results(emails, results, query))
 
-                if prefix_found:
+                if function_found:
                     # remove the query from the full search query
                     query_string = query_string.replace(query, '')
 
             query_string = query_string.strip()
             if query_string:
-                # search for the remaining query (which has the queries with custom prefixes removed)
+                # search for the remaining query (which has the queries with custom functions removed)
                 results = Email.objects.filter(full_text__icontains=query_string).order_by('-first_seen')
                 emails.extend(_add_email_results(emails, results, query_string))
 

@@ -18,22 +18,23 @@ def _get_related_headers_and_bodies(network_data_object, email, get_related_head
     links = []
     related_headers = None
     related_bodies = network_data_object.bodies.all()
+    MAX_RESULTS_LIMIT = 4
 
     if get_related_headers:
         # TODO: the links for each host will need to be deduplicated (between the header and body links) - I may want to move this code to the models.py
         related_headers = network_data_object.headers.all()
-        for header in related_headers[:4]:
+        for header in related_headers[:MAX_RESULTS_LIMIT]:
             if header.id != email.header.id:
                 links.append({'link': '/{}'.format(header.link), 'text': header.subject})
-    for body in related_bodies[:4]:
+    for body in related_bodies[:MAX_RESULTS_LIMIT]:
         # TODO: does this check work?
-        if body.id not in email.bodies.all():
+        if body.id not in [b.id for b in email.bodies.all()]:
             for link in body.links:
                 links.append({'link': '/{}'.format(link), 'text': body.email_set.all()[0].header.subject})
 
-    if related_bodies and len(related_bodies) > 4:
+    if related_bodies and len(related_bodies) > MAX_RESULTS_LIMIT:
         links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
-    if related_headers and len(related_headers) > 4:
+    if related_headers and len(related_headers) > MAX_RESULTS_LIMIT:
         links.append({'link': '/search?q={}'.format(network_data_object), 'text': ''})
 
     return links

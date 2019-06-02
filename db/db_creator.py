@@ -95,9 +95,11 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
 
 def _filename_exists(existing_filenames, new_filename):
     """Check to see if the new filename already exists."""
+    # TODO: test this out more robustly
     return (
-        '{}{}'.format(new_filename, JOIN_STRING) in existing_filenames
-        or '{}{}'.format(JOIN_STRING, new_filename) in existing_filenames
+        new_filename in existing_filenames
+        # or '{}{}'.format(new_filename, JOIN_STRING) in existing_filenames
+        # or '{}{}'.format(JOIN_STRING, new_filename) in existing_filenames
     )
 
 

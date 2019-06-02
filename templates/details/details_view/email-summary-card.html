@@ -2,17 +2,17 @@
     {% load static %}
     <img src="{% static "tl_red.svg.png" %}" alt="There is evidence this email is MALICIOUS" title="There is evidence this email is MALICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is MALICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
+    <i>There is evidence this email is MALICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank"><span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex=1 title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click to learn more."><i class="fa fa-question-circle" style="color: black;"></i></span></a>
 {% elif score < 0.334 %}
     {% load static %}
     <img src="{% static "tl_green.svg.png" %}" alt="There is evidence this email is BENIGN" title="There is evidence this email is BENIGN">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is BENIGN</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
+    <i>There is evidence this email is BENIGN</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank"><span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex=1 title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click to learn more."><i class="fa fa-question-circle" style="color: black;"></i></span></a>
 {% else %}
     {% load static %}
     <img src="{% static "tl_yellow.svg.png" %}" alt="There is evidence this email is SUSPICIOUS" title="There is evidence this email is SUSPICIOUS">
     <div class="clearfix"><br></div>
-    <i>There is evidence this email is SUSPICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
+    <i>There is evidence this email is SUSPICIOUS</i> <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank"><span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex=1 title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click to learn more."><i class="fa fa-question-circle" style="color: black;"></i></span></a>
 {% endif %}
 
 <br><br><br>

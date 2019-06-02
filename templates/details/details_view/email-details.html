@@ -6,9 +6,9 @@
         <br>
         <span title="{{ email.modified }}"><b>Most recently submitted:</b> {{ email.modified|timesince }} ago.</span>
         <br>
-        <b>TrendMicro Locality Sensitive Hash:</b> {{ email.tlsh_hash }} <a href="https://github.com/trendmicro/tlsh" target="_blank" title="The TrendMicro Locality Sensitive Hash is a fuzzy hash developed by TrendMicro. Click here to learn more."><i class="fa fa-question-circle"></i></a>
+        <b>TrendMicro Locality Sensitive Hash:</b> {{ email.tlsh_hash }} <a href="https://github.com/trendmicro/tlsh" target="_blank"><span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex=1 title="The TrendMicro Locality Sensitive Hash is a fuzzy hash developed by TrendMicro. Click to learn more."><i class="fa fa-question-circle" style="color: black;"></i></span></a>
         <br>
-        <b>Score:</b> {{ score|floatformat:3 }} <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank" title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click here to learn more."><i class="fa fa-question-circle"></i></a>
+        <b>Score:</b> {{ score|floatformat:3 }} <a href="https://blog.totalemail.io/email-scoring-0/" target="_blank"><span data-tooltip aria-haspopup="true" class="has-tip" data-disable-hover="false" tabindex=1 title="An email's score ranges from zero to one. Lower scores indicate that an email is likely benign. Higher values indicate that an email is likely malicious. Click to learn more."><i class="fa fa-question-circle" style="color: black;"></i></span></a>
     </div>
 
 <!--     <div class="columns large-6 float-right text-center">

@@ -121,6 +121,29 @@ Content-Type: text/html; charset=utf-8
         empty_redaction = """                    : """
         assert empty_redaction not in str(response.content)
 
+    def test_x_spam_prev_subject_display(self):
+        """Make sure emails with the "X-Spam-Prev-Subject" header are displayed properly - namely that the value in the "X-Spam-Prev-Subject" field is shown rather than the subject."""
+        s = """Delivered-To: REDACTED
+From: MICHAEL WANG <wangmi102@yandex.com>
+Subject: [*SPAM*] hi
+Date: Sat, 15 Dec 2018 14:14:13 -0800
+MIME-Version: 1.0
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+X-Spam-Prev-Subject: hi
+Message-Id: <20181215220658.71636A06FE@mail.cbkipa.net>
+To: REDACTED
+
+Good morning to you,
+"""
+        response = self.client.post('/save/', {'full_text': s, 'redact_data': True})
+        response = self.client.get(response.url)
+        assert '<h2>hi</h2>' in str(response.content)
+
 
 class StructureTest(TestCase):
     """Make sure email structures are properly displayed."""

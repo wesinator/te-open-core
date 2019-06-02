@@ -20,7 +20,19 @@ def test_attachment_filename():
 
 
 @pytest.mark.django_db
-def test_duplicate_attachment_filenames():
+def test_duplicate_attachment_filenames_1():
+    attachment = TestData.create_attachment('test.xml')
+    attachment.save()
+    assert attachment.filename == 'test.xml'
+
+    # make sure duplicate attachment names are handled correctly
+    attachment = TestData.create_attachment('test.xml')
+    attachment.save()
+    assert attachment.filename == 'test.xml'
+
+
+@pytest.mark.django_db
+def test_duplicate_attachment_filenames_2():
     attachment = TestData.create_attachment('test.xml')
     attachment.save()
     assert attachment.filename == 'test.xml'

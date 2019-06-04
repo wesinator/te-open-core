@@ -51,7 +51,7 @@ class Email(models.Model):
     submitter = models.CharField(max_length=16)
     structure = JSONField()
     # todo: Assumption (jan 2018): a many to one field between emails and a header is correct
-    header = models.ForeignKey('Header')
+    header = models.ForeignKey('Header', on_delete=models.CASCADE)
     bodies = models.ManyToManyField('Body')
     attachments = models.ManyToManyField('Attachment', blank=True)
     tlsh_hash = models.CharField(max_length=70, null=True, blank=True)
@@ -321,7 +321,7 @@ class Analysis(models.Model):
     source = models.CharField(max_length=50)
     score = models.DecimalField(max_digits=5, decimal_places=2, default=Decimal('0.00'))
     # one to many relationship between an email and analysis, respectively
-    email = models.ForeignKey('Email')
+    email = models.ForeignKey('Email', on_delete=models.CASCADE)
     first_seen = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):

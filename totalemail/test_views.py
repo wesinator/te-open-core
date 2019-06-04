@@ -53,6 +53,31 @@ class ViewTests(TestCase):
         assert email_object.id != email_object.cleaned_id
         assert original_sha256 == email_object.id
 
+    def test_save_with_multiple_custom_redaction_values(self):
+        original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
+        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'github.com,master'})
+        # ensure email created and system redirects to new email
+        self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
+        # make sure the original_sha256 is correct
+        email_object = Email.objects.get(id=TestData.email_id)
+        # assert email_object.cleaned_id == original_sha256
+        assert email_object.id != email_object.cleaned_id
+        assert original_sha256 == email_object.id
+        assert 'github.com' not in email_object.full_text
+        assert 'master' not in email_object.full_text
+
+    def test_save_with_single_custom_redaction_value(self):
+        original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
+        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'master'})
+        # ensure email created and system redirects to new email
+        self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
+        # make sure the original_sha256 is correct
+        email_object = Email.objects.get(id=TestData.email_id)
+        # assert email_object.cleaned_id == original_sha256
+        assert email_object.id != email_object.cleaned_id
+        assert original_sha256 == email_object.id
+        assert 'master' not in email_object.full_text
+
     def test_save_view_with_pii_redaction(self):
         s = """Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
 From: Bob Bradbury <bob@gmail.com>

@@ -78,8 +78,7 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
 
     decoded_text = None
 
-    # TODO: revisit this function as some of the operations done in this function can probably be moved to the utility
-
+    # TODO: revisit this function as some of the operations done in this function can probably be moved to the utility - part of the problem is also that "content-transfer-encoding: base64" will never be in the body's text because the body text send from the utility.email_bodies function is just the string payload (and doesn't contain the other details)... there is never going to be decoded text and we have to figure out another way to determine if the body content is base64 encoded
     if 'content-transfer-encoding: base64' in str(body_text).lower():
         decoded_text = parse_bodies.decode_base64(str(body_text).split('\n\n')[-1])
 
@@ -95,7 +94,9 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
 
 def _filename_exists(existing_filenames, new_filename):
     """Check to see if the new filename already exists."""
-    return new_filename in existing_filenames
+    return (
+        new_filename in existing_filenames
+    )
 
 
 def create_attachment(attachment_data):

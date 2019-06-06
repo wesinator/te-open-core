@@ -301,11 +301,11 @@ def test_phone_number_redaction():
 From: Bob Bradbury <bob@gmail.com>
 To: Alice Asimov <alice@gmail.com>
 
-1(800)123-4567 ext. 17
+1 (800) 123-4567 ext. 17
 
 """
     cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
-    assert '1(800)123-4567' not in cleaned_email
+    assert '1 (800) 123-4567' not in cleaned_email
 
 
 def test_base64_encoded_phone_number_redaction():
@@ -316,11 +316,11 @@ Content-Type: text/html;
     charset="utf-8"
 Content-Transfer-Encoding: base64
 
-MSg4MDApMTIzLTQ1Njc=
+MSAoODAwKSAxMjMtNDU2Nw==
 
 """
     cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
-    assert 'MSg4MDApMTIzLTQ1Njc' not in cleaned_email
+    assert 'MSAoODAwKSAxMjMtNDU2Nw==' not in cleaned_email
     assert 'UkVEQUNURUQ=' in cleaned_email
 
     # test a phone number in the middle of a string
@@ -331,7 +331,7 @@ Content-Type: text/html;
     charset="utf-8"
 Content-Transfer-Encoding: base64
 
-dGhpcyBpcyBhIDEoODAwKTEyMy00NTY3IHBob25lIG51bWJlciB0ZXN0Cg==
+dGhpcyBpcyBhIDEgKDgwMCkgMTIzLTQ1NjcgcGhvbmUgbnVtYmVyIHRlc3Q=
 
 """
     cleaned_email = clean_email(s, redaction_values='', redact_pii=True)

@@ -2,15 +2,11 @@
 
 <ul class="vertical menu" data-accordion-menu>
     {% for body in email.bodies.all|dictsort:"first_seen" %}
-        <li>
+        <li class="columns">
             <a href="" id="{{ body.id }}">{{ body.content_type }}</a>
             <ul class="menu vertical">
                 <li class="columns">
                     <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.full_text }}</pre>
-                    {% if body.decoded_text != None %}
-                        <br>
-                        <pre style="background-color: lightgrey;" id="{{ body.id }}">{{ body.decoded_text }}</pre>
-                    {% endif %}
                 </li>
             </ul>
         </li>

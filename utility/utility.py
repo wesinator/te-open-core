@@ -10,6 +10,7 @@ import ipaddress
 import json
 import os
 import re
+
 try:
     import urllib.parse as urlparse
 except ImportError:
@@ -129,10 +130,7 @@ def email_bodies(email_object):
             bodies.extend(email_bodies(subpart))
     else:
         if email_object.get_content_disposition() != "attachment":
-            bodies.append({
-                'content_type': email_object.get_content_type(),
-                'payload': email_object.get_payload()
-            })
+            bodies.append({'content_type': email_object.get_content_type(), 'payload': email_object.get_payload()})
 
     return bodies
 
@@ -218,9 +216,7 @@ def email_score_calculate(email):
 
     values_to_average = []
     for source, score in email_analysis_score_data.items():
-        values_to_average.append(
-            _calculate(score, source)
-        )
+        values_to_average.append(_calculate(score, source))
 
     if len(values_to_average) > 0:
         final_score = sum(values_to_average) / len(values_to_average)
@@ -239,7 +235,16 @@ def email_score_calculate(email):
 
 def domain_is_common(domain_name):
     """Check to see if the domain name is common (and should not be displayed in the network data section)."""
-    whitelisted_domain_regexes = ['(?:.*\.)?google\.com', 'fonts.googleapis.com', 'amazonaws.com', 'gmail.com', 'aol.com', 'protection.outlook.com', 'google.ru']
+    whitelisted_domain_regexes = [
+        '(?:.*\.)?google\.com',
+        'fonts.googleapis.com',
+        'amazonaws.com',
+        'gmail.com',
+        'aol.com',
+        'protection.outlook.com',
+        'google.ru',
+        'yahoo.com',
+    ]
 
     for regex in whitelisted_domain_regexes:
         if re.match(regex, domain_name):

@@ -67,7 +67,7 @@ class IndexSearchView(TemplateView):
                     results = [
                         email
                         for email in Email.objects.all().order_by('-first_seen')
-                        if search in email.header.get_value(header_search_mappings[function], '').lower()
+                        if email.header.get_value(header_search_mappings[function]) and search in email.header.get_value(header_search_mappings[function]).lower()
                     ]
                     emails.extend(_add_email_results(emails, results, query))
                 elif function in body_search_mappings:

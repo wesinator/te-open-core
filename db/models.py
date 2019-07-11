@@ -344,7 +344,16 @@ class Analysis(models.Model):
         return '{}: {}'.format(self.email.id, self.first_seen)
 
 
-class Host(models.Model):
+class NetworkDataBase(models.Model):
+    def save(self, *args, **kwargs):
+        """Create a base class for simple network data types that will make sure the data is saved properly."""
+        if not self.first_seen:
+            self.first_seen = timezone.now()
+        self.modified = timezone.now()
+        return super().save(*args, **kwargs)
+
+
+class Host(NetworkDataBase):
     # TODO: is this the proper length of a hostname (255 characters)? (3)
     host_name = models.CharField(max_length=255, primary_key=True)
     headers = models.ManyToManyField(Header)
@@ -352,18 +361,19 @@ class Host(models.Model):
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
-    def save(self, *args, **kwargs):
-        """On save, update timestamps"""
-        if not self.first_seen:
-            self.first_seen = timezone.now()
-        self.modified = timezone.now()
-        return super(Host, self).save(*args, **kwargs)
+    # I don't think the save function is necessary for this class or the one below now that they inherit from the NetworkDataBase class
+    # def save(self, *args, **kwargs):
+    #     """On save, update timestamps"""
+    #     if not self.first_seen:
+    #         self.first_seen = timezone.now()
+    #     self.modified = timezone.now()
+    #     return super(Host, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.host_name
 
 
-class IPAddress(models.Model):
+class IPAddress(NetworkDataBase):
     # TODO: is this a good length for ip addresses? (remember that we need to include ipv6) (3)
     ip_address = models.CharField(max_length=15, primary_key=True)
     headers = models.ManyToManyField(Header)
@@ -371,12 +381,12 @@ class IPAddress(models.Model):
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
-    def save(self, *args, **kwargs):
-        """On save, update timestamps"""
-        if not self.first_seen:
-            self.first_seen = timezone.now()
-        self.modified = timezone.now()
-        return super(IPAddress, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     """On save, update timestamps"""
+    #     if not self.first_seen:
+    #         self.first_seen = timezone.now()
+    #     self.modified = timezone.now()
+    #     return super(IPAddress, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.ip_address

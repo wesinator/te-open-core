@@ -151,10 +151,16 @@ class Email(models.Model):
         if self.header.ipaddress_set.exists:
             for address in self.header.ipaddress_set.all():
                 network_data_count += 1
-                data = _get_related_headers_and_bodies(address, self)
-                network_data_overlaps += len(data)
-                network_data['header']['ip_addresses'][address.ip_address] = data
-                network_data_flat_list.append(address.ip_address)
+                if utility.ip_address_is_common(address.address):
+                    data = [{
+                        'link': '/search?q={}'.format(address.address),
+                        'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
+                    }]
+                else:
+                    data = _get_related_headers_and_bodies(address, self)
+                    network_data_overlaps += len(data)
+                    network_data['header']['ip_addresses'][address.ip_address] = data
+                    network_data_flat_list.append(address.ip_address)
         if self.header.emailaddress_set.exists:
             for address in self.header.emailaddress_set.all():
                 network_data_count += 1
@@ -181,10 +187,16 @@ class Email(models.Model):
             if body.ipaddress_set.exists:
                 for address in body.ipaddress_set.all():
                     network_data_count += 1
-                    data = _get_related_headers_and_bodies(address, self)
-                    network_data_overlaps += len(data)
-                    network_data['bodies']['ip_addresses'][address.ip_address] = data
-                    network_data_flat_list.append(address.ip_address)
+                    if utility.ip_address_is_common(address.address):
+                        data = [{
+                            'link': '/search?q={}'.format(address.address),
+                            'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
+                        }]
+                    else:
+                        data = _get_related_headers_and_bodies(address, self)
+                        network_data_overlaps += len(data)
+                        network_data['bodies']['ip_addresses'][address.ip_address] = data
+                        network_data_flat_list.append(address.ip_address)
             if body.emailaddress_set.exists:
                 for address in body.emailaddress_set.all():
                     network_data_count += 1

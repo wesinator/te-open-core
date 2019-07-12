@@ -233,8 +233,25 @@ def email_score_calculate(email):
     return final_score
 
 
+def _string_has_match(regex_list, string):
+    """Determine if a string matches any of the regexes in the regex list."""
+    for regex in regex_list:
+        if re.match(regex, string):
+            return True
+    return False
+
+
+def ip_address_is_common(ip_address):
+    """Check to see if the given ip address is common."""
+    whitelisted_ip_address_regexes = [
+        '127.0.0.1'
+    ]
+
+    return _string_has_match(whitelisted_ip_address_regexes, ip_address)
+
+
 def domain_is_common(domain_name):
-    """Check to see if the domain name is common (and should not be displayed in the network data section)."""
+    """Check to see if the domain name is common."""
     whitelisted_domain_regexes = [
         '(?:.*\.)?google\.com',
         'fonts.googleapis.com',
@@ -244,13 +261,10 @@ def domain_is_common(domain_name):
         'protection.outlook.com',
         'google.ru',
         'yahoo.com',
+        'www.w3.org'
     ]
 
-    for regex in whitelisted_domain_regexes:
-        if re.match(regex, domain_name):
-            return True
-
-    return False
+    return _string_has_match(whitelisted_domain_regexes, domain_name)
 
 
 def _email_structure_iterator(email_object, email_structure=None):

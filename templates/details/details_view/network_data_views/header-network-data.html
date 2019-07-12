@@ -31,6 +31,8 @@
                 {% for link in links %}
                   {% if link.text == '' %}
                     <li><a href="{{ link.link }}">view more...</a></li>
+                  {% elif link.text == 'view more (this is a generic IP address and no overlaps will be shown)...' %}
+                    <li><a href="{{ link.link }}">{{ link.text }}</a></li>
                   {% else %}
                     <li>This IP address was also the email: <a href="{{ link.link }}">{{ link.text|truncatechars:42 }}</a></li>
                   {% endif %}

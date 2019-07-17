@@ -159,8 +159,8 @@ class Email(models.Model):
                 else:
                     data = _get_related_headers_and_bodies(address, self)
                     network_data_overlaps += len(data)
-                    network_data['header']['ip_addresses'][address.ip_address] = data
-                    network_data_flat_list.append(address.ip_address)
+                network_data['header']['ip_addresses'][address.ip_address] = data
+                network_data_flat_list.append(address.ip_address)
         if self.header.emailaddress_set.exists:
             for address in self.header.emailaddress_set.all():
                 network_data_count += 1
@@ -195,8 +195,8 @@ class Email(models.Model):
                     else:
                         data = _get_related_headers_and_bodies(address, self)
                         network_data_overlaps += len(data)
-                        network_data['bodies']['ip_addresses'][address.ip_address] = data
-                        network_data_flat_list.append(address.ip_address)
+                    network_data['bodies']['ip_addresses'][address.ip_address] = data
+                    network_data_flat_list.append(address.ip_address)
             if body.emailaddress_set.exists:
                 for address in body.emailaddress_set.all():
                     network_data_count += 1

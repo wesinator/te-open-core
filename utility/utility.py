@@ -244,7 +244,7 @@ def _string_has_match(regex_list, string):
 def ip_address_is_common(ip_address):
     """Check to see if the given ip address is common."""
     whitelisted_ip_address_regexes = [
-        '127.0.0.1'
+        '127\.0\.0\.1'
     ]
 
     return _string_has_match(whitelisted_ip_address_regexes, ip_address)
@@ -254,14 +254,14 @@ def domain_is_common(domain_name):
     """Check to see if the domain name is common."""
     whitelisted_domain_regexes = [
         '(?:.*\.)?google\.com',
-        'fonts.googleapis.com',
-        'amazonaws.com',
-        'gmail.com',
-        'aol.com',
-        'protection.outlook.com',
-        'google.ru',
-        'yahoo.com',
-        'www.w3.org'
+        'fonts\.googleapis\.com',
+        'amazonaws\.com',
+        'gmail\.com',
+        'aol\.com',
+        'protection\.outlook\.com',
+        'google\.ru',
+        'yahoo\.com',
+        'www\.w3\.org'
     ]
 
     return _string_has_match(whitelisted_domain_regexes, domain_name)

@@ -40,6 +40,30 @@ class ViewTests(TestCase):
         ensure_payload_displayed(TestData.email_message.get_payload(), response)
         # TODO: add more tests to the test_email_details_view function (3)
 
+    def test_generic_domain_display(self):
+        created_email = TestData.create_email()
+
+        new_domain = TestData.create_host('gmail.com')
+        new_domain.bodies.add(created_email.bodies.all()[0])
+        new_domain.save()
+
+        # make sure the generic domain is displayed properly
+        response = self.client.get("/email/{}/".format(created_email.id))
+        response_content = response.content.decode("utf-8")
+        assert 'a generic domain and no overlaps will be shown' in response_content
+
+    def test_generic_ip_address_display(self):
+        created_email = TestData.create_email()
+
+        new_ip_address = TestData.create_ip_address('127.0.0.1')
+        new_ip_address.bodies.add(created_email.bodies.all()[0])
+        new_ip_address.save()
+
+        # make sure the generic ip address is displayed properly
+        response = self.client.get("/email/{}/".format(created_email.id))
+        response_content = response.content.decode("utf-8")
+        assert 'a generic IP address and no overlaps will be shown' in response_content
+
     def test_email_details_view_without_header(self):
         # create an email without a header
         created_content = TestData.create_email("foobar buzz bang")

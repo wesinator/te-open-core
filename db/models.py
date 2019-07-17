@@ -151,9 +151,9 @@ class Email(models.Model):
         if self.header.ipaddress_set.exists:
             for address in self.header.ipaddress_set.all():
                 network_data_count += 1
-                if utility.ip_address_is_common(address.address):
+                if utility.ip_address_is_common(address.ip_address):
                     data = [{
-                        'link': '/search?q={}'.format(address.address),
+                        'link': '/search?q={}'.format(address.ip_address),
                         'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
                     }]
                 else:
@@ -187,9 +187,9 @@ class Email(models.Model):
             if body.ipaddress_set.exists:
                 for address in body.ipaddress_set.all():
                     network_data_count += 1
-                    if utility.ip_address_is_common(address.address):
+                    if utility.ip_address_is_common(address.ip_address):
                         data = [{
-                            'link': '/search?q={}'.format(address.address),
+                            'link': '/search?q={}'.format(address.ip_address),
                             'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
                         }]
                     else:

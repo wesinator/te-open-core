@@ -67,6 +67,11 @@ def save(request):
             redaction_values=request.POST.get('redaction_values', None)
         )
 
+        # new_email will be None if no headers are found in the uploaded content by the process_email function
+        if new_email is None:
+            messages.error(request, 'That text does not look like an email. Please upload an email (with a header and body(ies).')
+            return HttpResponseRedirect('/')
+
     return HttpResponseRedirect(reverse('details:details', args=(new_email.id,)))
 
 

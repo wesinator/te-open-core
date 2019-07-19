@@ -33,6 +33,11 @@ def process_email(
 
     # parse and create headers
     header_json = parse_header(email_text)
+
+    # if there are no headers in the email, abort the import and return None
+    if header_json == []:
+        return None
+
     email_header = db_creator.create_header(header_json, perform_external_analysis=perform_external_analysis)
 
     email_structure = utility.email_structure(email_text)

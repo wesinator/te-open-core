@@ -128,8 +128,17 @@ REDACTED
     def test_empty_save_without_following_redirect(self):
         response = self.client.post('/save/', {})
         assert response.status_code == 302
-        self.assertEqual(response.url, "/")
+        self.assertEqual(response.url, '/')
 
     def test_empty_save_following_redirect(self):
         response = self.client.post('/save/', {}, follow=True)
-        assert 'Please upload an email or paste the text of an email to analyze it' in response.content.decode("utf-8")
+        assert 'Please upload an email or paste the text of an email to analyze it' in response.content.decode('utf-8')
+
+    def test_save_bad_emails_without_following_redirect(self):
+        response = self.client.post('/save/', {'full_text': 'This is just junk data'})
+        assert response.status_code == 302
+        self.assertEqual(response.url, '/')
+
+    def test_save_bad_emails_following_redirect(self):
+        response = self.client.post('/save/', {'full_text': 'This is just junk data'}, follow=True)
+        assert 'That text does not look like an email. Please upload an email (with a header and body(ies).' in response.content.decode('utf-8')

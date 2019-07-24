@@ -87,7 +87,11 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
     )
 
     if perform_external_analysis:
-        analyzer.external_analysis.find_network_data(body_text, new_body.id, 'body')
+        # if the body content was base64 encoded, send the decoded content to the analysis server so that network data is parsed from the decoded content
+        if decoded_text:
+            analyzer.external_analysis.find_network_data(decoded_text, new_body.id, 'body')
+        else:
+            analyzer.external_analysis.find_network_data(body_text, new_body.id, 'body')
 
     return new_body
 

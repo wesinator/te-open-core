@@ -373,14 +373,6 @@ class Host(NetworkDataBase):
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
-    # I don't think the save function is necessary for this class or the one below now that they inherit from the NetworkDataBase class
-    # def save(self, *args, **kwargs):
-    #     """On save, update timestamps"""
-    #     if not self.first_seen:
-    #         self.first_seen = timezone.now()
-    #     self.modified = timezone.now()
-    #     return super(Host, self).save(*args, **kwargs)
-
     def __str__(self):
         return self.host_name
 
@@ -392,13 +384,6 @@ class IPAddress(NetworkDataBase):
     bodies = models.ManyToManyField(Body)
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
-
-    # def save(self, *args, **kwargs):
-    #     """On save, update timestamps"""
-    #     if not self.first_seen:
-    #         self.first_seen = timezone.now()
-    #     self.modified = timezone.now()
-    #     return super(IPAddress, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.ip_address

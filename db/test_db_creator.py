@@ -162,7 +162,7 @@ class EmailTests(TestCase):
 
         Bob"""
         new_email = TestData.create_email(email_text)
-        assert new_email.header.data == []
+        assert new_email == None
 
     def test_email_str(self):
         """Test email string."""
@@ -229,7 +229,7 @@ class HeaderTests(TestCase):
 
     def test_header_with_subject_line_changed_by_SpamAssassin(self):
         # TODO: implement this
-        assert 1 == 3
+        assert 1 == 2
 
 
 class BodyTests(TestCase):

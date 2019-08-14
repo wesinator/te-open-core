@@ -356,16 +356,7 @@ class Analysis(models.Model):
         return '{}: {}'.format(self.email.id, self.first_seen)
 
 
-class NetworkDataBase(models.Model):
-    def save(self, *args, **kwargs):
-        """Create a base class for simple network data types that will make sure the data is saved properly."""
-        if not self.first_seen:
-            self.first_seen = timezone.now()
-        self.modified = timezone.now()
-        return super().save(*args, **kwargs)
-
-
-class Host(NetworkDataBase):
+class Host(models.Model):
     # TODO: is this the proper length of a hostname (255 characters)? (3)
     host_name = models.CharField(max_length=255, primary_key=True)
     headers = models.ManyToManyField(Header)
@@ -373,17 +364,29 @@ class Host(NetworkDataBase):
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
 
+    def save(self, *args, **kwargs):
+        if not self.first_seen:
+            self.first_seen = timezone.now()
+        self.modified = timezone.now()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.host_name
 
 
-class IPAddress(NetworkDataBase):
+class IPAddress(models.Model):
     # TODO: is this a good length for ip addresses? (remember that we need to include ipv6) (3)
     ip_address = models.CharField(max_length=15, primary_key=True)
     headers = models.ManyToManyField(Header)
     bodies = models.ManyToManyField(Body)
     first_seen = models.DateTimeField(editable=False)
     modified = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.first_seen:
+            self.first_seen = timezone.now()
+        self.modified = timezone.now()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.ip_address

@@ -240,6 +240,58 @@ SSdtIHNvcnJ5IERhdmUsIEknbSBhZnJhaWQgSSBjYW4ndCBkbyB0aGF0
     assert 'SSdtIHNvcnJ5IFJFREFDVEVELCBJJ20gYWZyYWlkIEkgY2FuJ3QgZG8gdGhhdA==' in cleaned_email
 
 
+def test_base64_encoded_body_redaction_in_multipart_email():
+    s = """From: "Bar, Foo" <Foo>
+To: "REDACTED" <REDACTED>
+Subject:
+ =?utf-8?B?0KLQvtC70YzQutC+INC00LvRjyDQvdCw0YjQuNGFINC00YDRg9C30LXQuQ==?=
+Content-Type: multipart/alternative;
+    boundary="_000_886b229e3de3c9c12d289e32df4b615ba1cca7easdpaorg_"
+MIME-Version: 1.0
+
+--_000_886b229e3de3c9c12d289e32df4b615ba1cca7easdpaorg_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+
+SSdtIHNvcnJ5IERhdmUsIEknbSBhZnJhaWQgSSBjYW4ndCBkbyB0aGF0
+
+--_000_886b229e3de3c9c12d289e32df4b615ba1cca7easdpaorg_
+Content-Type: text/html; charset="utf-8"
+Content-ID: <3AE5B20EAE07E240A62C41F25E44173E@namprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjwvaGVhZD4NCjxib2R5IGJnY29sb3I9IiNmZmZm
+ZmYiPg0KPGRpdiBhbGlnbj0ibGVmdCI+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVmVyZGFuYSI+0J3Q
+sNGIINC/0LDRgNGC0L3QtdGAINGD0YHRgtGA0LDQuNCy0LDQtdGCINGB0YDQtdC00Lgg0L/QvtC7
+0YzQt9C+0LLQsNGC0LXQu9C10Lkg0L3QsNGI0LXQs9C+INGB0LXRgNCy0LjRgdCwINC60L7QvdC6
+0YPRgNGBINC4INCy0LDRiCBlbWFpbA0KPGEgaHJlZj0ibWFpbHRvOnhvbWEuYW5kcmVAZ21haWwu
+Y29tIj54b21hLmFuZHJlQGdtYWlsLmNvbTwvYT4mbmJzcDvRg9GH0LDRgdGC0LLRg9C10YI8L2Zv
+bnQ+PC9kaXY+DQo8ZGl2IGFsaWduPSJsZWZ0Ij48Zm9udCBzaXplPSIyIiBmYWNlPSJWZXJkYW5h
+Ij7Qn9C10YDQtdGF0L7QtNC4LCDRg9C30L3QsNCy0LDQuSDQuCDQt9Cw0LHQuNGA0LDQuSDRgdCy
+0L7QuSDQv9C+0LTQsNGA0L7QuiAtDQo8L2ZvbnQ+PGZvbnQgc2l6ZT0iMiIgZmFjZT0iVmVyZGFu
+YSI+PGEgaHJlZj0iaHR0cHM6Ly9nb29nbGUucnUvI2J0bkkmYW1wO3E9YVBWZFBSZGdoZ2prNzM4
+OTMiPmh0dHBzOi8vZ29vZ2xlLnJ1LyNidG5JJmFtcDtxPWFQVmRQUmRnaGdqazczODkzPC9hPjwv
+Zm9udD48L2Rpdj4NCjxkaXYgYWxpZ249ImxlZnQiPjxmb250IHNpemU9IjIiIGZhY2U9IkFyaWFs
+Ij48L2ZvbnQ+PC9kaXY+DQpDT05GSURFTlRJQUwgTUFURVJJQUw6IFRoaXMgbWVzc2FnZSBpcyBp
+bnRlbmRlZCBvbmx5IGZvciB0aGUgdXNlIG9mIHRoZSBpbmRpdmlkdWFsIG9yIGVudGl0eSB0byB3
+aGljaCBpdCBpcyBhZGRyZXNzZWQgYW5kIG1heSBjb250YWluIGluZm9ybWF0aW9uIHRoYXQgaXMg
+cHJpdmlsZWdlZCwgY29uZmlkZW50aWFsLCBhbmQgZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRl
+ciBhcHBsaWNhYmxlIGxhdy4gSWYgcmVjZWl2ZWQgaW4gZXJyb3IsIHBsZWFzZQ0KIG5vdGlmeSBz
+ZW5kZXIgYnkgcmV0dXJuIGUtbWFpbCBhbmQgZGVzdHJveSBhbGwgY29waWVzIG9mIHRoZSBvcmln
+aW5hbCB0cmFuc21pc3Npb24gYW5kIGFueSBhdHRhY2htZW50cy4gVGhhbmsgeW91LiBJZiB5b3Ug
+d2lzaCB0byB2aWV3IGluZm9ybWF0aW9uIGFib3V0IEVwaHJhdGEgQXJlYSBTY2hvb2wgRGlzdHJp
+Y3QsIHBsZWFzZSB2aXNpdCBvdXIgd2Vic2l0ZSBhdCB3d3cuZWFzZHBhLm9yZy4NCjwvYm9keT4N
+CjwvaHRtbD4NCg==
+
+--_000_886b229e3de3c9c12d289e32df4b615ba1cca7easdpaorg_--
+
+"""
+    cleaned_email = clean_email(s, redaction_values='dave')
+    assert 'SSdtIHNvcnJ5IERhdmUsIEknbSBhZnJhaWQgSSBjYW4ndCBkbyB0aGF0' not in cleaned_email
+    assert 'SSdtIHNvcnJ5IFJFREFDVEVELCBJJ20gYWZyYWlkIEkgY2FuJ3QgZG8gdGhhdA==' in cleaned_email
+
+
 def test_redaction_not_touching_attachments():
     # try to redact a value that is in the base64 decoded attachment
     cleaned_email = clean_email(ATTACHMENT_EMAIL, redaction_values='foo')

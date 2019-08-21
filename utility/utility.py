@@ -118,7 +118,12 @@ def email_read(email_text, policy='default'):
         return email.message_from_string(email_text)
 
 
-def email_bodies(email_object):
+def email_content_transfer_encoding(email_text):
+    email_object = email_read(email_text)
+    return email_object.get('Content-Transfer-Encoding')
+
+
+def email_bodies_objects(email_object):
     """."""
     if isinstance(email_object, str):
         email_object = email_read(email_object)
@@ -127,10 +132,10 @@ def email_bodies(email_object):
 
     if email_object.is_multipart():
         for subpart in email_object.get_payload():
-            bodies.extend(email_bodies(subpart))
+            bodies.extend(email_bodies_objects(subpart))
     else:
         if email_object.get_content_disposition() != "attachment":
-            bodies.append({'content_type': email_object.get_content_type(), 'payload': email_object.get_payload()})
+            bodies.append(email_object)
 
     return bodies
 
@@ -173,6 +178,8 @@ def base64_encode(text):
 def base64_decode(text):
     """Base64 decode the given text."""
     import base64
+
+    # TODO: there is another function in this file named "decode_base64"... probably need to merge these two functions
 
     result = base64.standard_b64decode(text.encode('utf-8'))
     return result.decode('utf-8')

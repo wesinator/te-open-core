@@ -42,11 +42,14 @@ def process_email(
 
     email_structure = utility.email_structure(email_text)
 
-    bodies = utility.email_bodies(email_text)
+    bodies = utility.email_bodies_objects(email_text)
     body_objects = []
     for body in bodies:
+        # determine whether or not this body is base64 encoded
+        decode_body_as_base64 = body.get('Content-Transfer-Encoding', '').lower() == 'base64'
+
         new_body = db_creator.create_body(
-            body['payload'], body['content_type'], perform_external_analysis=perform_external_analysis
+            body.get_payload(), body.get_content_type(), perform_external_analysis=perform_external_analysis, decode_body_as_base64=decode_body_as_base64
         )
         body_objects.append(new_body)
 

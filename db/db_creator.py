@@ -72,18 +72,18 @@ def create_header(header_json, perform_external_analysis=True):
     return new_header
 
 
-def create_body(body_payload, body_content_type, perform_external_analysis=True):
+def create_body(body_payload, body_content_type, perform_external_analysis=True, decode_body_as_base64=False):
     """'While we live in these earthly bodies, we groan and sigh, but it’s not that we want to die and get rid of these bodies that clothe us. Rather, we want to put on our new bodies so that these dying bodies will be swallowed up by life.' ~ 2 Corinthians 5:4."""
     body_text = str(body_payload).strip()
 
     decoded_text = None
 
-    # TODO: revisit this function as some of the operations done in this function can probably be moved to the utility - part of the problem is also that "content-transfer-encoding: base64" will never be in the body's text because the body text send from the utility.email_bodies function is just the string payload (and doesn't contain the other details)... there is never going to be decoded text and we have to figure out another way to determine if the body content is base64 encoded
-    if 'content-transfer-encoding: base64' in str(body_text).lower():
+    if decode_body_as_base64:
         decoded_text = parse_bodies.decode_base64(str(body_text).split('\n\n')[-1])
 
     new_body, created = Body.objects.update_or_create(
-        id=utility.sha256(body_text), defaults={'full_text': body_text, 'content_type': body_content_type, 'decoded_text': decoded_text}
+        id=utility.sha256(body_text),
+        defaults={'full_text': body_text, 'content_type': body_content_type, 'decoded_text': decoded_text},
     )
 
     if perform_external_analysis:
@@ -98,9 +98,7 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True)
 
 def _filename_exists(existing_filenames, new_filename):
     """Check to see if the new filename already exists."""
-    return (
-        new_filename in existing_filenames
-    )
+    return new_filename in existing_filenames
 
 
 def create_attachment(attachment_data):

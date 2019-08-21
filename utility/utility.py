@@ -118,11 +118,6 @@ def email_read(email_text, policy='default'):
         return email.message_from_string(email_text)
 
 
-def email_content_transfer_encoding(email_text):
-    email_object = email_read(email_text)
-    return email_object.get('Content-Transfer-Encoding')
-
-
 def email_bodies_objects(email_object):
     """."""
     if isinstance(email_object, str):

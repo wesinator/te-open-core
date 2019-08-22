@@ -118,7 +118,7 @@ def email_read(email_text, policy='default'):
         return email.message_from_string(email_text)
 
 
-def email_bodies_objects(email_object):
+def email_bodies_as_objects(email_object):
     """."""
     if isinstance(email_object, str):
         email_object = email_read(email_object)
@@ -127,7 +127,7 @@ def email_bodies_objects(email_object):
 
     if email_object.is_multipart():
         for subpart in email_object.get_payload():
-            bodies.extend(email_bodies_objects(subpart))
+            bodies.extend(email_bodies_as_objects(subpart))
     else:
         if email_object.get_content_disposition() != "attachment":
             bodies.append(email_object)
@@ -245,9 +245,7 @@ def _string_has_match(regex_list, string):
 
 def ip_address_is_common(ip_address):
     """Check to see if the given ip address is common."""
-    whitelisted_ip_address_regexes = [
-        '127\.0\.0\.1'
-    ]
+    whitelisted_ip_address_regexes = ['127\.0\.0\.1']
 
     return _string_has_match(whitelisted_ip_address_regexes, ip_address)
 
@@ -263,7 +261,7 @@ def domain_is_common(domain_name):
         'protection\.outlook\.com',
         'google\.ru',
         'yahoo\.com',
-        'www\.w3\.org'
+        'www\.w3\.org',
     ]
 
     return _string_has_match(whitelisted_domain_regexes, domain_name)

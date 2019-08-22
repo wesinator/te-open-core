@@ -22,11 +22,9 @@ def _add_email_results(existing_email_list, new_emails, search_query):
 
     for email in new_emails:
         if email.id not in existing_email_ids:
-            unique_new_emails.append({
-                'email': email,
-                'search_query': search_query,
-                'score': utility.email_score_calculate(email)
-            })
+            unique_new_emails.append(
+                {'email': email, 'search_query': search_query, 'score': utility.email_score_calculate(email)}
+            )
             existing_email_ids.append(email.id)
 
     return unique_new_emails
@@ -67,7 +65,8 @@ class IndexSearchView(TemplateView):
                     results = [
                         email
                         for email in Email.objects.all().order_by('-first_seen')
-                        if email.header.get_value(header_search_mappings[function]) and search in email.header.get_value(header_search_mappings[function]).lower()
+                        if email.header.get_value(header_search_mappings[function])
+                        and search in email.header.get_value(header_search_mappings[function]).lower()
                     ]
                     emails.extend(_add_email_results(emails, results, query))
                 elif function in body_search_mappings:
@@ -79,15 +78,23 @@ class IndexSearchView(TemplateView):
                     function_found = True
                     # find emails with the domain
                     if function == 'dom':
-                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
+                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by(
+                            '-first_seen'
+                        )
                         emails.extend(_add_email_results(emails, results, query))
-                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by(
+                            '-first_seen'
+                        )
                     # find emails with the domain in the header
                     elif function == 'domh':
-                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by('-first_seen')
+                        results = Email.objects.filter(header__host__host_name__icontains=search).order_by(
+                            '-first_seen'
+                        )
                     # find emails with the domain in the body
                     elif function == 'domb':
-                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by('-first_seen')
+                        results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by(
+                            '-first_seen'
+                        )
                     emails.extend(_add_email_results(emails, results, query))
 
                 if function_found:

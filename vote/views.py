@@ -25,21 +25,11 @@ class IndexView(TemplateView):
 
         for header in headers:
             if header.subject != 'N/A':
-                subject_data.append({
-                    'subject': header.subject,
-                    'link': '/{}'.format(header.link),
-                    'id': header.id
-                })
+                subject_data.append({'subject': header.subject, 'link': '/{}'.format(header.link), 'id': header.id})
 
         if len(subject_data) > MAX_SUBJECTS_DISPLAYED:
             selected_subjects = random.sample(subject_data, MAX_SUBJECTS_DISPLAYED)
         else:
             selected_subjects = subject_data
 
-        return render(
-            request,
-            template_name,
-            {
-                "subjects": json.dumps(selected_subjects)
-            },
-        )
+        return render(request, template_name, {"subjects": json.dumps(selected_subjects)})

@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .utility import base64_decode, domain_is_common, ip_address_is_common, email_bodies, email_read, email_attachments, _calculate, SOURCE_WEIGHTINGS
+from .utility import (
+    base64_decode,
+    domain_is_common,
+    ip_address_is_common,
+    email_bodies,
+    email_read,
+    email_attachments,
+    _calculate,
+    SOURCE_WEIGHTINGS,
+)
 
 ATTACHMENT_EMAIL = """MIME-Version: 1.0
 Subject: =?UTF-8?B?aGkgYWxpY2UgYXNpbW92?=
@@ -40,7 +49,10 @@ def test_ip_address_is_common_1():
 
 
 def test_base64_decode():
-    assert base64_decode('Zm9vIGV4YW1wbGVAZ21haWwuY29tIHRlc3RpbmcgY29uZmlybWF0aW9u') == 'foo example@gmail.com testing confirmation'
+    assert (
+        base64_decode('Zm9vIGV4YW1wbGVAZ21haWwuY29tIHRlc3RpbmcgY29uZmlybWF0aW9u')
+        == 'foo example@gmail.com testing confirmation'
+    )
 
 
 def test_base64_decode_with_invalid_input():

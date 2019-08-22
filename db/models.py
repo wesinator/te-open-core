@@ -63,7 +63,14 @@ class Email(models.Model):
         self.modified = timezone.now()
         return super(Email, self).save(*args, **kwargs)
 
-    def _structure_as_html_iterator(self, current_structure, bodies_by_content_type, attachments_by_content_type, html_structure='', indent_sequence=''):
+    def _structure_as_html_iterator(
+        self,
+        current_structure,
+        bodies_by_content_type,
+        attachments_by_content_type,
+        html_structure='',
+        indent_sequence='',
+    ):
         TAB = '&nbsp;' * 8
         # TODO: there may be a way/ways to improve the efficiency of this function... it would be worth investigating in the future (3)
 
@@ -74,7 +81,11 @@ class Email(models.Model):
         elif current_structure['content_disposition'] == 'attachment':
             if attachments_by_content_type.get(current_structure['type']):
                 current_attachment_id = attachments_by_content_type[current_structure['type']].pop()
-                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_attachment_id) + current_structure['type'] + " (attachment)</a>"
+                html_structure += (
+                    "<br>{}<a href='#{}'>".format(indent_sequence, current_attachment_id)
+                    + current_structure['type']
+                    + " (attachment)</a>"
+                )
             else:
                 # TODO: log an error message??? - this occurs if the structure dictates the presence of an attachment that is not really there
                 pass
@@ -83,7 +94,11 @@ class Email(models.Model):
         else:
             if bodies_by_content_type.get(current_structure['type']):
                 current_body_id = bodies_by_content_type[current_structure['type']].pop()
-                html_structure += "<br>{}<a href='#{}'>".format(indent_sequence, current_body_id) + current_structure['type'] + " (body)</a>"
+                html_structure += (
+                    "<br>{}<a href='#{}'>".format(indent_sequence, current_body_id)
+                    + current_structure['type']
+                    + " (body)</a>"
+                )
             else:
                 # TODO: log an error message??? - this occurs if the structure dictates the presence of an email body that is not really there
                 pass
@@ -93,7 +108,9 @@ class Email(models.Model):
         if current_structure['children']:
             indent_sequence += TAB
             for child in current_structure['children']:
-                html_structure += self._structure_as_html_iterator(child, bodies_by_content_type, attachments_by_content_type, indent_sequence=indent_sequence)
+                html_structure += self._structure_as_html_iterator(
+                    child, bodies_by_content_type, attachments_by_content_type, indent_sequence=indent_sequence
+                )
 
         return html_structure
 
@@ -116,7 +133,9 @@ class Email(models.Model):
                 attachments_by_content_type[attachment.content_type] = []
             attachments_by_content_type[attachment.content_type].append(attachment.id)
 
-        structure = self._structure_as_html_iterator(self.structure, bodies_by_content_type, attachments_by_content_type)
+        structure = self._structure_as_html_iterator(
+            self.structure, bodies_by_content_type, attachments_by_content_type
+        )
         if structure.startswith('<br>'):
             structure = structure[4:]
         return structure
@@ -139,10 +158,12 @@ class Email(models.Model):
             for host in self.header.host_set.all():
                 network_data_count += 1
                 if utility.domain_is_common(host.host_name):
-                    data = [{
-                        'link': '/search?q={}'.format(host.host_name),
-                        'text': 'view more (this is a generic domain and no overlaps will be shown)...'
-                    }]
+                    data = [
+                        {
+                            'link': '/search?q={}'.format(host.host_name),
+                            'text': 'view more (this is a generic domain and no overlaps will be shown)...',
+                        }
+                    ]
                 else:
                     data = _get_related_headers_and_bodies(host, self)
                     network_data_overlaps += len(data)
@@ -152,10 +173,12 @@ class Email(models.Model):
             for address in self.header.ipaddress_set.all():
                 network_data_count += 1
                 if utility.ip_address_is_common(address.ip_address):
-                    data = [{
-                        'link': '/search?q={}'.format(address.ip_address),
-                        'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
-                    }]
+                    data = [
+                        {
+                            'link': '/search?q={}'.format(address.ip_address),
+                            'text': 'view more (this is a generic IP address and no overlaps will be shown)...',
+                        }
+                    ]
                 else:
                     data = _get_related_headers_and_bodies(address, self)
                     network_data_overlaps += len(data)
@@ -175,10 +198,12 @@ class Email(models.Model):
                 for host in body.host_set.all():
                     network_data_count += 1
                     if utility.domain_is_common(host.host_name):
-                        data = [{
-                            'link': '/search?q={}'.format(host.host_name),
-                            'text': 'view more (this is a generic domain and no overlaps will be shown)...'
-                        }]
+                        data = [
+                            {
+                                'link': '/search?q={}'.format(host.host_name),
+                                'text': 'view more (this is a generic domain and no overlaps will be shown)...',
+                            }
+                        ]
                     else:
                         data = _get_related_headers_and_bodies(host, self)
                         network_data_overlaps += len(data)
@@ -188,10 +213,12 @@ class Email(models.Model):
                 for address in body.ipaddress_set.all():
                     network_data_count += 1
                     if utility.ip_address_is_common(address.ip_address):
-                        data = [{
-                            'link': '/search?q={}'.format(address.ip_address),
-                            'text': 'view more (this is a generic IP address and no overlaps will be shown)...'
-                        }]
+                        data = [
+                            {
+                                'link': '/search?q={}'.format(address.ip_address),
+                                'text': 'view more (this is a generic IP address and no overlaps will be shown)...',
+                            }
+                        ]
                     else:
                         data = _get_related_headers_and_bodies(address, self)
                         network_data_overlaps += len(data)

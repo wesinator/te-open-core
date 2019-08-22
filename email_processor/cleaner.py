@@ -84,7 +84,7 @@ def clean_email(email_text, redaction_values=None, redact_pii=False):
 
     # redact the bodies
     email_object = utility.email_read(cleaned_email)
-    for body in utility.email_bodies_objects(email_object):
+    for body in utility.email_bodies_as_objects(email_object):
         body_payload = body.get_payload()
         if body.get('Content-Transfer-Encoding') and body['Content-Transfer-Encoding'].lower() == 'base64':
             # decode the body

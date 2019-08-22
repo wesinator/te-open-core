@@ -179,7 +179,10 @@ class StructureTest(TestCase):
 
         response_content = response.content.decode("utf-8")
         print('response_content {}'.format(response_content))
-        assert "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#ea2bf05889ac5cf478293492da99b6e62c629f78cc1ef6a1248aea5ff6b0e226'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#6ce1e03b3902eee8dae69a56364413bdc9bb46d16743590ac42513217c5f430c'>text/html (body)</a>" in response_content
+        assert (
+            "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#ea2bf05889ac5cf478293492da99b6e62c629f78cc1ef6a1248aea5ff6b0e226'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#6ce1e03b3902eee8dae69a56364413bdc9bb46d16743590ac42513217c5f430c'>text/html (body)</a>"
+            in response_content
+        )
 
     def test_email_html_structure_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
@@ -188,7 +191,10 @@ class StructureTest(TestCase):
 
         response_content = response.content.decode("utf-8")
         print('response_content {}'.format(response_content))
-        assert "multipart/mixed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#c6a1427d7119cd3c049d4fe08cc02f1058d15291fba68a994816ea209af73f0e'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b64473d833f7568f15e1d86c02af3c237e652fb53c62087b74103c612f4e1dc3'>text/html (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml (attachment)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png (attachment)</a>" in response_content
+        assert (
+            "multipart/mixed<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#c6a1427d7119cd3c049d4fe08cc02f1058d15291fba68a994816ea209af73f0e'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b64473d833f7568f15e1d86c02af3c237e652fb53c62087b74103c612f4e1dc3'>text/html (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#e5d91ce2991b8f8720cbf499deb19c16b04bc61a3aada3a1011b41ecbee6104e'>text/xml (attachment)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#efc6d065a38f0e3d99391e0bb992ba30f4ddf612fbbb492c3bcdf387039e3f1e'>image/png (attachment)</a>"
+            in response_content
+        )
 
     def test_outlook_html_structure(self):
         created_content = TestData.create_email(TestData.outlook_email_text)
@@ -197,4 +203,7 @@ class StructureTest(TestCase):
 
         response_content = response.content.decode("utf-8")
         print('response_content {}'.format(response_content))
-        assert "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#54712d1572ff09d73c3baacf0760a42735a3ce6dbd83144eb2f998155f53b740'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b6fba92f1803f9f59d42fdd36b259fe8a550a68fee60808800cb11de14feeb8c'>text/html (body)</a>" in response_content
+        assert (
+            "multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#54712d1572ff09d73c3baacf0760a42735a3ce6dbd83144eb2f998155f53b740'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b6fba92f1803f9f59d42fdd36b259fe8a550a68fee60808800cb11de14feeb8c'>text/html (body)</a>"
+            in response_content
+        )

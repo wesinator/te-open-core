@@ -32,8 +32,17 @@ class EmailDetailView(generic.DetailView):
 
         network_data, network_data_flat_list, network_data_overlaps, network_data_count = email.network_data()
 
-        network_data_header_count = len(network_data['header']['hosts']) + len(network_data['header']['ip_addresses']) + len(network_data['header']['email_addresses'])
-        network_data_body_count = len(network_data['bodies']['hosts']) + len(network_data['bodies']['ip_addresses']) + len(network_data['bodies']['email_addresses']) + len(network_data['bodies']['urls'])
+        network_data_header_count = (
+            len(network_data['header']['hosts'])
+            + len(network_data['header']['ip_addresses'])
+            + len(network_data['header']['email_addresses'])
+        )
+        network_data_body_count = (
+            len(network_data['bodies']['hosts'])
+            + len(network_data['bodies']['ip_addresses'])
+            + len(network_data['bodies']['email_addresses'])
+            + len(network_data['bodies']['urls'])
+        )
 
         context['network_data'] = network_data
         context['network_data_flat_list'] = network_data_flat_list
@@ -76,7 +85,11 @@ class EmailFeedbackView(generic.DetailView):
 
     def post(self, request, **kwargs):
         """."""
-        feedback = '{}:{}:{}'.format(request.POST.get('feedback'), kwargs['pk'], settings._process_request_data(settings._get_request_data(request)))
+        feedback = '{}:{}:{}'.format(
+            request.POST.get('feedback'),
+            kwargs['pk'],
+            settings._process_request_data(settings._get_request_data(request)),
+        )
         utility.create_alerta_alert('Feedback: {}'.format(feedback[:16]), 'info', feedback)
         messages.info(request, 'Thank you! Your feedback has been recorded.')
         return HttpResponseRedirect('/')
@@ -88,7 +101,11 @@ class EmailRedactionView(generic.DetailView):
 
     def post(self, request, **kwargs):
         """."""
-        redaction_request = '{}:{}:{}'.format(request.POST.get('redactionRequest'), kwargs['pk'], settings._process_request_data(settings._get_request_data(request)))
+        redaction_request = '{}:{}:{}'.format(
+            request.POST.get('redactionRequest'),
+            kwargs['pk'],
+            settings._process_request_data(settings._get_request_data(request)),
+        )
         utility.create_alerta_alert('Redaction request: {}'.format(redaction_request[:16]), 'info', redaction_request)
         messages.info(request, 'Thank you! Your redaction request has been recorded.')
         return HttpResponseRedirect('/')

@@ -55,7 +55,10 @@ class ViewTests(TestCase):
 
     def test_save_with_multiple_custom_redaction_values(self):
         original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
-        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'github.com,master'})
+        response = self.client.post(
+            '/save/',
+            {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'github.com,master'},
+        )
         # ensure email created and system redirects to new email
         self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
         # make sure the original_sha256 is correct
@@ -68,7 +71,9 @@ class ViewTests(TestCase):
 
     def test_save_with_single_custom_redaction_value(self):
         original_sha256 = utility.sha256(TestData.email_text.replace('\n', '\r\n'))
-        response = self.client.post('/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'master'})
+        response = self.client.post(
+            '/save/', {'full_text': TestData.email_text, 'redact_recipient_data': True, 'redaction_values': 'master'}
+        )
         # ensure email created and system redirects to new email
         self.assertEqual(response.url, "/email/{}".format(TestData.email_id))
         # make sure the original_sha256 is correct
@@ -89,13 +94,18 @@ To: Alice Asimov <alice@gmail.com>
         response = self.client.post('/save/', {'full_text': s, 'redact_recipient_data': True, 'redact_pii': True})
         assert response.status_code == 302
         assert '123-45-6789' not in Email.objects.all()[0].full_text
-        assert Email.objects.all()[0].full_text == """Subject: =?UTF-8?B?aGkgUkVEQUNURUQ=?=
+        assert (
+            Email.objects.all()[0].full_text
+            == """Subject: =?UTF-8?B?aGkgUkVEQUNURUQ=?=
 From: Bob Bradbury <bob@gmail.com>
 To: REDACTED <REDACTED>
 
 REDACTED
 
-""".replace('\n', '\r\n')
+""".replace(
+                '\n', '\r\n'
+            )
+        )
 
     def test_save_view_with_duplicate_uploads(self):
         """Try saving an email without redaction and then saving it with redaction."""
@@ -141,4 +151,7 @@ REDACTED
 
     def test_save_bad_emails_following_redirect(self):
         response = self.client.post('/save/', {'full_text': 'This is just junk data'}, follow=True)
-        assert 'That text does not look like an email. Please upload an email (with a header and body(ies).' in response.content.decode('utf-8')
+        assert (
+            'That text does not look like an email. Please upload an email (with a header and body(ies).'
+            in response.content.decode('utf-8')
+        )

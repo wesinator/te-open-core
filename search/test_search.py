@@ -100,7 +100,9 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(function, EXPECTED_SEARCH_RESULTS_2.get(function))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(function, EXPECTED_SEARCH_RESULTS_2.get(function))
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(
+                function, EXPECTED_SEARCH_RESULTS_2.get(function)
+            )
             print("response content {}".format(response.content))
             assert desired_string in str(response.content)
 
@@ -113,7 +115,9 @@ class SearchViewTests(TestCase):
             url = '/search?q={}({})'.format(function, EXPECTED_SEARCH_RESULTS_3.get(function))
             response = self.client.get(url)
 
-            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(function, EXPECTED_SEARCH_RESULTS_3.get(function))
+            desired_string = 'Found 1 email matching "<i>{}({})</i>"'.format(
+                function, EXPECTED_SEARCH_RESULTS_3.get(function)
+            )
             assert desired_string in str(response.content)
 
     def test_search_with_spaces(self):

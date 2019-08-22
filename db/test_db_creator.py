@@ -206,7 +206,10 @@ class EmailTests(TestCase):
         new_email = TestData.create_email(TestData.outlook_email_text)
         assert new_email.id == 'e971f4c5ef63c73c615e0cf82ac7b9f0bb82a36f886cdeb92d21039e37a0ac7f'
         print(new_email.structure_as_html)
-        assert new_email.structure_as_html == """multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#54712d1572ff09d73c3baacf0760a42735a3ce6dbd83144eb2f998155f53b740'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b6fba92f1803f9f59d42fdd36b259fe8a550a68fee60808800cb11de14feeb8c'>text/html (body)</a>"""
+        assert (
+            new_email.structure_as_html
+            == """multipart/alternative<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#54712d1572ff09d73c3baacf0760a42735a3ce6dbd83144eb2f998155f53b740'>text/plain (body)</a><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='#b6fba92f1803f9f59d42fdd36b259fe8a550a68fee60808800cb11de14feeb8c'>text/html (body)</a>"""
+        )
 
 
 class HeaderTests(TestCase):
@@ -275,25 +278,69 @@ class StructureTest(TestCase):
 
     def test_email_structure(self):
         created_content = TestData.create_email()
-        desired_structure = {'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}
+        desired_structure = {
+            'type': 'multipart/alternative',
+            'content_disposition': None,
+            'children': [
+                {'type': 'text/plain', 'content_disposition': None, 'children': []},
+                {'type': 'text/html', 'content_disposition': None, 'children': []},
+            ],
+        }
         print(created_content.structure)
         assert created_content.structure == desired_structure
 
     def test_email_structure_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
-        desired_structure = {'type': 'multipart/mixed', 'content_disposition': None, 'children': [{'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}, {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []}, {'type': 'image/png', 'content_disposition': 'attachment', 'children': []}]}
+        desired_structure = {
+            'type': 'multipart/mixed',
+            'content_disposition': None,
+            'children': [
+                {
+                    'type': 'multipart/alternative',
+                    'content_disposition': None,
+                    'children': [
+                        {'type': 'text/plain', 'content_disposition': None, 'children': []},
+                        {'type': 'text/html', 'content_disposition': None, 'children': []},
+                    ],
+                },
+                {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []},
+                {'type': 'image/png', 'content_disposition': 'attachment', 'children': []},
+            ],
+        }
         print(created_content.structure)
         assert created_content.structure == desired_structure
 
     def test_outlook_structure(self):
         created_content = TestData.create_email(TestData.outlook_email_text)
-        desired_structure = {'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}
+        desired_structure = {
+            'type': 'multipart/alternative',
+            'content_disposition': None,
+            'children': [
+                {'type': 'text/plain', 'content_disposition': None, 'children': []},
+                {'type': 'text/html', 'content_disposition': None, 'children': []},
+            ],
+        }
         print(created_content.structure)
         assert created_content.structure == desired_structure
 
     def test_structure_with_duplicate_attachment_types(self):
         created_content = TestData.create_email(TestData.duplicate_attachment_types)
-        desired_structure = {'type': 'multipart/mixed', 'content_disposition': None, 'children': [{'type': 'multipart/alternative', 'content_disposition': None, 'children': [{'type': 'text/plain', 'content_disposition': None, 'children': []}, {'type': 'text/html', 'content_disposition': None, 'children': []}]}, {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []}, {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []}]}
+        desired_structure = {
+            'type': 'multipart/mixed',
+            'content_disposition': None,
+            'children': [
+                {
+                    'type': 'multipart/alternative',
+                    'content_disposition': None,
+                    'children': [
+                        {'type': 'text/plain', 'content_disposition': None, 'children': []},
+                        {'type': 'text/html', 'content_disposition': None, 'children': []},
+                    ],
+                },
+                {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []},
+                {'type': 'text/xml', 'content_disposition': 'attachment', 'children': []},
+            ],
+        }
         print(created_content.structure)
         assert created_content.structure == desired_structure
 

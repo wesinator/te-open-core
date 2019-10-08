@@ -43,7 +43,9 @@ def process_email(
     if header_json == []:
         return None
 
-    email_header = db_creator.create_header(header_json, perform_external_analysis=perform_external_analysis)
+    email_header = db_creator.create_header(
+        header_json, original_sha256, perform_external_analysis=perform_external_analysis
+    )
 
     email_structure = utility.email_structure(email_text)
 
@@ -56,6 +58,7 @@ def process_email(
         new_body = db_creator.create_body(
             body.get_payload(),
             body.get_content_type(),
+            original_sha256,
             perform_external_analysis=perform_external_analysis,
             decode_body_as_base64=decode_body_as_base64,
         )

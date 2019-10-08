@@ -20,16 +20,12 @@ def analyze_externally(email_object):
         sender = context.socket(zmq.PUSH)
         sender.connect(EXTERNAL_ANALYSIS_ENDPOINT)
 
-        data = {
-            'route': 'analysis',
-            'text': """{}""".format(email_object.full_text),
-            'id': email_object.id
-        }
+        data = {'route': 'analysis', 'text': """{}""".format(email_object.full_text), 'id': email_object.id}
 
         sender.send_json(data, zmq.NOBLOCK)
 
 
-def find_network_data(text, item_id, item_type):
+def find_network_data(text, item_id, item_type, email_id):
     """Send the text to the analysis server to parse network data from it."""
     if not utility.is_running_locally():
         context = zmq.Context()
@@ -38,9 +34,13 @@ def find_network_data(text, item_id, item_type):
         sender = context.socket(zmq.PUSH)
         sender.connect(EXTERNAL_ANALYSIS_ENDPOINT)
 
-        sender.send_json({
-            'route': 'network_data',
-            'type': item_type,
-            'text': """{}""".format(text),
-            'id': item_id
-        }, zmq.NOBLOCK)
+        sender.send_json(
+            {
+                'route': 'network_data',
+                'type': item_type,
+                'text': """{}""".format(text),
+                'id': item_id,
+                'email_id': email_id,
+            },
+            zmq.NOBLOCK,
+        )

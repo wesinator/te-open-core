@@ -60,19 +60,19 @@ def create_email(
         return email_in_db
 
 
-def create_header(header_json, perform_external_analysis=True):
+def create_header(header_json, email_id, perform_external_analysis=True):
     header_string = json.dumps(header_json)
 
     with transaction.atomic():
         new_header, created = Header.objects.update_or_create(id=utility.sha256(header_string), data=header_json)
 
     if perform_external_analysis:
-        analyzer.external_analysis.find_network_data(header_string, new_header.id, 'header')
+        analyzer.external_analysis.find_network_data(header_string, new_header.id, 'header', email_id=email_id)
 
     return new_header
 
 
-def create_body(body_payload, body_content_type, perform_external_analysis=True, decode_body_as_base64=False):
+def create_body(body_payload, body_content_type, email_id, perform_external_analysis=True, decode_body_as_base64=False):
     """'While we live in these earthly bodies, we groan and sigh, but it’s not that we want to die and get rid of these bodies that clothe us. Rather, we want to put on our new bodies so that these dying bodies will be swallowed up by life.' ~ 2 Corinthians 5:4."""
     body_text = str(body_payload).strip()
 
@@ -89,9 +89,9 @@ def create_body(body_payload, body_content_type, perform_external_analysis=True,
     if perform_external_analysis:
         # if the body content was base64 encoded, send the decoded content to the analysis server so that network data is parsed from the decoded content
         if decoded_text:
-            analyzer.external_analysis.find_network_data(decoded_text, new_body.id, 'body')
+            analyzer.external_analysis.find_network_data(decoded_text, new_body.id, 'body', email_id=email_id)
         else:
-            analyzer.external_analysis.find_network_data(body_text, new_body.id, 'body')
+            analyzer.external_analysis.find_network_data(body_text, new_body.id, 'body', email_id=email_id)
 
     return new_body
 

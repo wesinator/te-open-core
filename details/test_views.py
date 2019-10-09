@@ -14,8 +14,9 @@ def ensure_payload_displayed(payloads, response):
     """Assert payload contents are shown."""
     for payload in payloads:
         if not payload.is_multipart():
-            str_payload = html.escape(payload.get_payload().strip().replace("\n", "\\n"))
+            str_payload = html.escape(payload.get_payload().strip().replace('\n', '\\n'))
             print('str_payload {}'.format(str_payload))
+            print('str(response.content) {}'.format(str(response.content)))
             assert str_payload in str(response.content)
 
 
@@ -26,7 +27,6 @@ class ViewTests(TestCase):
         created_content = TestData.create_email()
         response = self.client.get("/email/{}/".format(created_content.id))
         response_content = response.content.decode("utf-8")
-        print('response_content {}'.format(response_content))
 
         assert html.escape(created_content.header.get_value('Subject')) in response_content
         assert html.escape(created_content.header.get_value('To')) in response_content
@@ -63,21 +63,6 @@ class ViewTests(TestCase):
         response = self.client.get("/email/{}/".format(created_email.id))
         response_content = response.content.decode("utf-8")
         assert 'a generic IP address and no overlaps will be shown' in response_content
-
-    def test_email_details_view_without_header(self):
-        # create an email without a header
-        created_content = TestData.create_email("foobar buzz bang")
-        response = self.client.get("/email/{}/".format(created_content.id))
-        response_content = response.content.decode("utf-8")
-        print('response_content {}'.format(response_content))
-
-        # make sure the email is uploaded and displayed properly
-        assert 'First submitted:' in response_content
-        assert 'Most recently submitted:' in response_content
-        assert 'minutes ago.' in response_content
-
-        # make sure the header section is not shown
-        assert 'Header' not in response_content
 
     def test_email_details_view_with_attachments(self):
         created_content = TestData.create_email(TestData.attachment_email_text)
@@ -167,6 +152,17 @@ Good morning to you,
         response = self.client.post('/save/', {'full_text': s, 'redact_data': True})
         response = self.client.get(response.url)
         assert '<h2>hi</h2>' in str(response.content)
+
+    def test_redirect_to_lowercase_url(self):
+        """Make sure requests with an uppercased email ID are redirected to the lowercased version of the url."""
+        created_email = TestData.create_email()
+
+        response = self.client.get("/email/{}/".format(created_email.id))
+        assert response.status_code == 200
+
+        response = self.client.get("/email/{}/".format(created_email.id.upper()))
+        assert response.status_code == 302
+        assert response.url == '/email/{}/'.format(created_email.id)
 
 
 class StructureTest(TestCase):

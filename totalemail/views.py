@@ -78,6 +78,10 @@ def save(request):
 
 
 def error_404_handler(request):
+    """Try redirecting to a lowercased version of a url if the given url has uppercase characters in it."""
+    lower_cased_path = request.path.lower()
+    if request.path != lower_cased_path:
+        return HttpResponseRedirect(lower_cased_path)
     return render(request, '404.html', status=404)
 
 

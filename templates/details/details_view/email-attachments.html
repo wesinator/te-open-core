@@ -6,6 +6,11 @@
           <a href="" id="{{ attachment.id }}">{{ attachment.content_type }} ({{ attachment.filenames|join:", " }})</a>
           <ul class="menu vertical">
             <li class="columns">
+              <b>MD5:</b> {{ attachment.md5 }}<br>
+              <b>SHA1:</b> {{ attachment.sha1 }}<br>
+              <b>SHA256:</b> {{ attachment.sha256 }}<br>
+            </li>
+            <li class="columns">
               <pre style="background-color: lightgrey;">{{ attachment.full_text }}</pre>
             </li>
           </ul>

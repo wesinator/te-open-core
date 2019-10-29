@@ -50,7 +50,7 @@ class EmailBase(generics.ListCreateAPIView):
             if request.query_params.get('sdkTest'):
                 mock_success_response = {'result': 'Email passed serializer validation.'}
                 return Response(mock_success_response, status=status.HTTP_201_CREATED)
-            if request.query_params.get('localTest'):
+            elif request.query_params.get('localTest'):
                 new_email = serializer.save(
                     request_details=request_details,
                     is_test=True,
@@ -62,13 +62,15 @@ class EmailBase(generics.ListCreateAPIView):
                     request_details=request_details, redact_recipient_info=redact, redaction_values=redaction_values
                 )
 
-                # if no email is returned, this means that the email was not valid
-                if new_email is None:
-                    failure_response = {
-                        'result': 'The text in the "full_text" key is not a valid email (according to our systems). If you think this is incorrect, please contact info@totalemail.io, otherwise try again with a valid email.'
-                    }
-                    return Response(failure_response, status=status.HTTP_400_BAD_REQUEST)
-            return Response(EmailSerializer(new_email).data, status=status.HTTP_201_CREATED)
+            # if no email is returned, this means that the email was not valid
+            if new_email is None:
+                failure_response = {
+                    'result': 'The text in the "full_text" key is not a valid email (according to our systems). If you think this is incorrect, please contact info@totalemail.io, otherwise try again with a valid email.'
+                }
+                return Response(failure_response, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(EmailSerializer(new_email).data, status=status.HTTP_201_CREATED)
+        # if the data is not valid according to the serializer...
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

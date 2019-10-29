@@ -57,6 +57,11 @@ class EmailBase(generics.ListCreateAPIView):
                 new_email = serializer.save(
                     request_details=request_details, redact_recipient_info=redact, redaction_values=redaction_values
                 )
+
+                # if no email is returned, this means that the email was not valid
+                if new_email is None:
+                    failure_response = {'result': 'Invalid email text.'}
+                    return Response(failure_response, status=status.HTTP_400_BAD_REQUEST)
             return Response(EmailSerializer(new_email).data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

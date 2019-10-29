@@ -60,7 +60,9 @@ class EmailBase(generics.ListCreateAPIView):
 
                 # if no email is returned, this means that the email was not valid
                 if new_email is None:
-                    failure_response = {'result': 'Invalid email text.'}
+                    failure_response = {
+                        'result': 'The text in the "full_text" key is not a valid email (according to our systems). If you think this is incorrect, please contact info@totalemail.io, otherwise try again with a valid email.'
+                    }
                     return Response(failure_response, status=status.HTTP_400_BAD_REQUEST)
             return Response(EmailSerializer(new_email).data, status=status.HTTP_201_CREATED)
         else:

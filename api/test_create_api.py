@@ -19,7 +19,7 @@ class EmailAPITests(APITestCase):
     def test_basic_email_creation(self):
         email_text = TestData.email_text
 
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
 
         assert response.status_code == 201
 
@@ -36,7 +36,7 @@ class EmailAPITests(APITestCase):
     def test_email_redaction(self):
         email_text = TestData.email_text
 
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is redacted
@@ -44,7 +44,7 @@ class EmailAPITests(APITestCase):
 
     def test_email_without_redaction_1(self):
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1&redact=false', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1&redact=false', {'full_text': email_text})
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is not redacted
@@ -53,7 +53,7 @@ class EmailAPITests(APITestCase):
     def test_email_without_redaction_2(self):
         """Make sure an uppercase `False` is handled correctly."""
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1&redact=False', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1&redact=False', {'full_text': email_text})
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is not redacted
@@ -63,7 +63,7 @@ class EmailAPITests(APITestCase):
         email_text = TestData.email_text
 
         response = self.client.post(
-            '/api/v1/emails/?test=1', {'full_text': email_text, 'redaction_values': ['github.com']}
+            '/api/v1/emails/?localTest=1', {'full_text': email_text, 'redaction_values': ['github.com']}
         )
 
         assert response.status_code == 201
@@ -80,10 +80,10 @@ class EmailAPITests(APITestCase):
         """Make sure it is possible to make multiple authenticated requests."""
         email_text = TestData.email_text
 
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
 
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
 
     def test_email_analysis_creation(self):
@@ -127,9 +127,7 @@ class BadEmailTests(APITestCase):
 
 class HeaderVotesTests(APITestCase):
     def test_header_votes_simple(self):
-        response = self.client.post(
-            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
-        )
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': TestData.email_text})
         assert response.status_code == 201
 
         created_email_header = Email.objects.all()[0].header
@@ -161,9 +159,7 @@ class HeaderVotesTests(APITestCase):
         assert header.subject_not_suspicious_votes == 2
 
     def test_header_votes_post(self):
-        response = self.client.post(
-            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
-        )
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': TestData.email_text})
         assert response.status_code == 201
 
         created_email_header = Email.objects.all()[0].header
@@ -176,9 +172,7 @@ class HeaderVotesTests(APITestCase):
         assert response.status_code == 405
 
     def test_header_votes_get(self):
-        response = self.client.post(
-            '/api/v1/emails/?test=1', {'full_text': TestData.email_text}
-        )
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': TestData.email_text})
         assert response.status_code == 201
 
         created_email_header = Email.objects.all()[0].header
@@ -194,9 +188,7 @@ class HeaderVotesTests(APITestCase):
         assert header.subject_not_suspicious_votes == 0
 
         # TODO: as of may 2019, this test is not working... at the time of writing, I don't think this is a problem and am not going to fix this
-        response = self.client.get(
-            '/api/v1/headers/{}/vote/'.format(created_email_header.id)
-        )
+        response = self.client.get('/api/v1/headers/{}/vote/'.format(created_email_header.id))
         assert response.status_code == 200
         print('response {}'.format(response.data))
         assert 1 == 2
@@ -208,11 +200,11 @@ class UnauthenticatedEmailAPITests(APITestCase):
     def test_email_creation_rate_limit(self):
         email_text = TestData.email_text
 
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
 
         # make sure there is a rate limit error
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
 
 
@@ -224,13 +216,13 @@ class NetworkDataAPITest(APITestCase):
     def test_basic_domain_creation(self):
         # create an email
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
         response = self.client.post(
-            '/api/v1/domains/?test=1', {'host_name': TestData.domain_name, 'bodies': [body_id], 'headers': []}
+            '/api/v1/domains/?localTest=1', {'host_name': TestData.domain_name, 'bodies': [body_id], 'headers': []}
         )
         assert response.status_code == 201
 
@@ -244,13 +236,13 @@ class NetworkDataAPITest(APITestCase):
     def test_basic_ip_address_creation(self):
         # create an email
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
         response = self.client.post(
-            '/api/v1/ipAddresses/?test=1', {'ip_address': TestData.ip_address, 'bodies': [body_id], 'headers': []}
+            '/api/v1/ipAddresses/?localTest=1', {'ip_address': TestData.ip_address, 'bodies': [body_id], 'headers': []}
         )
         assert response.status_code == 201
 
@@ -264,13 +256,13 @@ class NetworkDataAPITest(APITestCase):
     def test_basic_email_address_creation(self):
         # create an email
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
         response = self.client.post(
-            '/api/v1/emailAddresses/?test=1',
+            '/api/v1/emailAddresses/?localTest=1',
             {'email_address': TestData.email_address, 'bodies': [body_id], 'headers': []},
         )
         assert response.status_code == 201
@@ -285,12 +277,12 @@ class NetworkDataAPITest(APITestCase):
     def test_basic_url_creation(self):
         # create an email
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
-        response = self.client.post('/api/v1/urls/?test=1', {'url': TestData.url, 'bodies': [body_id]})
+        response = self.client.post('/api/v1/urls/?localTest=1', {'url': TestData.url, 'bodies': [body_id]})
         assert response.status_code == 201
 
         # make sure the email was created in the db correctly
@@ -304,13 +296,13 @@ class NetworkDataAPITest(APITestCase):
     def test_complex_url_with_fragment_creation(self):
         # create an email
         email_text = TestData.email_text
-        response = self.client.post('/api/v1/emails/?test=1', {'full_text': email_text})
+        response = self.client.post('/api/v1/emails/?localTest=1', {'full_text': email_text})
         assert response.status_code == 201
         # get the id of the body of the email we just created
         body_id = Email.objects.all()[0].bodies.all()[0].id
 
         url = 'https://bit.ly/1234#1234'
-        response = self.client.post('/api/v1/urls/?test=1', {'url': url, 'bodies': [body_id]})
+        response = self.client.post('/api/v1/urls/?localTest=1', {'url': url, 'bodies': [body_id]})
         assert response.status_code == 201
 
         # make sure the email was created in the db correctly

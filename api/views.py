@@ -46,7 +46,11 @@ class EmailBase(generics.ListCreateAPIView):
                 if request.query_params['redact'].lower() == 'false':
                     redact = False
 
-            if request.query_params.get('test'):
+            # if the request is simply testing an SDK, return a success response noting that the request data was validated by the serializer
+            if request.query_params.get('sdkTest'):
+                mock_success_response = {'result': 'Email passed serializer validation.'}
+                return Response(mock_success_response, status=status.HTTP_201_CREATED)
+            if request.query_params.get('localTest'):
                 new_email = serializer.save(
                     request_details=request_details,
                     is_test=True,

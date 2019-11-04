@@ -85,14 +85,19 @@ class EmailFeedbackView(generic.DetailView):
 
     def post(self, request, **kwargs):
         """."""
-        feedback = '{}:{}:{}'.format(
-            request.POST.get('feedback'),
-            kwargs['pk'],
-            settings._process_request_data(settings._get_request_data(request)),
-        )
-        utility.create_alerta_alert('Feedback: {}'.format(feedback[:16]), 'info', feedback)
-        messages.info(request, 'Thank you! Your feedback has been recorded.')
-        return HttpResponseRedirect('/')
+        feedback_text = request.POST.get('feedback')
+        email_id = kwargs['pk']
+
+        if feedback_text:
+            feedback = '{}:{}:{}'.format(
+                feedback_text, email_id, settings._process_request_data(settings._get_request_data(request))
+            )
+            utility.create_alerta_alert('Feedback: {}'.format(feedback[:16]), 'info', feedback)
+            messages.info(request, 'Thank you! Your feedback has been recorded.')
+            return HttpResponseRedirect(reverse('details:details', args=(email_id,)))
+        else:
+            messages.error(request, 'Please provide feedback to help us improve!')
+            return HttpResponseRedirect(request.path)
 
 
 class EmailRedactionView(generic.DetailView):
@@ -101,11 +106,20 @@ class EmailRedactionView(generic.DetailView):
 
     def post(self, request, **kwargs):
         """."""
-        redaction_request = '{}:{}:{}'.format(
-            request.POST.get('redactionRequest'),
-            kwargs['pk'],
-            settings._process_request_data(settings._get_request_data(request)),
-        )
-        utility.create_alerta_alert('Redaction request: {}'.format(redaction_request[:16]), 'info', redaction_request)
-        messages.info(request, 'Thank you! Your redaction request has been recorded.')
-        return HttpResponseRedirect('/')
+        redaction_request_text = request.POST.get('redactionRequest')
+        email_id = kwargs['pk']
+
+        if redaction_request_text:
+            redaction_request = '{}:{}:{}'.format(
+                redaction_request_text, email_id, settings._process_request_data(settings._get_request_data(request))
+            )
+            utility.create_alerta_alert(
+                'Redaction request: {}'.format(redaction_request[:16]), 'info', redaction_request
+            )
+            messages.info(request, 'Thank you! Your redaction request has been recorded.')
+            return HttpResponseRedirect(reverse('details:details', args=(email_id,)))
+        else:
+            messages.error(
+                request, 'Please provide some details about what you would like to be redacted from the email.'
+            )
+            return HttpResponseRedirect(request.path)

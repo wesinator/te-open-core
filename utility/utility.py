@@ -262,6 +262,7 @@ def domain_is_common(domain_name):
         'google\.ru',
         'yahoo\.com',
         'www\.w3\.org',
+        'bit.ly',
     ]
 
     return _string_has_match(whitelisted_domain_regexes, domain_name)

@@ -160,7 +160,7 @@ class Email(models.Model):
                 if utility.domain_is_common(host.host_name):
                     data = [
                         {
-                            'link': '/search?q={}'.format(host.host_name),
+                            'link': '/search?q=dom({})'.format(host.host_name),
                             'text': 'view more (this is a generic domain and no overlaps will be shown)...',
                         }
                     ]
@@ -200,7 +200,7 @@ class Email(models.Model):
                     if utility.domain_is_common(host.host_name):
                         data = [
                             {
-                                'link': '/search?q={}'.format(host.host_name),
+                                'link': '/search?q=dom({})'.format(host.host_name),
                                 'text': 'view more (this is a generic domain and no overlaps will be shown)...',
                             }
                         ]

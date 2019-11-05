@@ -207,9 +207,10 @@ def _calculate(score, source):
 
 
 def email_score_calculate(email):
-    """Calculate the score of the email from the email."""
-    # calculate the score for the email
+    """Calculate the score of the email from the email's analysis results."""
     email_analysis_score_data = {}
+
+    # TODO: factor the suspicious votes into an email's score
 
     # collect (and create the score) based only on the most recent analysis from each source (ignore older analyses)
     for analysis in email.analysis_set.all().order_by('-first_seen'):

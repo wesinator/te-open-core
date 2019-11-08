@@ -160,3 +160,11 @@ class SearchViewTests(TestCase):
         response = self.client.get(url)
         print('response {}'.format(str(response.content)))
         assert 'Found 1 email matching "<i>domb(github.com)</i>"' in str(response.content)
+
+    def test_search_function_hasAttachment(self):
+        TestData.create_email(TestData.attachment_email_text)
+
+        url = '/search?q=hasAttachment()'
+        response = self.client.get(url)
+        print('response {}'.format(str(response.content)))
+        assert 'Found 1 email matching "<i>hasAttachment()</i>"' in str(response.content)

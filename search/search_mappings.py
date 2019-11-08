@@ -6,4 +6,6 @@ header_search_mappings = {'sub': 'subject', 'to': 'to', 'from': 'from'}
 
 body_search_mappings = ['bod']
 
+attachment_search_mappings = ['hasAttachment']
+
 network_data_search_mappings = ['dom', 'domh', 'domb']

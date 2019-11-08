@@ -8,7 +8,12 @@ from django.views.generic.base import TemplateView
 from django.contrib import messages
 
 from db.models import Email
-from .search_mappings import header_search_mappings, body_search_mappings, network_data_search_mappings
+from .search_mappings import (
+    header_search_mappings,
+    body_search_mappings,
+    network_data_search_mappings,
+    attachment_search_mappings,
+)
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 from utility import utility
 
@@ -95,6 +100,11 @@ class IndexSearchView(TemplateView):
                         results = Email.objects.filter(bodies__host__host_name__icontains=search).order_by(
                             '-first_seen'
                         )
+                    emails.extend(_add_email_results(emails, results, query))
+                elif function in attachment_search_mappings:
+                    function_found = True
+                    if function == 'hasAttachment':
+                        results = Email.objects.filter(attachments__isnull=False).order_by('-first_seen')
                     emails.extend(_add_email_results(emails, results, query))
 
                 if function_found:

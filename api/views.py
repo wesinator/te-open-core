@@ -36,7 +36,11 @@ class EmailBase(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         request_details = settings._get_request_data(request)
 
-        redaction_values = ','.join(request.data.get('redaction_values', []))
+        redaction_values = request.data.get('redaction_values')
+        # if the redaction values is None or an empty string, change it to a list
+        if not redaction_values:
+            redaction_values = []
+        redaction_values_string = ','.join(redaction_values)
 
         # use a special serializer for email creation
         serializer = EmailCreateSerializer(data=request.data)
@@ -55,11 +59,13 @@ class EmailBase(generics.ListCreateAPIView):
                     request_details=request_details,
                     is_test=True,
                     redact_recipient_info=redact,
-                    redaction_values=redaction_values,
+                    redaction_values=redaction_values_string,
                 )
             else:
                 new_email = serializer.save(
-                    request_details=request_details, redact_recipient_info=redact, redaction_values=redaction_values
+                    request_details=request_details,
+                    redact_recipient_info=redact,
+                    redaction_values=redaction_values_string,
                 )
 
             # if no email is returned, this means that the email was not valid

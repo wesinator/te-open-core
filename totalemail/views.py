@@ -70,7 +70,7 @@ def save(request):
         # new_email will be None if no headers are found in the uploaded content by the process_email function
         if new_email is None:
             messages.error(
-                request, 'That text does not look like an email. Please upload an email (with a header and body(ies).'
+                request, 'That text does not look like an email. Please upload an email (with a header and body(ies)).'
             )
             return HttpResponseRedirect('/')
 

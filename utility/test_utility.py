@@ -5,7 +5,7 @@ from .utility import (
     base64_decode,
     domain_is_common,
     ip_address_is_common,
-    email_bodies,
+    email_bodies_as_objects,
     email_read,
     email_attachments,
     _calculate,
@@ -66,11 +66,11 @@ def test_domain_is_common_1():
     assert not domain_is_common('example.com')
 
 
-def test_email_bodies():
-    bodies = email_bodies(email_read(ATTACHMENT_EMAIL))
+def test_email_bodies_as_objects():
+    bodies = email_bodies_as_objects(email_read(ATTACHMENT_EMAIL))
     assert len(bodies) == 2
 
-    bodies = email_bodies(ATTACHMENT_EMAIL)
+    bodies = email_bodies_as_objects(ATTACHMENT_EMAIL)
     assert len(bodies) == 2
 
 

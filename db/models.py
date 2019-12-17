@@ -271,21 +271,34 @@ class Header(models.Model):
     @property
     def subject(self):
         # if the email has been run through SpamAssassin, the subject will be changed and the original subject is stored in the "X-Spam-Prev-Subject" field
-        if self.get_value('x-spam-prev-subject'):
-            return self.get_value('x-spam-prev-subject')
+        if self.get_header_key_values('x-spam-prev-subject'):
+            subject_value = self.get_header_key_values('x-spam-prev-subject')[0]
+        elif self.get_header_key_values('subject'):
+            subject_value = self.get_header_key_values('subject')[0]
+        # if there is no subject for the email, return 'N/A' (I'm returning a string rather than None because this function is often used to display the subject line in the UI)
         else:
-            subject_value = self.get_value('subject')
-            # if there is a subject for this email, return the subject... otherwise return 'N/A' (I'm returning a string rather than None because this function is often used to display the subject line in the UI)
-            if subject_value:
-                return subject_value
-            else:
-                return 'N/A'
+            subject_value = 'N/A'
 
-    def get_value(self, desired_header_key):
+        return subject_value
+
+    def get_header_key_values(self, desired_header_key):
+        header_values = []
         for header_key, header_value in self.data:
             if header_key.lower() == desired_header_key.lower():
-                return header_value
-        return None
+                header_values.append(header_value)
+        return header_values
+
+    def header_value_contains(self, desired_header_key, desired_header_value):
+        """Return whether or not this header has the desired_header_key and contains the desired_header_value."""
+        values = self.get_header_key_values(desired_header_key)
+        if any(values):
+            matching_values = filter(lambda x: desired_header_value.lower() in x, values)
+            if any(matching_values):
+                return True
+            else:
+                return False
+        else:
+            return False
 
     def __str__(self):
         string = ''

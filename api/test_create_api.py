@@ -30,8 +30,8 @@ class EmailAPITests(APITestCase):
         emails = Email.objects.all()
         assert len(emails) == 1
         assert emails[0].id == TestData.email_id
-        assert 'Alice Underwood' in emails[0].header.get_value('from')
-        assert 'alice@gmail.com' in emails[0].header.get_value('from')
+        assert 'Alice Underwood' in emails[0].header.get_header_key_values('from')[0]
+        assert 'alice@gmail.com' in emails[0].header.get_header_key_values('from')[0]
 
     def test_email_redaction(self):
         email_text = TestData.email_text
@@ -40,7 +40,7 @@ class EmailAPITests(APITestCase):
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is redacted
-        assert 'bob@gmail.com' not in emails[0].header.get_value('to')
+        assert 'bob@gmail.com' not in emails[0].header.get_header_key_values('to')[0]
 
     def test_email_without_redaction_1(self):
         email_text = TestData.email_text
@@ -48,7 +48,7 @@ class EmailAPITests(APITestCase):
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is not redacted
-        assert 'bob@gmail.com' in emails[0].header.get_value('to')
+        assert 'bob@gmail.com' in emails[0].header.get_header_key_values('to')[0]
 
     def test_email_without_redaction_2(self):
         """Make sure an uppercase `False` is handled correctly."""
@@ -57,7 +57,7 @@ class EmailAPITests(APITestCase):
         emails = Email.objects.all()
         assert response.status_code == 201
         # make sure the to field is not redacted
-        assert 'bob@gmail.com' in emails[0].header.get_value('to')
+        assert 'bob@gmail.com' in emails[0].header.get_header_key_values('to')[0]
 
     def test_email_custom_redaction(self):
         email_text = TestData.email_text

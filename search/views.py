@@ -17,7 +17,6 @@ from .search_mappings import (
 from totalemail.settings import _validate_search_query, MAX_RESULTS
 from utility import utility
 
-# SEARCH_PATTERN_REGEX = '(\S*:(?:(?:".*?")|\S*))'
 SEARCH_PATTERN_REGEX = '(\w*\(.*?\))'
 
 
@@ -41,7 +40,8 @@ class IndexSearchView(TemplateView):
     def get(self, request):
         """Handle get requests."""
         template_name = "search/search_index.html"
-        total_email_count = len(Email.objects.all())
+        all_email_objects = Email.objects.all()
+        total_email_count = len(all_email_objects)
         query_string = request.GET.get("q")
         original_query_string = query_string
         if query_string:
@@ -61,7 +61,7 @@ class IndexSearchView(TemplateView):
 
                 # find the function of the custom query
                 function = query.split('(')[0]
-                # find the search value of the custom query (we are joining on '(' in case the query has a colon in it)
+                # find the search value of the custom query (we are joining on '(' in case the query has a '(' in it)
                 search = '('.join(query.split('(')[1:]).lower().strip(')')
                 function_found = False
 
@@ -69,9 +69,8 @@ class IndexSearchView(TemplateView):
                     function_found = True
                     results = [
                         email
-                        for email in Email.objects.all().order_by('-first_seen')
-                        if email.header.get_value(header_search_mappings[function])
-                        and search in email.header.get_value(header_search_mappings[function]).lower()
+                        for email in all_email_objects.order_by('-first_seen')
+                        if email.header.header_value_contains(header_search_mappings[function])
                     ]
                     emails.extend(_add_email_results(emails, results, query))
                 elif function in body_search_mappings:

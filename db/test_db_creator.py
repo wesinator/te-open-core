@@ -89,7 +89,12 @@ class EmailTests(TestCase):
 
     def test_header_retrieval(self):
         new_email = TestData.create_email()
-        assert new_email.header.get_value('from') == 'Alice Underwood <alice@gmail.com>'
+        assert new_email.header.get_header_key_values('from')[0] == 'Alice Underwood <alice@gmail.com>'
+
+        # test an email with multiple header entries with the same key
+        header_values = new_email.header.get_header_key_values('Received')
+        assert isinstance(header_values, list)
+        assert len(header_values) == 2
 
     def test_related_bodies(self):
         """Make sure a header and body are related to a created email."""
@@ -222,7 +227,7 @@ class HeaderTests(TestCase):
     def test_bad_content_type(self):
         new_header = TestData.create_email(TestData.bad_content_type_email_text).header
         assert new_header is not None
-        assert new_header.get_value('subject') == '[ILUG] STOP THE MLM INSANITY'
+        assert new_header.get_header_key_values('subject')[0] == '[ILUG] STOP THE MLM INSANITY'
 
     def test_creation_of_duplicate_headers(self):
         new_headers = TestData.create_emails_with_same_header()
@@ -231,8 +236,16 @@ class HeaderTests(TestCase):
         assert new_headers[0].header.modified != new_headers[1].header.modified
 
     def test_header_with_subject_line_changed_by_SpamAssassin(self):
-        # TODO: implement this
-        assert 1 == 2
+        email_text = '''Subject: SPAMISH SPAM
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+X-Spam-Prev-Subject: Did You Authorize Her?
+
+Hello!
+'''
+
+        new_email = TestData.create_email(email_text=email_text)
+        assert new_email.header.subject == 'Did You Authorize Her?'
 
 
 class BodyTests(TestCase):

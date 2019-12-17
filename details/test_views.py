@@ -28,9 +28,9 @@ class ViewTests(TestCase):
         response = self.client.get("/email/{}/".format(created_content.id))
         response_content = response.content.decode("utf-8")
 
-        assert html.escape(created_content.header.get_value('Subject')) in response_content
-        assert html.escape(created_content.header.get_value('To')) in response_content
-        assert html.escape(created_content.header.get_value('From')) in response_content
+        assert html.escape(created_content.header.get_header_key_values('Subject')[0]) in response_content
+        assert html.escape(created_content.header.get_header_key_values('To')[0]) in response_content
+        assert html.escape(created_content.header.get_header_key_values('From')[0]) in response_content
         assert 'First submitted:' in response_content
         assert 'Most recently submitted:' in response_content
         assert 'minutes ago.' in response_content
@@ -71,9 +71,9 @@ class ViewTests(TestCase):
         print('response_content {}'.format(response_content))
 
         # assert header contents are shown
-        assert html.escape(created_content.header.get_value('Subject')) in response_content
-        assert html.escape(created_content.header.get_value('To')) in response_content
-        assert html.escape(created_content.header.get_value('From')) in response_content
+        assert html.escape(created_content.header.get_header_key_values('Subject')[0]) in response_content
+        assert html.escape(created_content.header.get_header_key_values('To')[0]) in response_content
+        assert html.escape(created_content.header.get_header_key_values('From')[0]) in response_content
 
         ensure_payload_displayed(TestData.attachment_email_message.get_payload(), response)
 

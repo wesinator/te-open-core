@@ -39,7 +39,7 @@
     </div>
 
     <div class="large-9 medium-9 float-left">
-      <p>Is there something in this email that should be removed (e.g. <a href="https://en.wikipedia.org/wiki/Personal_data">PII</a> or trade secrets)? Please let us know <i>what</i> you would like redacted from this email and <i>why</i> and we'll make it happen. Thanks!</p>
+      <p>Is there something in this email that should be removed (e.g. <a target="_blank" href="https://en.wikipedia.org/wiki/Personal_data">PII</a> or trade secrets)? Please let us know <i>what</i> you would like redacted from this email and <i>why</i> and we'll make it happen. Thanks!</p>
 
       <form action="{% url 'details:redaction' email.id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}

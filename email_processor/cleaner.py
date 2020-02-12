@@ -14,7 +14,7 @@ def _clean_pii(text):
     ssn_pattern = '(\d{3}-\d{2}-\d{4})'
     cleaned_text = re.sub(ssn_pattern, 'REDACTED', text, flags=re.IGNORECASE)
 
-    phone_number_pattern = '(?<!\d)(?:(?:\(?[0-9]{3}(\)?(?: |-))))[0-9]{3}[ -][0-9]{4}'
+    phone_number_pattern = '(?<!\d)(?:(?:\(?[0-9]{3}(\)?(?: |[-.]))))[0-9]{3}[ -.][0-9]{4}'
     cleaned_text = re.sub(phone_number_pattern, 'REDACTED', cleaned_text, flags=re.IGNORECASE)
 
     return cleaned_text

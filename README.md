@@ -154,3 +154,8 @@ The color codes for the stop lights are:
 - #6FEF87 - green
 - #F1D86C - yellow
 - #E64A48 - red
+
+## Licensing
+
+This project is currently licensed under the [AGPL-3.0](https://opensource.org/licenses/AGPL-3.0) license. If you have any questions, feel free to contact us at info@totalemail.io.
+

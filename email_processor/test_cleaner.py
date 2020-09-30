@@ -406,3 +406,20 @@ foo
 """
     cleaned_email = clean_email(s, redaction_values='', redact_pii=True)
     assert 'Wed, 08 May 2019 03:44:37 -0400' in cleaned_email
+
+
+def test_subject_cleaning():
+    """See https://gitlab.com/totalemail/core/-/issues/385."""
+    s = """Subject: Foobar
+From: Bob Bradbury <bob@gmail.com>
+To: Alice Asimov <alice@gmail.com>
+Date: Wed, 08 May 2019 03:44:37 -0400
+Content-Type: text/html;
+    charset="utf-8"
+Content-Transfer-Encoding: text/plain
+
+foo
+
+"""
+    cleaned_email = clean_email(s, redaction_values='Foobar')
+    assert 'Foobar' not in cleaned_email

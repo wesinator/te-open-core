@@ -22,7 +22,7 @@ def _clean_pii(text):
 
 def clean_email(email_text, redaction_values=None, redact_pii=False):
     """Clean an email."""
-    FIELDS_TO_REDACT = ['to', 'delivered-to']
+    FIELDS_TO_REDACT = ('to', 'delivered-to')
     cleaned_email = email_text
     redaction_value_list = []
     if redaction_values:

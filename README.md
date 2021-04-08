@@ -156,6 +156,7 @@ The color codes for the stop lights are:
 - #E64A48 - red
 
 ## Licensing
+Copyright (C) 2017-2021, TotalEmail authors
 
 This project is currently licensed under the [AGPL-3.0](https://opensource.org/licenses/AGPL-3.0) license. If you have any questions, feel free to contact us at info@totalemail.io.
 

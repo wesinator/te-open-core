@@ -245,10 +245,8 @@ def _string_has_match(regex_list, string):
 
 
 def ip_address_is_common(ip_address):
-    """Check to see if the given ip address is common."""
-    whitelisted_ip_address_regexes = ['127\.0\.0\.1']
-
-    return _string_has_match(whitelisted_ip_address_regexes, ip_address)
+    ip = ipaddress.ip_address(ip)
+    return ip.is_private or ip.is_multicast
 
 
 def domain_is_common(domain_name):

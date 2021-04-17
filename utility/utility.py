@@ -245,7 +245,7 @@ def _string_has_match(regex_list, string):
 
 
 def ip_address_is_common(ip_address):
-    ip = ipaddress.ip_address(ip)
+    ip = ipaddress.ip_address(ip_address)
     return ip.is_private or ip.is_multicast
 
 

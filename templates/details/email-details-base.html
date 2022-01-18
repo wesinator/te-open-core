@@ -26,7 +26,7 @@
   <br>
   {% if email.pk %}
     <div class="row">
-      <h2>{{ email.header.subject|truncatechars:42 }}</h2>
+      <h2 title="{{ email.header.subject }}">{{ email.header.subject|truncatechars:42 }}</h2>
 
       <div class="row">
           {% if messages %}
